@@ -298,8 +298,6 @@ function dashboard(id, fData){
         'SQL',
         'Python',
         'ASP',
-		'TypeScript',
-		'Lisp',
 		'JS'].map(function(d){ 
               return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
           });    
@@ -337,9 +335,6 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
                 Python:comp[d["Vos compétences : langage informatique [Phyton]"]],
                 ASP:comp[d["Vos compétences : langage informatique [ASP]"]],
                 JS:comp[d["Vos compétences : langage informatique [JS]"]],
-                TypeScript:comp[d["Vos compétences : langage informatique [TypeScript]"]],
-                Lisp:comp[d["Vos compétences : langage informatique [Lisp]"]],
-
             }
 		};
 		d.state = getKeyLine(d);	
