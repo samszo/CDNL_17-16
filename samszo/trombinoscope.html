@@ -14,7 +14,7 @@
  	
 	<script>
 	//merci beaucoup à https://etienner.fr/flickr-json
-	$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686701939221&extras=original_format&format=json&jsoncallback=?",
+	$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686924962130&extras=original_format&format=json&jsoncallback=?",
 	function(data){
 	    // Debut de la boucle
 	    $.each(data.photoset.photo, function(i,item){
@@ -23,7 +23,7 @@
 	        // Sockage de l'url dans une variable
 	        var url= 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_c.jpg';
 	        // Affichage des images dans la balise ul#images avec le l'url dans la balise li
-	        $("<img/>").attr({src: photo, alt: item.title}).appendTo("#images").wrap("<li><a href=' "+ url +"' title=' "+ item.title +" ' ></a></li>");
+	        $("<img/>").attr({src: photo, alt: item.title}).appendTo("#etuTrombi").wrap("<li><a href=' "+ url +"' title=' "+ item.title +" ' ></a></li>");
 	    }); //Fin de la boucle
 	});
 	// Fin appel JSON 	
