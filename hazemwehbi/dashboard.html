@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  
 <meta charset="utf-8">
 <style>
 body{
@@ -37,35 +39,25 @@ rect:hover {  fill:blue; }
     width:50px;
 }
 #etu{
-  width:500px;
-  height:200px;
+	width:500px;
+	height:200px;
 }
 #dashboard{
-  width:100%;
-  float:left;
+	width:100%;
+	float:left;
 }
-#photoEtu{  
-  float:right;
-  height:200px;
-   width: 200px;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    
-  
-}
-#infos{
-    float: right;
+#photoEtu{
+	float:right;
+	height:200px;
 }
 </style>
 </head>
 <body>
 <h1>Les compétences des étudiants</h1>
 <div id="etu" >
-  <img id="photoEtu" src="http://www.samszo.univ-paris8.fr/THYP/17-18/photo/" /> 
-  <div id="infos">
-  <h2 id="sltEtu"></h2>
-  <p id="mailEtu"></p>
-  </div>
+	<img id="photoEtu" />
+	<h2 id="sltEtu"></h2>
+	<p id="mailEtu"></p>
 </div>
 <div id='dashboard'>
 </div>
@@ -86,9 +78,9 @@ function dashboard(id, fData){
                     +d.freq.Javascript
                     +d.freq.Java;}
                     );
-    */
+   	*/
    var segColor = d3.scale.category20b();
-   var sltEtu = false;  
+   var sltEtu = false;	
     fData.forEach(function(d){
         d.total =   d.freq.PHP+d.freq.HTML+d.freq.JSON+d.freq.CSS+d.freq.XML+d.freq.JAVA+d.freq.SQL+d.freq.Python+d.freq.ASP+d.freq.JS;}
                     );
@@ -130,8 +122,8 @@ function dashboard(id, fData){
             .attr("height", function(d) { return hGDim.h - y(d[1]); })
             .attr('fill',barColor)
             .on("click",function(d){
-              sltEtu = true;
-              })
+            	sltEtu = true;
+            	})
             .on("mouseover",mouseover)// mouseover is defined below.
             .on("mouseout",mouseout);// mouseout is defined below.
             
@@ -141,28 +133,54 @@ function dashboard(id, fData){
             .attr("y", function(d) { return y(d[1])-5; })
             .attr("text-anchor", "middle");
         
-        function mouseover(d){  // utility function to be called on mouseover.
-            sltEtu = false;
-          //met à jour le titre de la légende
-          var etu = dataEtu.filter(function(e){
-            return e.state == d[0];
-            });
-            if(etu[0]){
-              etu = etu[0];
-              /*
-              d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
-              d3.select("#mailEtu").text(etu["E-mail"]);              
-              */
-              d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
-              d3.select("#mailEtu").text(etu["E-mail"]);
-              
 
-              var urlTof = 'http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+etu["lien vers la photo"];
-              d3.select("#photoEtu").attr('src', urlTof);              
-              
-            }
-  
-      // filter for selected state.
+        function mouseover(d){  // utility function to be called on mouseover.
+        		sltEtu = false;
+	    		//met à jour le titre de la légende
+	    		var etu = dataEtu.filter(function(e){
+	    			return e.state == d[0];
+	    			});
+        		if(etu[0]){
+        			etu = etu[0];
+        			/*
+        			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
+        			d3.select("#mailEtu").text(etu["E-mail"]);        			
+        			*/
+        			
+        			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
+        			d3.select("#mailEtu").text(etu["E-mail"]);
+        			var urlTof = tofEtu[etu["lien vers la photo"]] ? tofEtu[etu["lien vers la photo"]].large : "";
+    			    
+  // First Solution
+        			/* The Code that i added to get the photo URL from Flickr and show it in  
+        			
+        			
+		        			var flickerAPI = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+		        			  
+		        			    $.getJSON( flickerAPI, {
+		        			      tags: etu["Nom"],
+		        			      tagmode: "any",
+		        			      format: "json"
+		        			    })
+		        			      .done(function( data ) {
+		        			        $.each( data.items, function( i, item ) { 
+		        			        	
+		        			          d3.select("#photoEtu").attr('src', item.media.m);        			
+		        			          
+		        			          if ( i > 2 ) {
+		        			            return false;
+		        			          } 
+		        			        });  
+		        			      }); 
+        			    */
+ // Second Solution	    
+            			d3.select("#photoEtu").attr('src', 'http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+etu["lien vers la photo"]);   
+
+        			    
+
+        		}
+	
+			// filter for selected state.
             var st = fData.filter(function(s){ return s.State == d[0];})[0],
                 nD = d3.keys(st.freq).map(function(s){ return {type:s, freq:st.freq[s]};});
                
@@ -172,13 +190,13 @@ function dashboard(id, fData){
         }
         
         function mouseout(d){    // utility function to be called on mouseout.
-        if(sltEtu)return;
-          //met à jour le titre de la légende
-      d3.select("#sltEtu").text("---");
-      d3.select("#mailEtu").text("---");
-      d3.select("#photoEtu").attr('http://www.samszo.univ-paris8.fr/THYP/17-18/photo/', "");   //***********************************          
+    		if(sltEtu)return;
+        	//met à jour le titre de la légende
+			d3.select("#sltEtu").text("---");
+			d3.select("#mailEtu").text("---");
+			d3.select("#photoEtu").attr('src', "https://dummyimage.com/356x200/000/000");        			
 
-            // reset the pie-chart and legend.    
+        		// reset the pie-chart and legend.    
             pC.update(tF);
             leg.update(tF);
         }
@@ -244,7 +262,7 @@ function dashboard(id, fData){
             hG.update(fData.map(function(v){
                 return [v.State,v.total];}), barColor);
         }
-        // Animating the pie-slice requiring a custom function which specifies 
+        // Animating the pie-slice requiring a custom function which specifies
         // how the intermediate paths should be drawn.
         function arcTween(a) {
             var i = d3.interpolate(this._current, a);
@@ -265,9 +283,9 @@ function dashboard(id, fData){
         var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
             
         // create the first column for each segment.
-        tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
-            .attr("width", '16').attr("height", '16')
-      .attr("fill",function(d){ return segColor(d.type); });
+        tr.append("td").append("svg").attr("width", '17').attr("height", '17').append("rect")
+            .attr("width", '17').attr("height", '17')
+			.attr("fill",function(d){ return segColor(d.type); });
             
         // create the second column for each segment.
         tr.append("td").text(function(d){ return d.type;});
@@ -310,7 +328,23 @@ function dashboard(id, fData){
         'SQL',
         'Python',
         'ASP',
-    'JS'].map(function(d){ 
+		'RUBY',
+		'JS','JSP','C#','C++','ObjectiveC',
+        'Perl',
+        'TypeScript',
+        'LISP',
+        'COBOL',
+        'SCALA',
+		'Prolog',
+        'Joomla',
+        'WORPRESS',
+        'SPIP',
+        'Drupal',
+        'Typo3',
+        'Prestashop',
+        'Omeka','Magento','Exo plateforme','Open Cart','GIMP','Photoshop','Illustrator',
+        'Inkscape','Eclipse','Dreamweaver','Office','3DSMax','Visual Studio','Github','SVN','Net Beans',
+        'Sublime Text','Notepad ++','Unity','Angular IDE','Dev C++','After Effect','Android Studio'].map(function(d){ 
               return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
           });    
 
@@ -328,15 +362,16 @@ function dashboard(id, fData){
 var dataEtu, tofEtu=[];
 //d3.csv("php/lecteurFlux.php?url=THYP1718data", null, function(error, data) {
 d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefaJxHJWnLGS7xudeNJChpgpvqWdskujnlt03TkiWRHtW5uoTV8sYAH3HZ/pub?gid=642939185&single=true&output=csv", null, function(error, data) {
-  freqData = [];
-  dataEtu = data;
-  /*formulaire THYP*/
-                                          
-  var comp = {"médiocre":5,"trop fort":10,"mauvais":2,"connais pas":1};
-  data.forEach(function(d){
-    var args = {
-      State:getKeyLine(d)
-      ,freq:{
+	freqData = [];
+	dataEtu = data;
+	/*formulaire THYP*/
+																					
+	var comp = {"médiocre":5,"trop fort":10,"mauvais":2,"connais pas":1};
+	data.forEach(function(d){
+		var args = {
+			State:getKeyLine(d)
+			,freq:{
+
                 PHP:comp[d["Vos compétences : langage informatique [PHP]"]], 
                 HTML:comp[d["Vos compétences : langage informatique [HTML]"]],
                 JSON:comp[d["Vos compétences : langage informatique [jSON]"]],
@@ -346,36 +381,78 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
                 SQL:comp[d["Vos compétences : langage informatique [SQL]"]], 
                 Python:comp[d["Vos compétences : langage informatique [Phyton]"]],
                 ASP:comp[d["Vos compétences : langage informatique [ASP]"]],
+                RUBY:comp[d["Vos compétences : langage informatique [RUBY]"]],
                 JS:comp[d["Vos compétences : langage informatique [JS]"]],
-            }
-    };
-    d.state = getKeyLine(d);  
-    
-    //vérification des données
-    for(var p in args.freq) {
-       if(args.freq[p] == undefined)args.freq[p]=0;
-    }   
-    freqData.push(args);    
-  });
-  
-  function getKeyLine(d){
-    return d["Nom"].substring(0,1).toUpperCase()+""+d["Nom"].substring(2,1)+" "+d["Prénom"].substring(0,1).toUpperCase();
-  }
+                JSP:comp[d["Vos compétences : langage informatique [JSP]"]],
+                C1:comp[d["Vos compétences : langage informatique [C#]"]],
+                C2:comp[d["Vos compétences : langage informatique [C++]"]],
+                ObjectiveC:comp[d["Vos compétences : langage informatique [Objective C]"]],
+                Perl:comp[d["Vos compétences : langage informatique [Perl]"]],
+                TypeScript:comp[d["Vos compétences : langage informatique [TypeScript]"]],
+                LISP:comp[d["Vos compétences : langage informatique [LISP]"]], 
+                COBOL:comp[d["Vos compétences : langage informatique [COBOL]"]],
+                SCALA:comp[d["Vos compétences : langage informatique [SCALA]"]],
+                Prolog:comp[d["Vos compétences : langage informatique [Prolog]"]],
+                Joomla:comp[d["Vos compétences : CMS [Joomla]"]],
+                WORPRESS:comp[d["Vos compétences : CMS [WORPRESS]"]],
+                SPIP:comp[d["Vos compétences : CMS [SPIP]"]],
+                Drupal:comp[d["Vos compétences : CMS [Drupal]"]], 
+                Typo3:comp[d["Vos compétences : CMS [Typo 3]"]],
+                Prestashop:comp[d["Vos compétences : CMS [Prestashop]"]],
+                Omeka:comp[d["Vos compétences : CMS [Omeka]"]],
+                Magento:comp[d["Vos compétences : CMS [Magento]"]],
+                Exoplateforme:comp[d["Vos compétences : CMS [Exo plateforme]"]],
+                OpenCart:comp[d["Vos compétences : CMS [Open Cart]"]],
+                GIMP:comp[d["Vos compétences : logiciel [GIMP]"]],
+                Photoshop:comp[d["Vos compétences : logiciel [Photoshop]"]],
+                Illustrator:comp[d["Vos compétences : logiciel [Illustrator]"]],
+                Inkscape:comp[d["Vos compétences : logiciel [Inkscape]"]],
+                Eclipse:comp[d["Vos compétences : logiciel [Eclipse]"]],
+                Dreamweaver:comp[d["Vos compétences : logiciel [Dreamweaver]"]],
+                Office:comp[d["Vos compétences : logiciel [Office]"]],
+                DSMax:comp[d["Vos compétences : logiciel [3DSMax]"]],
+                VisualStudio:comp[d["Vos compétences : logiciel [Visual Studio]"]],
+                Github:comp[d["Vos compétences : logiciel [Github]"]],
+                SVN:comp[d["Vos compétences : logiciel [SVN]"]],
+                NetBeans:comp[d["Vos compétences : logiciel [Net Beans]"]],
+                SublimeText:comp[d["Vos compétences : logiciel [Sublime Text]"]],
+                Notepad:comp[d["Vos compétences : logiciel [Notepad ++]"]],
+				Unity:comp[d["Vos compétences : logiciel [Unity]"]],
+				AngularIDE:comp[d["Vos compétences : logiciel [Angular IDE]"]],
+				DevC:comp[d["Vos compétences : logiciel [Dev C++]"]],
+				AfterEffect:comp[d["Vos compétences : logiciel [After Effect]"]],
+				AndroidStudio:comp[d["Vos compétences : logiciel [Android Studio]"]]
 
-  /*récupère les photos
-  d3.xml("php/lecteurFlux.php?url=THYP1617photo", "application/xml", function(xml) {
-    var tofs = xml.documentElement.getElementsByTagName("group"); 
-        for (i = 0; i < tofs.length; i++) { 
-          tofEtu[i]={'mini':tofs[i].childNodes[6].getAttribute("url"),'medium':tofs[i].childNodes[5].getAttribute("url"),'large':tofs[i].childNodes[0].getAttribute("url")};
-        }
-        
-      dashboard('#dashboard',freqData);
-        
-  });*/
-  
-  dashboard('#dashboard',freqData);
-  
-}); 
+            }
+		};
+		d.state = getKeyLine(d);	
+		
+		//vérification des données
+		for(var p in args.freq) {
+		   if(args.freq[p] == undefined)args.freq[p]=0;
+		}		
+		freqData.push(args);		
+	});
+	
+	function getKeyLine(d){
+		return d["Nom"].substring(0,1).toUpperCase()+""+d["Nom"].substring(2,1)+" "+d["Prénom"].substring(0,1).toUpperCase();
+	
+	}
+
+	/*récupère les photos
+	d3.xml("php/lecteurFlux.php?url=THYP1617photo", "application/xml", function(xml) {
+		var tofs = xml.documentElement.getElementsByTagName("group"); 
+       	for (i = 0; i < tofs.length; i++) { 
+       		tofEtu[i]={'mini':tofs[i].childNodes[6].getAttribute("url"),'medium':tofs[i].childNodes[5].getAttribute("url"),'large':tofs[i].childNodes[0].getAttribute("url")};
+       	}
+       	
+    	dashboard('#dashboard',freqData);
+       	
+	});
+	*/
+	dashboard('#dashboard',freqData);
+	
+});
 
 </script>
 </body>
