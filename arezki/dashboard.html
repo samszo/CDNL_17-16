@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -47,6 +47,12 @@ rect:hover {  fill:blue; }
 #photoEtu{
 	float:right;
 	height:200px;
+    width:200px;
+    padding: 15px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
 }
 </style>
 </head>
@@ -145,7 +151,7 @@ function dashboard(id, fData){
         			*/
         			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
         			d3.select("#mailEtu").text(etu["E-mail"]);
-        			var urlTof = tofEtu[etu["lien vers la photo"]] ? tofEtu[etu["lien vers la photo"]].large : "";
+        			var urlTof = 'http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+etu["lien vers la photo"];
         			d3.select("#photoEtu").attr('src', urlTof);        			
         			
         		}
@@ -298,7 +304,18 @@ function dashboard(id, fData){
         'SQL',
         'Python',
         'ASP',
-		'JS'].map(function(d){ 
+        'JS',
+        'TypeScript',
+        'Lisp',
+        'RUBY',
+        'CPP',
+        'CSHARP',
+        'ObjectiveC',
+        'PERL',
+        'COBOL',
+        'SCALA',
+        'Prolog',
+		'JSP'].map(function(d){ 
               return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
           });    
 
@@ -335,6 +352,19 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
                 Python:comp[d["Vos compétences : langage informatique [Phyton]"]],
                 ASP:comp[d["Vos compétences : langage informatique [ASP]"]],
                 JS:comp[d["Vos compétences : langage informatique [JS]"]],
+                TypeScript:comp[d["Vos compétences : langage informatique [TypeScript]"]],
+                Lisp:comp[d["Vos compétences : langage informatique [Lisp]"]],
+                RUBY:comp[d["Vos compétences : langage informatique [RUBY]"]],
+                CPP:comp[d["Vos compétences : langage informatique [C++]"]],
+                CSHARP:comp[d["Vos compétences : langage informatique [C SHARP]"]],
+                ObjectiveC:comp[d["Vos compétences : langage informatique [Objective C]"]],
+                PERL:comp[d["Vos compétences : langage informatique [PERL]"]],
+                COBOL:comp[d["Vos compétences : langage informatique [COBOL]"]],
+                SCALA:comp[d["Vos compétences : langage informatique [SCALA]"]],
+                Prolog:comp[d["Vos compétences : langage informatique [Prolog]"]],
+                JSP:comp[d["Vos compétences : langage informatique [JSP]"]],
+
+
             }
 		};
 		d.state = getKeyLine(d);	
@@ -360,7 +390,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
     	dashboard('#dashboard',freqData);
        	
 	});
-         */
+	*/
 	dashboard('#dashboard',freqData);
 	
 });
