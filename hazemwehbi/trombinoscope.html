@@ -5,30 +5,12 @@
 	<meta charset="utf-8">    
     <script type="text/javascript" src="js/d3.v3.js"></script>
  	<script type="text/javascript" src="js/jquery.min.js" ></script>
- 
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
  </head>
  <body>
  	<div id="etuTrombi"/>
  	<div id="etuData"/>
- 	
-	<script>
-	//merci beaucoup à https://etienner.fr/flickr-json
-	$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686924962130&extras=original_format&format=json&jsoncallback=?",
-	function(data){
-	    // Debut de la boucle
-	    $.each(data.photoset.photo, function(i,item){
-	        // Sockage de l'image dans une variable
-	        var photo = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_s.jpg';
-	        // Sockage de l'url dans une variable
-	        var url= 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_c.jpg';
-	        // Affichage des images dans la balise ul#images avec le l'url dans la balise li
-	        $("<img/>").attr({src: photo, alt: item.title}).appendTo("#etuTrombi").wrap("<li><a href=' "+ url +"' title=' "+ item.title +" ' ></a></li>");
-	    }); //Fin de la boucle
-	});
-	// Fin appel JSON 	
- 	
- 	/*
     <script type="text/javascript">
 	    var urlPhoto = "php/lecteurFlux.php?url=THYP1617photo";
    		d3.json(urlPhoto, function(data)
@@ -37,6 +19,9 @@
    	        //console.log("data:", data);
 			data.feed.entry.map(function(e, i){									
 				var tof = e['media$group']['media$thumbnail'][2];
+				
+				document.write(tof.url);
+				
 	        	var h = i+' = <img src="'+tof.url+'" />';
    	            $('<div class="data" id="etu_' + i + '"></div>').html(h).appendTo('#etuTrombi');
 			});																
@@ -54,7 +39,6 @@
 	   	    })
 			
    	    })
-   	  */
    	    
 </script>
 

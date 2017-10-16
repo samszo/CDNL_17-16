@@ -147,7 +147,7 @@ function dashboard(id, fData){
         			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
         			d3.select("#mailEtu").text(etu["E-mail"]);
         			var urlTof = tofEtu[etu["lien vers la photo"]] ? tofEtu[etu["lien vers la photo"]].large : "";
-        			d3.select("#photoEtu").attr('src', urlTof);        			
+        			d3.select("#photoEtu").attr('src', 'http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+ urlTof);        			
         			
         		}
 	
@@ -356,7 +356,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
 		return d["Nom"].substring(0,1).toUpperCase()+""+d["Nom"].substring(2,1)+" "+d["Prénom"].substring(0,1).toUpperCase();
 	}
 
-	/*récupère les photos
+	//récupère les photos
 	d3.xml("php/lecteurFlux.php?url=THYP1617photo", "application/xml", function(xml) {
 		var tofs = xml.documentElement.getElementsByTagName("group"); 
        	for (i = 0; i < tofs.length; i++) { 
@@ -366,7 +366,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
     	dashboard('#dashboard',freqData);
        	
 	});
-	*/
+	
 	dashboard('#dashboard',freqData);
 	
 });

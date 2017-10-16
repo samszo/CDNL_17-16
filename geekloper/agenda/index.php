@@ -51,14 +51,19 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $r = "rien";
 	           break;
 	    }
-	    	echo json_encode($r);    
-	} catch (Exception $e) {
+
+        echo "<a href='http://" . $_SERVER['HTTP_HOST'] . "/THYP_17-18/geekloper/agenda/index.php?out=1'><img src='img/sign_out.png'></a>";
+        echo "<br><br>";
+        echo json_encode($r);
+
+    } catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/samszo/agenda/callback.php';
-	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/geekloper/agenda/callback.php';
+	//header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+    echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in'></a>";
 }
 
 

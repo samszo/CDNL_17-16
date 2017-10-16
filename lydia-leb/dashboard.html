@@ -47,13 +47,18 @@ rect:hover {  fill:blue; }
 #photoEtu{
 	float:right;
 	height:200px;
+	width:200px;
+	-o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
 }
 </style>
 </head>
 <body>
 <h1>Les compétences des étudiants</h1>
 <div id="etu" >
-	<img id="photoEtu" />
+	<img id="photoEtu" src="http://www.samszo.univ-paris8.fr/THYP/17-18/photo/" />
 	<h2 id="sltEtu"></h2>
 	<p id="mailEtu"></p>
 </div>
@@ -137,16 +142,18 @@ function dashboard(id, fData){
 	    		var etu = dataEtu.filter(function(e){
 	    			return e.state == d[0];
 	    			});
-        		if(etu[0]){
-        			etu = etu[0];
-        			/*
-        			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
-        			d3.select("#mailEtu").text(etu["E-mail"]);        			
-        			*/
-        			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
-        			d3.select("#mailEtu").text(etu["E-mail"]);
-        			var urlTof = tofEtu[etu["lien vers la photo"]] ? tofEtu[etu["lien vers la photo"]].large : "";
-        			d3.select("#photoEtu").attr('src', urlTof);        			
+        		            if(etu[0]){
+              etu = etu[0];
+              /*
+              d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
+              d3.select("#mailEtu").text(etu["E-mail"]);              
+              */
+              d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
+              d3.select("#mailEtu").text(etu["E-mail"]);
+              
+              
+              var urlTof = 'http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+etu["lien vers la photo"];
+             d3.select("#photoEtu").attr('src', urlTof);       			
         			
         		}
 	
@@ -164,7 +171,7 @@ function dashboard(id, fData){
         	//met à jour le titre de la légende
 			d3.select("#sltEtu").text("---");
 			d3.select("#mailEtu").text("---");
-			d3.select("#photoEtu").attr('src', "");        			
+			d3.select("#photoEtu").attr('http://www.samszo.univ-paris8.fr/THYP/17-18/photo/', "");        			
 
         		// reset the pie-chart and legend.    
             pC.update(tF);
@@ -306,7 +313,8 @@ function dashboard(id, fData){
     // calculate total frequency by state for all segment.
     var sF = fData.map(function(d){return [d.State,d.total];});
 
-    var hG = histoGram(sF), // create the histogram.
+    var
+	hG = histoGram(sF), // create the histogram.
         pC = pieChart(tF), // create the pie-chart.
         leg= legend(tF);  // create the legend.
 }
