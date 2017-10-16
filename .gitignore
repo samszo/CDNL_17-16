@@ -28,3 +28,7 @@ samszo/agenda/client_secret.json
 samszo/.DS_Store
 samszo/data/EtudiantsTHYP17-18.csv
 .DS_Store
+
+# Geekloper ignore
+geekloper/agenda/client_secret.json
+geekloper/agenda/google-api-php-client-2.2.0/*
