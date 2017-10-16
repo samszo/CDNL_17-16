@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <title>Simple Template Example</title>
+	<meta charset="utf-8">    
+    <script type="text/javascript" src="js/d3.v3.js"></script>
+ 	<script type="text/javascript" src="js/jquery.min.js" ></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+ </head>
+ <body>
+ 	<div id="etuTrombi"/>
+ 	<div id="etuData"/>
+    <script type="text/javascript">
+	    var urlPhoto = "php/lecteurFlux.php?url=THYP1617photo";
+   		d3.json(urlPhoto, function(data)
+   	    {
+   	        //prices is an array of json objects containing the data in from the csv
+   	        //console.log("data:", data);
+			data.feed.entry.map(function(e, i){									
+				var tof = e['media$group']['media$thumbnail'][2];
+				
+				document.write(tof.url);
+				
+	        	var h = i+' = <img src="'+tof.url+'" />';
+   	            $('<div class="data" id="etu_' + i + '"></div>').html(h).appendTo('#etuTrombi');
+			});																
+
+		    var urlData = "php/lecteurFlux.php?url=CDNL1617data";
+	   		d3.csv(urlData, function(data)
+	   	    {
+	   	        //prices is an array of json objects containing the data in from the csv
+	   	        //console.log("data:", data);
+	   	        data.forEach(function(d,i){
+	    	        	var h = i+' - '+d.numPhoto+' = '+d['Votre prénom']+" "+d['Votre nom']+" "+d['numEtudiant'];
+	   	            $('<div class="data" id="data_' + i + '"></div>').html(h).appendTo('#etu_'+d['numTof']);
+	   	        		
+	   	        });
+	   	    })
+			
+   	    })
+   	    
+</script>
+
+
+ </body>
+</html>
