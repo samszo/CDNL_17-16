@@ -6,7 +6,8 @@ session_start();
 $client = new Google_Client();
 $client->setAuthConfigFile('client_secret.json');
 $client->setRedirectUri('http://localhost/THYP_17-18/samszo/googleAuth/callback.php');
-$client->addScope(array("https://www.googleapis.com/auth/calendar"));
+//$client->addScope(array("https://www.googleapis.com/auth/calendar"));
+$client->setScopes ( array ('https://www.googleapis.com/auth/drive' ) );
 
 if (! isset($_GET['code'])) {
 	$auth_url = $client->createAuthUrl();
