@@ -1,9 +1,6 @@
 <?php
-require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
-
+require_once '././google-api-php-client-2.2.0/vendor/autoload.php';
 session_start();
-
-
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
@@ -14,11 +11,6 @@ if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
 }
-
-//vérifie que le token n'ets pas expéré
-//if ($client->isAccessTokenExpired()) {
-//    unset($_SESSION['access_token']);
-//}
 
 
 //pour supprimer les droits https://myaccount.google.com/permissions?pli=1
@@ -51,19 +43,14 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $r = "rien";
 	           break;
 	    }
-
-        echo "<a href='http://" . $_SERVER['HTTP_HOST'] . "/THYP_17-18/geekloper/agenda/index.php?out=1'><img src='img/sign_out.png'></a>";
-        echo "<br><br>";
-        echo json_encode($r);
-
-    } catch (Exception $e) {
+	    	echo json_encode($r);    
+	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/geekloper/agenda/callback.php';
-	//header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-    echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in.png'></a>";
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/salmisim/agenda/callback.php';
+	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
 

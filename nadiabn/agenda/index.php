@@ -57,7 +57,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/CDNL_nbouna/CDNL_17-18/nadiabn/agenda/callback.php;
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/CDNL_nbouna/CDNL_17-18/nadiabn/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
