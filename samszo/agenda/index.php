@@ -24,13 +24,15 @@ if(isset($_GET['out'])){
 //pour supprimer les droits https://myaccount.google.com/permissions?pli=1
 
 //print_r($_SESSION['access_token']);
-//$_SESSION['access_token'] = array("access_token"=>"ya29.GlvYBAAizcoG4SH14m1nTmBnZXqgabVmkNJyd0d1wFBMfDOTDmJvHWaD86CRJjFXRSY0SEiTfZjpvpWGzFAAkTfuhCICZ_hznkuCkDtSI5OIlCAz2M4aPOwZp3jS","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1506954203);
+//$_SESSION['access_token'] = array("access_token"=>"ya29.GlznBOwSIyspxzMQnUG7IVmqqUUnQ5c7GXY16rPPqPo6nrJ80rUK0WUQwootMzwuNPQLrTKUfITfN71XM-g0zii6yu_V6ugGE4Jsp56mV2bWH0UbsmUdV6-kyTnNMw","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1508238940);
 
 
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
 	//
+	$_GET['q'] = 'present';
+	$_GET['id'] = 'thyp1213@gmail.com';
 	try {
 	    
 	    switch ($_GET['q']) {
@@ -45,7 +47,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            break;
 	        case 'present':
 	            //Pour ajouter un présent
-	            $r = insertPresent($cal_service, $_GET['id']);
+	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
 	        default:
 	            $r = "rien";
@@ -120,29 +122,43 @@ function getAclInfo($acl)
     return $r;
 }
 
-function insertPresent($service, $calendarId){
+function insertPresent($service, $calendarId, $desc, $mails){
+    //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+    $date = new DateTime();
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $date->add(new DateInterval('PT60S'));
+    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+    echo $dateDeb." - ".$dateFin;
+    $attendees = array();
+    foreach ($mails as $m) {
+        $attendees[]=array('email'=>$m);
+    }
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
+    //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
     
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
         'location' => 'Paris 8',
-        'description' => 'Cours E-service',
+        'description' => $desc,
         'start' => array(
-            'dateTime' => '2017-10-02T09:00:00',
+            'dateTime' => $dateDeb,
             'timeZone' => 'Europe/Paris',
         ),
         'end' => array(
-            'dateTime' => '2017-10-02T10:00:00',
+            'dateTime' => $dateFin,
             'timeZone' => 'Europe/Paris',
         ),
-        'attendees' => array(
-            array('email' => 'lpage@example.com'),
-            array('email' => 'sbrin@example.com'),
-        ),
+        'attendees' => $attendees,
     ));
-    
+    //print_r($event);
     $event = $service->events->insert($calendarId, $event);
     return array('message'=>'Event created', 'event'=>$event);
     
 }
-
+?>
 
