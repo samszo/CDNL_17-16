@@ -1,11 +1,12 @@
 <?php
-require_once '../../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 session_start();
 
 
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
+//$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
 
@@ -56,14 +57,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-<<<<<<< HEAD:morynho/agenda/index.php
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/Master_thyp/CDNL_17-18/morynho/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/samszo/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-=======
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/geekloper/agenda/callback.php';
-	//header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-    echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in.png'></a>";
->>>>>>> 05bae0c10e2a8ed034b373d8e5ea16dbe9f550da:geekloper/agenda/index.php
 }
 
 
@@ -149,5 +144,3 @@ function insertPresent($service, $calendarId){
     return array('message'=>'Event created', 'event'=>$event);
 
 }
-
-

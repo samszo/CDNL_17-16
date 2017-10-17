@@ -1,12 +1,16 @@
 <?php
-require_once '../../vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
 
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
-$client->addScope(array("https://www.googleapis.com/auth/calendar"));
+//$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
+//$client->addScope(array("https://www.googleapis.com/auth/drive"));
+$client->addScope(Google_Service_Drive::DRIVE);
+
+//$client->setScopes ( array ('https://www.googleapis.com/auth/drive' ) );
 
 
 if(isset($_GET['out'])){
@@ -28,49 +32,68 @@ if(isset($_GET['out'])){
 
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
-	$cal_service = new Google_Service_Calendar($client);
-	//
-	try {
+//	$cal_service = new Google_Service_Calendar($client);
+	
+$service = new Google_Service_Drive( $client );
 
+	try {
+	    
 	    switch ($_GET['q']) {
 	        case 'all':
-	            //Pour la liste complète des calendrier de la personne
-	            $r = getAllCalendar($cal_service);
-        	        break;
-	        case 'info':
-	            //Pour les infos d'un calendrier
-	            $calendar = $cal_service->calendarList->get($_GET['id']);
-	            $r = getCalendarInfo($calendar, $cal_service);
-	            break;
-	        case 'present':
-	            //Pour ajouter un présent
-	            $r = insertPresent($cal_service, $_GET['id']);
-	            break;
+	            // Lists the user's files.
+	            {	getallfiles($service);	break;}
+	        case 'app':
+	            // Lists a user's installed apps.
+	            {retrieveAllApps($service);break; }
+				
 	        default:
 	            $r = "rien";
 	           break;
 	    }
-	    	echo json_encode($r);
+	    	echo json_encode($r);    
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
 	//
 } else {
-<<<<<<< HEAD:morynho/agenda/index.php
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/Master_thyp/CDNL_17-18/morynho/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/samszo/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-=======
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/geekloper/agenda/callback.php';
-	//header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-    echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in.png'></a>";
->>>>>>> 05bae0c10e2a8ed034b373d8e5ea16dbe9f550da:geekloper/agenda/index.php
 }
 
+// Lists the user's files.
+		function getallfiles($service)
+		{
+		$files_list = $service->files->listFiles(array());
+		if (count($files_list->getFiles()) == 0) {
+			print "No files found.\n";
+		} else {
+			foreach ($files_list->getFiles() as $file) {
+				$res['name'] = $file->getName();
+				$res['id'] = $file->getId();
+				$files[] = $res;
+			}
+			print_r($files);
+		}
 
+		}
+// Lists a user's installed apps.
+		function retrieveAllApps($service) {
+		  try {
+			$apps = $service->apps->listApps();
+			return $apps->getFiles();
+		  } catch (Exception $e) {
+			print "An error occurred: " . $e->getMessage();
+		  }
+		  return NULL;
+		}
+
+
+
+/*
 function getAllCalendar($service)
 {
     //Pour la liste complète des calendrier de la personne
-    $calendarList = 	$service->calendarList->listCalendarList();
+    $calendarList = 	$service->calendarList->listCalendarList();    
     while(true) {
         foreach ($calendarList->getItems() as $calendarListEntry) {
             $calendars[] = getCalendarInfo($calendarListEntry, $service);
@@ -84,25 +107,25 @@ function getAllCalendar($service)
         }
     }
     return $calendars;
-
+    
 }
-
+    
 function getCalendarInfo($cal, $service)
 {
-
+    
     $r = array("summary"=>$cal->getSummary()
         ,"id"=>$cal->getId()
         ,"access"=>$cal->getAccessRole()
         ,"description"=>$cal->getDescription()
         ,"location"=>$cal->getLocation()
     );
-
+        
     //récupère les roles
     if($r["access"]!="writer" && $r["access"]!="reader"){
         $roles = getListeAcl($r["id"], $service);
         $r["roles"]=$roles;
     }
-
+    
     return $r;
 }
 
@@ -126,7 +149,7 @@ function getAclInfo($acl)
 }
 
 function insertPresent($service, $calendarId){
-
+    
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
         'location' => 'Paris 8',
@@ -144,10 +167,9 @@ function insertPresent($service, $calendarId){
             array('email' => 'sbrin@example.com'),
         ),
     ));
-
+    
     $event = $service->events->insert($calendarId, $event);
     return array('message'=>'Event created', 'event'=>$event);
-
+    
 }
-
-
+*/

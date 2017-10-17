@@ -1,11 +1,13 @@
+
 <?php
-require_once '../../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 session_start();
 
 
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
+//$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
 
@@ -14,7 +16,7 @@ if(isset($_GET['out'])){
     $client->revokeToken();
 }
 
-//vÃ©rifie que le token n'ets pas expÃ©rÃ©
+//vérifie que le token n'ets pas expéré
 //if ($client->isAccessTokenExpired()) {
 //    unset($_SESSION['access_token']);
 //}
@@ -34,7 +36,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 
 	    switch ($_GET['q']) {
 	        case 'all':
-	            //Pour la liste complÃ¨te des calendrier de la personne
+	            //Pour la liste complète des calendrier de la personne
 	            $r = getAllCalendar($cal_service);
         	        break;
 	        case 'info':
@@ -43,7 +45,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $r = getCalendarInfo($calendar, $cal_service);
 	            break;
 	        case 'present':
-	            //Pour ajouter un prÃ©sent
+	            //Pour ajouter un présent
 	            $r = insertPresent($cal_service, $_GET['id']);
 	            break;
 	        default:
@@ -56,20 +58,14 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-<<<<<<< HEAD:morynho/agenda/index.php
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/Master_thyp/CDNL_17-18/morynho/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/samszo/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-=======
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/geekloper/agenda/callback.php';
-	//header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-    echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in.png'></a>";
->>>>>>> 05bae0c10e2a8ed034b373d8e5ea16dbe9f550da:geekloper/agenda/index.php
 }
 
 
 function getAllCalendar($service)
 {
-    //Pour la liste complÃ¨te des calendrier de la personne
+    //Pour la liste complète des calendrier de la personne
     $calendarList = 	$service->calendarList->listCalendarList();
     while(true) {
         foreach ($calendarList->getItems() as $calendarListEntry) {
@@ -97,7 +93,7 @@ function getCalendarInfo($cal, $service)
         ,"location"=>$cal->getLocation()
     );
 
-    //rÃ©cupÃ¨re les roles
+    //récupère les roles
     if($r["access"]!="writer" && $r["access"]!="reader"){
         $roles = getListeAcl($r["id"], $service);
         $r["roles"]=$roles;
@@ -128,7 +124,7 @@ function getAclInfo($acl)
 function insertPresent($service, $calendarId){
 
     $event = new Google_Service_Calendar_Event(array(
-        'summary' => 'PrÃ©sent',
+        'summary' => 'Présent',
         'location' => 'Paris 8',
         'description' => 'Cours E-service',
         'start' => array(
@@ -149,5 +145,4 @@ function insertPresent($service, $calendarId){
     return array('message'=>'Event created', 'event'=>$event);
 
 }
-
-
+<?
