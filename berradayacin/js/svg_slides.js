@@ -30,6 +30,7 @@ var slides={},
 
 function svg_slides(svg,delay) {
 	
+	
 	//style du body
 	d3.select("body")
 		.style("margin",0);
