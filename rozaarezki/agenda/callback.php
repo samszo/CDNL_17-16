@@ -1,11 +1,11 @@
 <?php
-require_once 'google-api-php-client-2.2.0/vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
 $client = new Google_Client();
 $client->setAuthConfigFile('client_secret.json');
-$client->setRedirectUri('http://localhost/THYP_17-18/rozaraezki/agenda/callback.php');
+//$client->setRedirectUri('http://localhost/THYP_17-18/rozaraezki/agenda/callback.php');
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
 //print_r($_GET);
