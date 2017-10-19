@@ -63,7 +63,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 } else {
 	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/geekloper/agenda/callback.php';
 	//header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-    echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in'></a>";
+    echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in.png'></a>";
 }
 
 
@@ -108,7 +108,7 @@ function getCalendarInfo($cal, $service)
 
 function getListeAcl($idCal, $service)
 {
-    $acls ="";
+    $acls =array();
     $acl = $service->acl->listAcl($idCal);
     foreach ($acl->getItems() as $rule) {
         $acls[]=getAclInfo($rule);
