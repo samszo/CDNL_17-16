@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
@@ -32,12 +32,12 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$cal_service = new Google_Service_Calendar($client);
 	//
 	try {
-
+	    
 	    switch ($_GET['q']) {
 	        case 'all':
 	            //Pour la liste complète des calendrier de la personne
 	            $r = getAllCalendar($cal_service);
-        	        break;
+        	        break;	        
 	        case 'info':
 	            //Pour les infos d'un calendrier
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
@@ -51,7 +51,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $r = "rien";
 	           break;
 	    }
-	    	echo json_encode($r);
+	    	echo json_encode($r);    
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
@@ -65,7 +65,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 function getAllCalendar($service)
 {
     //Pour la liste complète des calendrier de la personne
-    $calendarList = 	$service->calendarList->listCalendarList();
+    $calendarList = 	$service->calendarList->listCalendarList();    
     while(true) {
         foreach ($calendarList->getItems() as $calendarListEntry) {
             $calendars[] = getCalendarInfo($calendarListEntry, $service);
@@ -79,25 +79,25 @@ function getAllCalendar($service)
         }
     }
     return $calendars;
-
+    
 }
-
+    
 function getCalendarInfo($cal, $service)
 {
-
+    
     $r = array("summary"=>$cal->getSummary()
         ,"id"=>$cal->getId()
         ,"access"=>$cal->getAccessRole()
         ,"description"=>$cal->getDescription()
         ,"location"=>$cal->getLocation()
     );
-
+        
     //récupère les roles
     if($r["access"]!="writer" && $r["access"]!="reader"){
         $roles = getListeAcl($r["id"], $service);
         $r["roles"]=$roles;
     }
-
+    
     return $r;
 }
 
@@ -121,7 +121,7 @@ function getAclInfo($acl)
 }
 
 function insertPresent($service, $calendarId){
-
+    
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
         'location' => 'Paris 8',
@@ -139,8 +139,10 @@ function insertPresent($service, $calendarId){
             array('email' => 'sbrin@example.com'),
         ),
     ));
-
+    
     $event = $service->events->insert($calendarId, $event);
     return array('message'=>'Event created', 'event'=>$event);
-
+    
 }
+
+

@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
@@ -16,6 +16,6 @@ if (! isset($_GET['code'])) {
 } else {
 	$client->authenticate($_GET['code']);
 	$_SESSION['access_token'] = $client->getAccessToken();
-	$redirect_uri = 'http://localhost/THYP_17-18/samszo/agenda/index.php?q=';
+	$redirect_uri = 'http://localhost/THYP_17-18/samszo/agenda/index.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
