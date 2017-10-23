@@ -1,5 +1,5 @@
 <?php
-require_once '././google-api-php-client-2.2.0/vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 session_start();
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
