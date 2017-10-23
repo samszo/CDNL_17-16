@@ -10,7 +10,6 @@ $client->setAuthConfig('client_secret.json');
 //$client->addScope(array("https://www.googleapis.com/auth/drive"));
 $client->addScope(Google_Service_Drive::DRIVE);
 
-//$client->setScopes ( array ('https://www.googleapis.com/auth/drive' ) );
 
 
 if(isset($_GET['out'])){
@@ -18,10 +17,7 @@ if(isset($_GET['out'])){
     $client->revokeToken();
 }
 
-//vérifie que le token n'ets pas expéré
-//if ($client->isAccessTokenExpired()) {
-//    unset($_SESSION['access_token']);
-//}
+
 
 
 //pour supprimer les droits https://myaccount.google.com/permissions?pli=1
@@ -56,7 +52,7 @@ $service = new Google_Service_Drive( $client );
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/samszo/agenda/callback.php';
+$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/hazemwehbi/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
