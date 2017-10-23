@@ -31,6 +31,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
 	//
+    $_GET['q'] = 'present';
+    $_GET['id'] = 'thyp1213@gmail.com';
 	try {
 	    
 	    switch ($_GET['q']) {
@@ -119,7 +121,17 @@ function getAclInfo($acl)
     );
     return $r;
 }
-
+function insertPresent($service, $calendarId, $desc, $mails){
+    
+    $date = new DateTime();
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $date->add(new DateInterval('PT60S'));
+    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+    echo $dateDeb." - ".$dateFin;
+    $attendees = array();
+    foreach ($mails as $m) {
+        $attendees[]=array('email'=>$m);
+    }
 function insertPresent($service, $calendarId){
     
     $event = new Google_Service_Calendar_Event(array(
