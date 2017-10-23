@@ -59,7 +59,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/samszo/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/hazemwehbi/agenda/callbackCalender.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
