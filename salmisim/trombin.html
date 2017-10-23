@@ -12,7 +12,7 @@
  	<div id="etuTrombi"/>
  	<div id="etuData"/>
     <script type="text/javascript">
-	    var urlPhoto = "php/lecteurFlux.php?url=THYP1617photo";
+	    var urlPhoto = "php/trombin.php?url=THYP1617photo";
    		d3.json(urlPhoto, function(data)
    	    {
    	        
@@ -25,7 +25,7 @@
 	        	var h = i+' = <img src="'+tof.url+'" />';
    	            $('<div class="data" id="etu_' + i + '"></div>').html(h).appendTo('#etuTrombi');
 			});																
-		    var urlData = "php/lecteurFlux.php?url=CDNL1617data";
+		    var urlData = "php/trombin.php?url=CDNL1617data";
 	   		d3.csv(urlData, function(data)
 	   	    {
 	   	      
