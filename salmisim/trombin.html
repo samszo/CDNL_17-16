@@ -9,38 +9,46 @@
 
  </head>
  <body>
+	 <body>
  	<div id="etuTrombi"/>
  	<div id="etuData"/>
-    <script type="text/javascript">
-	    var urlPhoto = "php/trombin.php?url=THYP1617photo";
-   		d3.json(urlPhoto, function(data)
-   	    {
-   	        
-   	        //console.log("data:", data);
-			data.feed.entry.map(function(e, i){									
-				var tof = e['media$group']['media$thumbnail'][2];
-				
-				document.write(tof.url);
-				
-	        	var h = i+' = <img src="'+tof.url+'" />';
-   	            $('<div class="data" id="etu_' + i + '"></div>').html(h).appendTo('#etuTrombi');
-			});																
-		    var urlData = "php/trombin.php?url=CDNL1617data";
-	   		d3.csv(urlData, function(data)
-	   	    {
-	   	      
-	   	        //console.log("data:", data);
-	   	        data.forEach(function(d,i){
-	    	        	var h = i+' - '+d.numPhoto+' = '+d['Votre prénom']+" "+d['Votre nom']+" "+d['numEtudiant'];
-	   	            $('<div class="data" id="data_' + i + '"></div>').html(h).appendTo('#etu_'+d['numTof']);
-	   	        		
-	   	        });
-	   	    })
-			
-   	    })
-   	    
-</script>
+ 	<form id="myField"  method="post" action="'agenda/index.php';" >
 
-
+	<script>
+	var personne = [];
+	personne["36831301933"] = "mans@gmail.com";personne["36831301813"] = "mansour.ismail.pro@gmail.com";
+	personne["37469324182"] = "wehbihazem@gmail.com";personne["37500371201"] = "fb.mory@gmail.com"; 
+        personne["37469326552"] = "elmounjide.hamza@gmail.com";personne["37469306082"] = "saadhamdani1995@gmail.com"; 
+        personne["36790405664"] = "derfoufiabdel@gmail.com";personne["36790405044"] = "berradayacin@gmail.com"; personne["37583374782"] = "nouryadef@gmail.com"; 
+        personne["37617449841"] = "cylia.oulebsir@yahoo.fr"; personne["37242244670"] = "nourhenyahyaoui@gmail.com";
+        personne["36790360594"] = "bouna.nadia.isamm@gmail.com"; personne["37469269022"] = "rabia.taleb@yhoo.fr";  
+	personne["37452460846"] = "lydia.lebaz@gmail.com";  personne["37469229002"] = "hassina.salmi90@gmail.com"; personne["23647903238"] = "aoua.kahina@gmail.com"; 
+        personne["37500282781"] = "roza.arezki@outlook.fr"; personne["36790307514"] = "rabahmaakni@gmail.com"; personne["23647865848"] = "soukaynamanessoub@gmail.com"; 
+	personne["23647866988"] = "hatim.elmabrouk@gmail.com"; personne["37469188442"] = "frdfhdewl@gmail.com";personne["37583377632"] = "nourhenyahyaoui@gmail.com"; 
+        	
+	var fruits = [];
+	
+	function save(){
+	var str=[];
+		for (i = 0; i < fruits.length; i++) {
+			if(document.getElementById(fruits[i]).checked)  { str.push(personne[fruits[i]]);}
+}
+document.getElementById('myField').action ="../../samszo/agenda/index.php?q=present&id="+document.getElementById('id').value+"&desc="+document.getElementById('desc').value+"&email="+str.toString();
+	}
+		$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686924962130&extras=original_format&format=json&jsoncallback=?",
+	function(data){
+	    // Debut de la boucle
+	    $.each(data.photoset.photo, function(i,item){
+		 fruits.push(item.id); 
+	        // Sockage de l'image dans une variable
+	        var photo = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_s.jpg';
+	        // Sockage de l'url dans une variable
+	        var url= 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_c.jpg';
+	        // Affichage des images dans la balise ul#images avec le l'url dans la balise li
+	        $("<img/>").attr({src: photo, alt: item.title}).appendTo("#etuTrombi").wrap("<li> <input type='checkbox'  name='"+item.id+"' id='"+item.id +"' /><a href=' "+ url +"' title=' "+ item.title +" ' ></a></li>");
+	  }); //Fin de la boucle
+	});
+		</script>
+		 </form>
  </body>
 </html>
