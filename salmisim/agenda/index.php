@@ -34,7 +34,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            //Pour les infos d'un calendrier
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
 	            $r = getCalendarInfo($calendar, $cal_service);
-	            break;
+	            break; 
 	        case 'present':
 	            //Pour ajouter un présent
 	            $r = insertPresent($cal_service, $_GET['id']);
