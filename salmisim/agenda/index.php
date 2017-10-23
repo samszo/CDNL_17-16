@@ -5,7 +5,7 @@ $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 //$client->addScope(array("https://www.googleapis.com/auth/calendar"));
-$client->addScope(Google_Service_Drive::DRIVE)
+$client->addScope(Google_Service_Drive::DRIVE);
 if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
