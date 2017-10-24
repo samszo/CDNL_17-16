@@ -10,52 +10,85 @@
 <div id="etuTrombi"/>
 <div id="etuData"/>
 
-<script>
-    //merci beaucoup à https://etienner.fr/flickr-json
-    $.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686924962130&extras=original_format&format=json&jsoncallback=?",
-        function (data) {
-            // Debut de la boucle
-            $.each(data.photoset.photo, function (i, item) {
-                // Sockage de l'image dans une variable
-                var photo = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_s.jpg';
-                // Sockage de l'url dans une variable
-                var url = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_c.jpg';
-                // Affichage des images dans la balise ul#images avec le l'url dans la balise li
-                $("<img/>").attr({
-                    src: photo,
-                    alt: item.title
-                }).appendTo("#etuTrombi").wrap("<li><a href=' " + url + "' title=' " + item.title + " ' ></a></li>");
-            }); //Fin de la boucle
-        });
-    // Fin appel JSON
+<center>
+    <form method="post" action="agenda/callback.php">
 
 
-    var urlPhoto = "php/lecteurFlux.php?url=THYP1617photo";
-    d3.json(urlPhoto, function (data) {
-        //prices is an array of json objects containing the data in from the csv
-        //console.log("data:", data);
-        data.feed.entry.map(function (e, i) {
-            var tof = e['media$group']['media$thumbnail'][2];
-            var h = i + ' = <img src="' + tof.url + '" />';
-            $('<div class="data" id="etu_' + i + '"></div>').html(h).appendTo('#etuTrombi');
-        });
+        <input type="hidden" id="q" value=""><br>
+        <label/>Mail de l'etudiant
+        <input type="text" id="id" value=""><br><br>
+        <label/>Date
+        <input type="date" id="desc" value=""><br>
+        <input type="hidden" id="email" value=""><br>
 
-        var urlData = "php/lecteurFlux.php?url=CDNL1617data";
-        d3.csv(urlData, function (data) {
-            //prices is an array of json objects containing the data in from the csv
-            //console.log("data:", data);
-            data.forEach(function (d, i) {
-                var h = i + ' - ' + d.numPhoto + ' = ' + d['Votre prénom'] + " " + d['Votre nom'] + " " + d['numEtudiant'];
-                $('<div class="data" id="data_' + i + '"></div>').html(h).appendTo('#etu_' + d['numTof']);
+        <script>
 
-            });
-        });
+            var eleve = [
+                "mans@gmail.com",
+                "mansour.ismail.pro@gmail.com",
+                "wehbihazem@gmail.com",
+                "fb.mory@gmail.com",
+                "elmounjide.hamza@gmail.com",
+                "saadhamdani1995@gmail.com",
+                "derfoufiabdel@gmail.com",
+                "berradayacin@gmail.com",
+                "bouna.nadia.isamm@gmail.com",
+                "rabia.taleb@yhoo.fr",
+                "nourhenyahyaoui@gmail.com",
+                "lydia.lebaz@gmail.com",
+                "hassina.salmi90@gmail.com",
+                "aoua.kahina@gmail.com",
+                "roza.arezki@outlook.fr",
+                "rabahmaakni@gmail.com",
+                "soukaynamanessoub@gmail.com",
+                "hatim.elmabrouk@gmail.com",
+                "frdfhdewl@gmail.com",
+                "nourhenyahyaoui@gmail.com",
+                "nouryadef@gmail.com",
+                "cylia.oulebsir@yahoo.fr"
+            ]
+            var fruits = [];
 
-    });
+            function save() {
+                var str = [];
+                for (i = 0; i < fruits.length; i++) {
+                    if (document.getElementById(fruits[i]).checked) {
+                        str.push(eleve[fruits[i]]);
+                    }
+                }
+                document.getElementById('myField').action = "../../samszo/agenda/index.php?q=present&id=" + document.getElementById('id').value + "&desc=" + document.getElementById('desc').value + "&email=" + str.toString();
+
+            }
+
+            //merci beaucoup à https://etienner.fr/flickr-json
+            $.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686924962130&extras=original_format&format=json&jsoncallback=?",
+                function (data) {
+                    // Debut de la boucle
+                    $.each(data.photoset.photo, function (i, item) {
+
+                        // Sockage de l'image dans une variable
+                        var photo = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_s.jpg';
+                        // Sockage de l'url dans une variable
+                        var url = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_c.jpg';
+                        // Affichage des images dans la balise ul#images avec le l'url dans la balise li
+
+                        $("<img/>").attr({
+                            src: photo,
+                            alt: item.title
+                        }).appendTo("#etuTrombi").wrap("<td><a href=' " + url + "' title=' " + item.title + " ' ></a> <input type='checkbox' name='" + eleve[i] + "' ></td>");
+                    }); //Fin de la boucle
+                });
+            // Fin appel JSON
 
 
-</script>
+        </script>
 
+        <center>
+            <button onclick="save()">Présent</button>
+        </center>
+        <br>
+    </form>
 
+</center>
 </body>
 </html>
