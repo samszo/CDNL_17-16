@@ -8,6 +8,7 @@ $arrUrl = array(
 );
 //$_GET['url'] = 	"THYP1617photo";
 curl($arrUrl[$_GET['url']]);
+
 function curl($url){
 	$handle = curl_init();
 	curl_setopt($handle, CURLOPT_URL, $url);
@@ -15,6 +16,6 @@ function curl($url){
     curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
     $response = curl_exec($handle);
     curl_close($handle);
-    
+    var_dump($response);
     echo $response;
 }

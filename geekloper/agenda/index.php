@@ -1,7 +1,7 @@
 <?php 
 
 	include 'lib/class.inc.php';
-
+  include 'header.php';
 	session_start();
 
 // < [INITIALIZING] >
@@ -14,34 +14,38 @@ if(isset($_GET['out'])){
 	$client->revokeToken();
 }
 
-if (isset($_SESSION['access_token']) && $_SESSION['access_token']) 
-{
+if(isset($_POST['send'])){
+
+	$id='derfoufiabdel@gmail.com';
+	$desc ='Liste des étudiants présents';
+
 	$cal_service = $client->getService($_SESSION['access_token']);
-	try {
-    
-    switch ($_GET['q']) {
-        case 'all':
-            //Pour la liste complète des calendrier de la personne
-            $r = $client->getAllCalendar($cal_service);
-      	        break;	 
-      	default:
-            $r = $client->getAllCalendar($cal_service);
-        break;
 
-    }
+	$mails = json_decode(stripslashes($_POST['mails']));
 
-    echo "<a href='http://" . $_SERVER['HTTP_HOST'] . "/THYP_17-18/geekloper/agenda/index.php?out=1'><img src='img/sign_out.png'></a>";
-    echo "<br><br>";
-    echo json_encode($r);
+	$client->insertPresent($cal_service, $id, $desc, $mails);;
 
- 	}catch(Exception $e) {
-    echo 'ERREUR : ',  $e->getMessage(), "\n";
- 	}
-}
-else 
-{
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/geekloper/agenda/callback.php';
-  echo "<a href='".filter_var($redirect_uri, FILTER_SANITIZE_URL) ."'><img src='img/sign_in.png'></a>";
+} else{
+
+	if (isset($_SESSION['access_token']) && $_SESSION['access_token']) 
+	{
+		$cal_service = $client->getService($_SESSION['access_token']);
+		try {
+
+	      header('Location: ' . filter_var('setabsences.php', FILTER_SANITIZE_URL));
+
+	 	}catch(Exception $e) {
+	    echo 'ERREUR : ',  $e->getMessage(), "\n";
+	 	}
+	}
+	else 
+	{
+		
+	  include 'jumbotron.php';
+
+	}
+
+	include 'footer.php';
 }
 
 ?>
