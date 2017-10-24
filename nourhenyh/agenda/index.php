@@ -1,5 +1,5 @@
 <?php
-require_once 'google-api-php-client-2.2.0/vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 session_start();
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
@@ -123,11 +123,11 @@ function insertPresent($service, $calendarId){
         'location' => 'Paris 8',
         'description' => 'Cours E-service',
         'start' => array(
-            'dateTime' => '2017-10-02T09:00:00',
+            'dateTime' => '2017-10-17T14:00:00',
             'timeZone' => 'Europe/Paris',
         ),
         'end' => array(
-            'dateTime' => '2017-10-02T10:00:00',
+            'dateTime' => '2017-10-17T14:20:00',
             'timeZone' => 'Europe/Paris',
         ),
         'attendees' => array(

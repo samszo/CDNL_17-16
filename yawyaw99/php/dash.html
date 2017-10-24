@@ -7,20 +7,18 @@ body{
     width:1060px;
     margin:50px auto;
 }
-path { stroke: #fff; }
+path {  stroke: #fff; }
 path:hover {  opacity:0.9; }
 rect:hover {  fill:blue; }
 .axis {  font: 10px sans-serif; }
 .legend tr{    border-bottom:1px solid grey; }
 .legend tr:first-child{    border-top:1px solid grey; }
-
 .axis path,
 .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
-
 .x.axis path {  display: none; }
 .legend{
     margin-bottom:76px;
@@ -37,31 +35,42 @@ rect:hover {  fill:blue; }
     width:50px;
 }
 #etu{
-	width:500px;
+	width:80%;
 	height:200px;
 }
 #dashboard{
 	width:100%;
-	float:left;
+    float:left;
 }
 #photoEtu{
-	float:right;
-	height:200px;
+    display: block;
+	float:left;
+    height: 200px;
+    width: 356px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+}
+#infos{
+    float: right;
 }
 </style>
 </head>
 <body>
-<h1>Les compétences des étudiants</h1>
 <div id="etu" >
-	<img id="photoEtu" />
-	<h2 id="sltEtu"></h2>
-	<p id="mailEtu"></p>
+    <img id="photoEtu" src="https://dummyimage.com/356x200/000/000" />
+
+    <div id="infos">
+        <h2 id="sltEtu">---</h2>
+        <p id="mailEtu">---</p>
+    </div>
+
 </div>
 <div id='dashboard'>
 </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-	
 function dashboard(id, fData){
     var barColor = 'steelblue';
     /*
@@ -95,20 +104,16 @@ function dashboard(id, fData){
             .attr("width", hGDim.w + hGDim.l + hGDim.r)
             .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
             .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
-
         // create function for x-axis mapping.
         var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
                 .domain(fD.map(function(d) { return d[0]; }));
-
         // Add x-axis to the histogram svg.
         hGsvg.append("g").attr("class", "x axis")
             .attr("transform", "translate(0," + hGDim.h + ")")
             .call(d3.svg.axis().scale(x).orient("bottom"));
-
         // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
                 .domain([0, d3.max(fD, function(d) { return d[1]; })]);
-
         // Create bars for histogram to contain rectangles and freq labels.
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
                 .append("g").attr("class", "bar");
@@ -144,9 +149,10 @@ function dashboard(id, fData){
         			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
         			d3.select("#mailEtu").text(etu["E-mail"]);        			
         			*/
-        			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' : '+etu["N° étudiant"]);
+        			d3.select("#sltEtu").text(etu["Prénom"]+' '+etu["Nom"]+' '+etu["N° étudiant"]);
         			d3.select("#mailEtu").text(etu["E-mail"]);
-        			var urlTof = tofEtu[etu["lien vers la photo"]] ? tofEtu[etu["lien vers la photo"]].large : "";
+        			//var urlTof = tofEtu[etu["lien vers la photo"]] ? tofEtu[etu["lien vers la photo"]].large : "";
+					var urlTof = 'http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+etu["lien vers la photo"];
         			d3.select("#photoEtu").attr('src', urlTof);        			
         			
         		}
@@ -165,8 +171,7 @@ function dashboard(id, fData){
         	//met à jour le titre de la légende
 			d3.select("#sltEtu").text("---");
 			d3.select("#mailEtu").text("---");
-			d3.select("#photoEtu").attr('src', "");        			
-
+			d3.select("#photoEtu").attr('src', "https://dummyimage.com/356x200/000/000");        			
         		// reset the pie-chart and legend.    
             pC.update(tF);
             leg.update(tF);
@@ -185,7 +190,6 @@ function dashboard(id, fData){
                 .attr("y", function(d) {return y(d[1]); })
                 .attr("height", function(d) { return hGDim.h - y(d[1]); })
                 .attr("fill", color);
-
             // transition the frequency labels location and change value.
             bars.select("text").transition().duration(500)
                 .text(function(d){ return d3.format(",")(d[1])})
@@ -206,16 +210,13 @@ function dashboard(id, fData){
         
         // create function to draw the arcs of the pie slices.
         var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
-
         // create a function to compute the pie slice angles.
         var pie = d3.layout.pie().sort(null).value(function(d) { return d.freq; });
-
         // Draw the pie slices.
         piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
             .each(function(d) { this._current = d; })
             .style("fill", function(d) { return segColor(d.data.type); })
             .on("mouseover",mouseover).on("mouseout",mouseout);
-
         // create function to update pie-chart. This will be used by histogram.
         pC.update = function(nD){
             piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
@@ -260,23 +261,18 @@ function dashboard(id, fData){
             
         // create the second column for each segment.
         tr.append("td").text(function(d){ return d.type;});
-
         // create the third column for each segment.
         tr.append("td").attr("class",'legendFreq')
             .text(function(d){ return d3.format(",")(d.freq);});
-
         // create the fourth column for each segment.
         tr.append("td").attr("class",'legendPerc')
             .text(function(d){ return getLegend(d,lD);});
-
         // Utility function to be used to update the legend.
         leg.update = function(nD){
             // update the data attached to the row elements.
             var l = legend.select("tbody").selectAll("tr").data(nD);
-
             // update the frequencies.
             l.select(".legendFreq").text(function(d){ return d3.format(",")(d.freq);});
-
             // update the percentage column.
             l.select(".legendPerc").text(function(d){ return getLegend(d,nD);});        
         }
@@ -284,7 +280,6 @@ function dashboard(id, fData){
         function getLegend(d,aD){ // Utility function to compute percentage.
             return d3.format("%")(d.freq/d3.sum(aD.map(function(v){ return v.freq; })));
         }
-
         return leg;
     }
     
@@ -299,16 +294,23 @@ function dashboard(id, fData){
         'SQL',
         'Python',
         'ASP',
-		'TypeScript',
-		'Lisp',
-		'JS'].map(function(d){ 
+		'JS',
+		'RUBY',
+        'CPP',
+        'CSHARP',
+        'ObjectiveC',
+        'PERL',
+        'TypeScript',
+        'LISP',
+        'COBOL',
+        'SCALA',
+		'Prolog',
+		'JSP'].map(function(d){ 
               return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
           });    
-
     
     // calculate total frequency by state for all segment.
     var sF = fData.map(function(d){return [d.State,d.total];});
-
     var hG = histoGram(sF), // create the histogram.
         pC = pieChart(tF), // create the pie-chart.
         leg= legend(tF);  // create the legend.
@@ -338,9 +340,41 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
                 Python:comp[d["Vos compétences : langage informatique [Phyton]"]],
                 ASP:comp[d["Vos compétences : langage informatique [ASP]"]],
                 JS:comp[d["Vos compétences : langage informatique [JS]"]],
+				RUBY:comp[d["Vos compétences : langage informatique [RUBY]"]], 
+                CPP:comp[d["Vos compétences : langage informatique [C++]"]],
+                CSHARP:comp[d["Vos compétences : langage informatique [C SHARP]"]],
+                ObjectiveC:comp[d["Vos compétences : langage informatique [Objective C]"]],
+                PERL:comp[d["Vos compétences : langage informatique [PERL]"]],
                 TypeScript:comp[d["Vos compétences : langage informatique [TypeScript]"]],
-                Lisp:comp[d["Vos compétences : langage informatique [Lisp]"]],
-
+                LISP:comp[d["Vos compétences : langage informatique [LISP]"]], 
+                COBOL:comp[d["Vos compétences : langage informatique [COBOL]"]],
+                SCALA:comp[d["Vos compétences : langage informatique [SCALA]"]],
+                Prolog:comp[d["Vos compétences : langage informatique [Prolog]"]],
+				JSP:comp[d["Vos compétences : langage informatique [JSP]"]],
+				
+				/*
+				Joomla:comp[d["Vos compétences : langage informatique [Joomla]"]], 
+                WORPRESS:comp[d["Vos compétences : langage informatique [WORPRESS]"]],
+                SPIP:comp[d["Vos compétences : langage informatique [SPIP]"]],
+                Drupal:comp[d["Vos compétences : langage informatique [Drupal]"]],
+                Typo3:comp[d["Vos compétences : langage informatique [Typo 3]"]],
+                Prestashop:comp[d["Vos compétences : langage informatique [Prestashop]"]],
+                Omeka:comp[d["Vos compétences : langage informatique [Omeka]"]], 
+                Magento:comp[d["Vos compétences : langage informatique [Magento]"]],
+                Exoplateforme:comp[d["Vos compétences : langage informatique [Exo plateforme]"]],
+                OpenCart:comp[d["Vos compétences : langage informatique [Open Cart]"]],
+				
+				
+				GIMP:comp[d["Vos compétences : langage informatique [GIMP]"]], 
+                Photoshop:comp[d["Vos compétences : langage informatique [Photoshop]"]],
+                Illustrator:comp[d["Vos compétences : langage informatique [Illustrator]"]],
+                Inkscape:comp[d["Vos compétences : langage informatique [Inkscape]"]],
+                XML:comp[d["Vos compétences : langage informatique [XML]"]],
+                JAVA:comp[d["Vos compétences : langage informatique [JAVA]"]],
+                SQL:comp[d["Vos compétences : langage informatique [SQL]"]], 
+                Python:comp[d["Vos compétences : langage informatique [Phyton]"]],
+                ASP:comp[d["Vos compétences : langage informatique [ASP]"]],
+                JS:comp[d["Vos compétences : langage informatique [JS]"]],*/
             }
 		};
 		d.state = getKeyLine(d);	
@@ -355,7 +389,6 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
 	function getKeyLine(d){
 		return d["Nom"].substring(0,1).toUpperCase()+""+d["Nom"].substring(2,1)+" "+d["Prénom"].substring(0,1).toUpperCase();
 	}
-
 	/*récupère les photos
 	d3.xml("php/lecteurFlux.php?url=THYP1617photo", "application/xml", function(xml) {
 		var tofs = xml.documentElement.getElementsByTagName("group"); 
@@ -370,7 +403,6 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
 	dashboard('#dashboard',freqData);
 	
 });
-
 </script>
 </body>
 </html>
