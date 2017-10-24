@@ -1,21 +1,15 @@
 <?php
-require_once 'autoload.php';
-
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 session_start();
-
-
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
-
-
 if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
 }
 
-//vérifie que le token n'ets pas expéré
 //if ($client->isAccessTokenExpired()) {
 //    unset($_SESSION['access_token']);
 //}
@@ -51,13 +45,15 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $r = "rien";
 	           break;
 	    }
+
+
 	    	echo json_encode($r);    
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/CDNL_nbouna/CDNL_17-18/nadiabn/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/nadiabn/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
@@ -120,29 +116,43 @@ function getAclInfo($acl)
     return $r;
 }
 
-function insertPresent($service, $calendarId){
+function insertPresent($service, $calendarId, $desc, $mails){
+    //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+    $date = new DateTime();
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $date->add(new DateInterval('PT60S'));
+    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+    echo $dateDeb." - ".$dateFin;
+    $attendees = array();
+    foreach ($mails as $m) {
+        $attendees[]=array('email'=>$m);
+    }
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
+    //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
     
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
         'location' => 'Paris 8',
-        'description' => 'Cours E-service',
+        'description' => $desc,
         'start' => array(
-            'dateTime' => '2017-10-02T09:00:00',
+            'dateTime' => $dateDeb,
             'timeZone' => 'Europe/Paris',
         ),
         'end' => array(
-            'dateTime' => '2017-10-02T10:00:00',
+            'dateTime' => $dateFin,
             'timeZone' => 'Europe/Paris',
         ),
-        'attendees' => array(
-            array('email' => 'lpage@example.com'),
-            array('email' => 'sbrin@example.com'),
-        ),
+        'attendees' => $attendees,
     ));
-    
+    //print_r($event);
     $event = $service->events->insert($calendarId, $event);
     return array('message'=>'Event created', 'event'=>$event);
     
 }
-
+?>
 
