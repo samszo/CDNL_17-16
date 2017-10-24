@@ -45,7 +45,11 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
+<<<<<<< HEAD
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/saadhamdani/agenda/callback.php';
+=======
 	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/saadhamdani/agenda/callback.php';
+>>>>>>> 48b431f43256079424f35fd37ba5b9a8f2c25f4a
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 function getAllCalendar($service)
