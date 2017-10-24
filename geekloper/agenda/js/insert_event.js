@@ -36,28 +36,31 @@ $( document ).ready(function() {
 
     $("#confirm").click(function(){
 
-    	$('.modal-body').html('Emails of students : <br> ');
-    	
-    	for(var i in emails){
-  				$('.modal-body').append(" - " + emails[i] + "<br>" );
-  		}
+      $('.modal-body').html('Emails of students : <br> ');
+      
+      for(var i in emails){
+          $('.modal-body').append(" - " + emails[i] + "<br>" );
+      }
 
-  		// TO DO Send emails by AJAX
-  		/*
-    	var jqxhr = $.post( "example.php", function() {
-			  alert( "success" );
-			})
-			  .done(function() {
-			    alert( "second success" );
-			  })
-			  .fail(function() {
-			    alert( "error" );
-			  })
-			  .always(function() {
-			    alert( "finished" );
-			  });*/
+    });
 
-			//return false;
+    $("#send").click(function(){
+
+  		$('#confirm').prop('disabled', true);
+      
+      var jsonString = JSON.stringify(emails);
+      $.ajax({
+            type: "POST",
+            url: "index.php",
+            data: {mails : jsonString, send:"hi"}, 
+            cache: false,
+
+            success: function(data){
+                alert('DONE');
+            }
+      });
+
+      $('#send').prop('disabled', true);
 
     });
 
