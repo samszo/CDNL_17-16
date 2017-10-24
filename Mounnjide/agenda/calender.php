@@ -59,7 +59,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/CDNL_17-18/Mounnjide/agenda/callbackCalender.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/Mounnjide/agenda/callbackCalender.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
@@ -137,7 +137,7 @@ $attendees = array();
       $attendees[]=array('email'=>$m);
   }
 
-    //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
+  
     
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
