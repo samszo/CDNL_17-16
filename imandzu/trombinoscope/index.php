@@ -33,7 +33,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	//
 	
 	$_GET['desc'] = 'la liste des present';
-	$_GET['id'] = 'mansour.ismail.pro@gmail.com';
+	$_GET['id'] = 'samszon@gmail.com';
 	try {
 	    
 	    switch ($_GET['q']) {
