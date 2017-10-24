@@ -19,3 +19,4 @@ if (! isset($_GET['code'])) {
 	$redirect_uri = 'http://localhost/THYP_17-18/rozaraezki/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
+?>

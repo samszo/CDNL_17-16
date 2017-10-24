@@ -31,8 +31,6 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
 	//
-    $_GET['q'] = 'present';
-    $_GET['id'] = 'thyp1213@gmail.com';
 	try {
 	    
 	    switch ($_GET['q']) {
@@ -52,6 +50,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	        default:
 	            $r = "rien";
 	           break;
+				
 	    }
 	    	echo json_encode($r);    
 	} catch (Exception $e) {
@@ -59,7 +58,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/projects/THYP_17-18/rozaarezki/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/rozaarezki/agenda/callback.php';
+	//echo $redirect_uri ; //pour afficher
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
@@ -105,7 +105,7 @@ function getCalendarInfo($cal, $service)
 
 function getListeAcl($idCal, $service)
 {
-    $acls ="";
+    $acls =array();
     $acl = $service->acl->listAcl($idCal);
     foreach ($acl->getItems() as $rule) {
         $acls[]=getAclInfo($rule);
@@ -121,17 +121,7 @@ function getAclInfo($acl)
     );
     return $r;
 }
-function insertPresent($service, $calendarId, $desc, $mails){
-    
-    $date = new DateTime();
-    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
-    $date->add(new DateInterval('PT60S'));
-    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
-    echo $dateDeb." - ".$dateFin;
-    $attendees = array();
-    foreach ($mails as $m) {
-        $attendees[]=array('email'=>$m);
-    }
+
 function insertPresent($service, $calendarId){
     
     $event = new Google_Service_Calendar_Event(array(
@@ -158,3 +148,4 @@ function insertPresent($service, $calendarId){
 }
 
 
+?>
