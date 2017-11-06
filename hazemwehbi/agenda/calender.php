@@ -43,7 +43,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	        case 'info':
 	            //Pour les infos d'un calendrier
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
-	            $r = getCalendarInfo($calendar, $cal_service);
+	            $r = getCalendarInfo($calendar,  $cal_service);//$_GET['startdate'], $_GET['enddate'],
 	            break;
 	        case 'present':
 	            //Pour ajouter un présent
@@ -86,12 +86,34 @@ function getAllCalendar($service)
     
 function getCalendarInfo($cal, $service)
 {
-    
+	//$st=$_GET['startdate'];
+/* Print the next 10 events on the user's calendar.
+$optParams = array(
+  'maxResults' => 5,
+  'orderBy' => 'startTime',
+  'singleEvents' => TRUE,
+  'timeMin' => date('c'),
+);
+*/
+  $optParams = array(
+    "timeMin" => $_GET['startdate'],
+    "timeMax" => $_GET['enddate']
+  );
+
+     $events = $service->events->listEvents($cal->getId(), $optParams);
+
+     $i=1;
+     foreach ($events->getItems() as $event) {
+       $eventDateStr .= '<font color=red>'.'Event name'. $i .'= '. '</font>' . $event->summary . ', ';
+       $i++;
+      }  
+  
     $r = array("summary"=>$cal->getSummary()
         ,"id"=>$cal->getId()
         ,"access"=>$cal->getAccessRole()
         ,"description"=>$cal->getDescription()
         ,"location"=>$cal->getLocation()
+		,"event"=>$eventDateStr
     );
         
     //récupère les roles
@@ -99,7 +121,7 @@ function getCalendarInfo($cal, $service)
         $roles = getListeAcl($r["id"], $service);
         $r["roles"]=$roles;
     }
-    
+  
     return $r;
 }
 
