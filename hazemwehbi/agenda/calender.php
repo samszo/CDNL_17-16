@@ -27,14 +27,14 @@ if(isset($_GET['out'])){
 
 //print_r($_SESSION['access_token']);
 //$_SESSION['access_token'] = array("access_token"=>"ya29.GlvYBAAizcoG4SH14m1nTmBnZXqgabVmkNJyd0d1wFBMfDOTDmJvHWaD86CRJjFXRSY0SEiTfZjpvpWGzFAAkTfuhCICZ_hznkuCkDtSI5OIlCAz2M4aPOwZp3jS","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1506954203);
-
+   // var connected = $_GET['connect'];
 
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
 	//
-	try {
-	    
+	try {		
+		
 	    switch ($_GET['q']) {
 	        case 'all':
 	            //Pour la liste complète des calendrier de la personne
@@ -50,7 +50,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
 	        default:
-	            $r = "rien";
+	            header('Location: ../grid.html');
 	           break;
 	    }
 	    	echo json_encode($r);    
@@ -59,7 +59,9 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/hazemwehbi/agenda/callbackCalender.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/hazemwehbi/agenda/callbackCalender.php'; 
+	
+	//&id='.$_GET['id'].'&startdate=.'$_GET['startdate'].&enddate=.'.$_GET['enddate'];
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
