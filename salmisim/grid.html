@@ -40,11 +40,37 @@ $(function () {
 	            { field: 'location', caption: 'Lieux', size: '40%' },
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ]
-	    });
-
-	});
+	   onClick: function (event) {
+		// enter the start Date for the search
+			var startdate = prompt("Please enter the start date for the search","2017-10-01T05:00:00-06:00");
+			
+		// enter the End Date for the search
+			var enddate = prompt("Please enter the end date for the search","2017-11-5T20:00:01-06:00");
+			$.getJSON("agenda/calender.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
+					function(data){
+				
+			w2ui['grid2'].clear();
+            //var record = data;
+            w2ui['grid2'].add([
+                { recid: 0, name: 'The Events:', value: data.event }				
+            ])});
+        }
+	    }); 
+	    $('#grid2').w2grid({ 
+        header: 'Details',
+        show: { header: true, columnHeaders: false },
+        name: 'grid2', 
+        columns: [                
+            { field: 'name', caption: 'Name', size: '100px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=right" },
+            { field: 'value', caption: 'Value', size: '100%' }
+        ]
+    });		
+		
+	});	
+	
+	
 });
 </script>
-
+<? } ?>
 </body>
 </html>
