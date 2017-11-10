@@ -39,7 +39,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
 	        default:
-	            $r = "rien";
+	      header('Location: ../grid.html');
 	           break;
 	    }
 	    	echo json_encode($r);
