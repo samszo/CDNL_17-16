@@ -83,8 +83,9 @@ function getCalendarInfo($cal, $service)
 function getInfoEvent($service, $id_cal , $id_event){
 
   $event = $service->events->get($id_cal,$id_event);
-
-  return $event->getSummary();
+  $html  = "<h1> Titre : " . $event->getSummary() . "</h1></br>";
+  $html = $html . "<h3> Description :  </h3><p>" . $event->getDescription() . "</p></br>";
+  return $html;
 
 }
 
