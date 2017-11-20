@@ -32,8 +32,8 @@ if(isset($_POST['send'])){
 		$cal_service = $client->getService($_SESSION['access_token']);
 		try {
 
-	      header('Location: ' . filter_var('setabsences.php', FILTER_SANITIZE_URL));
-
+	      //header('Location: ' . filter_var('setabsences.php', FILTER_SANITIZE_URL));
+				header('Location: ' . filter_var('grid.html', FILTER_SANITIZE_URL));
 	 	}catch(Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	 	}
