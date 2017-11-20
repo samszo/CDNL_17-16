@@ -88,19 +88,21 @@ function getAllCalendar($service)
     
 function getCalendarInfo($cal, $service)
 {
-	//$st=$_GET['startdate'];
-/* Print the next 10 events on the user's calendar.
-$optParams = array(
-  'maxResults' => 5,
-  'orderBy' => 'startTime',
-  'singleEvents' => TRUE,
-  'timeMin' => date('c'),
-);
-*/
-  $optParams = array(
-    "timeMin" => $_GET['startdate'],
-    "timeMax" => $_GET['enddate']
-  );
+      if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
+		  $optParams = array(
+	    "timeMin" => $_GET['startdate'],
+	    "timeMax" => $_GET['enddate']
+	  );
+
+	}
+	else{
+
+			  $optParams = array(
+					"timeMin" => "2017-10-01T05:00:00-06:00",
+					"timeMax" => "2017-11-5T20:00:01-06:00"
+				  );
+
+	}
 
      $events = $service->events->listEvents($cal->getId(), $optParams);
 
