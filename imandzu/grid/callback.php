@@ -4,7 +4,7 @@ require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 session_start();
 
 $client = new Google_Client();
-$client->setAuthConfigFile('client_secret.json');
+$client->setAuthConfigFile('../agenda/client_secret.json');
 $client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/imandzu/grid/callback.php');
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
