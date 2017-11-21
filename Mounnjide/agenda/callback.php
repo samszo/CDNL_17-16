@@ -1,6 +1,5 @@
-
 <?php
-require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';//chemin vers google_api
 session_start();
 $client = new Google_Client();
 $client->setAuthConfigFile('client_secret.json');
@@ -13,6 +12,6 @@ if (! isset($_GET['code'])) {
 } else {
 	$client->authenticate($_GET['code']);
 	$_SESSION['access_token'] = $client->getAccessToken();
-	header('Location: ' . filter_var('http://localhost/THYP_17-18/Mounnjide/agenda/index.php', FILTER_SANITIZE_URL));
+	$redirect_uri = 'http://localhost/THYP_17-18/Mounnjide/agenda/index.php?q=all';
+	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
-

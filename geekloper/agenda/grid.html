@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>W2UI Demo: grid-18</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+</head>
+<body>
+<br><br>
+<br>
+<div style="position: relative; height: 300px;">
+    <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
+    <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
+</div>
+<p id="info_event">Selectionner un event !</p>
+
+<script type="text/javascript">
+
+$(function () {
+  $.getJSON("ajax_req.php?q=all",
+    function(data){
+    data.forEach(function(d){
+      d.recid = d.id;
+    });
+      $('#grid1').w2grid({ 
+          header: 'Liste des agendas',        
+          name: 'grid1', 
+          show: {
+              header         : true,
+              toolbar     : true,
+              footer        : true,
+              lineNumbers    : true,
+              selectColumn: true,
+              expandColumn: true
+          },        
+          
+          //url: 'list.json',
+          //method: 'GET', // need this to avoid 412 error on Safari
+          records: data,
+          columns: [                
+              { field: 'recid', caption: 'recid', size: '30%' },
+              { field: 'access', caption: 'Autorisation', size: '30%' },
+              { field: 'description', caption: 'Description', size: '30%' },
+              { field: 'id', caption: 'ID', size: '40%' },
+              { field: 'location', caption: 'Lieux', size: '40%' },
+              { field: 'summary', caption: 'Titre', size: '120px' }
+          ],
+
+        onClick: function (event) {
+    // enter the start Date for the search
+      var startdate = prompt("Please enter the start date for the search","2017-11-20T05:00:00-06:00");
+      
+    // enter the End Date for the search
+      var enddate = prompt("Please enter the end date for the search","2017-11-22T20:00:01-06:00");
+
+      $.getJSON("ajax_req.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
+          function(data){
+        
+      w2ui['grid2'].clear();
+
+            w2ui['grid2'].add(data);
+          });
+        }
+
+      }); 
+
+      $('#grid2').w2grid({ 
+        header: 'Details',
+        show: { header: true, columnHeaders: true },
+        name: 'grid2', 
+        columns: [                
+            { field: 'title', caption: 'Title'}
+        ] ,
+
+        onClick: function (event) {
+
+          $.get( "ajax_req.php?q=info_event&id_cal="+ w2ui['grid1'].getSelection()[0] +"&id_event="+event.recid, function( data ) {
+             $("#info_event").html( data );
+          });
+
+        }
+    });   
+    
+  }); 
+  
+  
+});
+</script>
+<? } ?>
+</body>
+</html>
