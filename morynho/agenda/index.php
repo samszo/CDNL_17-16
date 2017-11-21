@@ -9,37 +9,25 @@ $client->setAuthConfig('client_secret.json');
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
 
-if(isset($_GET['out'])){
+if (isset($_GET['out'])) {
     unset($_SESSION['access_token']);
     $client->revokeToken();
 }
-
-//vérifie que le token n'ets pas expéré
-//if ($client->isAccessTokenExpired()) {
-//    unset($_SESSION['access_token']);
-//}
-
-
-//pour supprimer les droits https://myaccount.google.com/permissions?pli=1
-
-//print_r($_SESSION['access_token']);
-//$_SESSION['access_token'] = array("access_token"=>"ya29.GlznBOwSIyspxzMQnUG7IVmqqUUnQ5c7GXY16rPPqPo6nrJ80rUK0WUQwootMzwuNPQLrTKUfITfN71XM-g0zii6yu_V6ugGE4Jsp56mV2bWH0UbsmUdV6-kyTnNMw","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1508238940);
 
 
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $client->setAccessToken($_SESSION['access_token']);
     $cal_service = new Google_Service_Calendar($client);
-    //
-    $_GET['q'] = 'present';
-    $_GET['id'] = 'fb.mory@gmail.com';
-    $_GET['desc'] = 'present';
-    $_GET['email'] = array('fb.mory@gmail.com');
+
+    $_GET['q'] = 'all';
+
     try {
 
         switch ($_GET['q']) {
             case 'all':
                 //Pour la liste complète des calendrier de la personne
                 $r = getAllCalendar($cal_service);
+                header('http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/morynho/grid.html');
                 break;
             case 'info':
                 //Pour les infos d'un calendrier
@@ -49,6 +37,10 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
             case 'present':
                 //Pour ajouter un présent
                 $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
+                break;
+            case 'event':
+                //Pour la liste complète des evenement du calendrier
+                $r = getAllEvent($cal_service, $_GET['calendrier_id']) ;
                 break;
             default:
                 $r = "rien";
@@ -84,6 +76,30 @@ function getAllCalendar($service)
     return $calendars;
 
 }
+
+function getAllEvent($service, $calendar_id)
+{
+
+    $events = $service->events->listEvents($calendar_id);
+
+    while(true) {
+        foreach ($events->getItems() as $event) {
+            $calendars[] = $event;
+        }
+        $pageToken = $events->getNextPageToken();
+        if ($pageToken) {
+            $optParams = array('pageToken' => $pageToken);
+            $events = $service->events->listEvents($calendar_id, $optParams);
+        } else {
+            break;
+        }
+    }
+
+    return $calendars;
+
+
+}
+
 
 function getCalendarInfo($cal, $service)
 {
@@ -162,3 +178,4 @@ function insertPresent($service, $calendarId, $desc, $mails){
 
 }
 ?>
+
