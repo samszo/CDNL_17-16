@@ -56,7 +56,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
-	//
+
+    //
 } else {
 	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/lydia-leb/agenda/callback.php';
 	//echo $redirect_uri ; //pour afficher
@@ -64,7 +65,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 }
 
 
-function getAllCalendar($service)
+ function getAllCalendar($service)
 {
     //Pour la liste complète des calendrier de la personne
     $calendarList = 	$service->calendarList->listCalendarList();    
@@ -84,10 +85,39 @@ function getAllCalendar($service)
     
 }
     
+
 function getCalendarInfo($cal, $service)
 {
-    
-    $r = array("summary"=>$cal->getSummary()
+      if(isset($_GET['startdate']) && isset($_GET['enddate']) ){
+      $optParams = array(
+      "timeMin" => $_GET['startdate'],
+      "timeMax" => $_GET['enddate']
+      );
+      
+           $events = $service->events->listEvents($cal->getId(), $optParams);
+     $r = array();
+     foreach ($events->getItems() as $event) {
+        
+        $info = array();
+        $info["recid"] = $event->getId();
+        $info["title"] = $event->summary;
+        $info["summary"]=$cal->getSummary();
+        $info["id"]=$cal->getId();
+        $info["access"]=$cal->getAccessRole();
+        $info["description"]=$cal->getDescription();
+        $info["location"]=$cal->getLocation();
+        array_push($r , $info);
+               
+      }  
+    return $r;
+  }
+  else{
+        $optParams = array(
+          "timeMin" => "2017/10/01",
+          "timeMax" => "2017/11/05"
+          );
+          
+          $r = array("summary"=>$cal->getSummary()
         ,"id"=>$cal->getId()
         ,"access"=>$cal->getAccessRole()
         ,"description"=>$cal->getDescription()
@@ -101,9 +131,13 @@ function getCalendarInfo($cal, $service)
     }
     
     return $r;
+  }
+    
+    
 }
 
-function getListeAcl($idCal, $service)
+
+function getListeAcl($idCal,$service)
 {
     $acls =array();
     $acl = $service->acl->listAcl($idCal);
@@ -122,29 +156,44 @@ function getAclInfo($acl)
     return $r;
 }
 
-function insertPresent($service, $calendarId){
+
+function insertPresent($service, $calendarId, $desc, $mails){
+    //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+    $date = new DateTime();
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $date->add(new DateInterval('PT60S'));
+    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+    echo $dateDeb." - ".$dateFin;
+    $attendees = array();
+    foreach ($mails as $m) {
+        $attendees[]=array('email'=>$m);
+    }
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
+    //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
     
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
         'location' => 'Paris 8',
-        'description' => 'Cours E-service',
+        'description' => $desc,
         'start' => array(
-            'dateTime' => '2017-10-02T09:00:00',
+            'dateTime' => $dateDeb,
             'timeZone' => 'Europe/Paris',
+            
         ),
         'end' => array(
-            'dateTime' => '2017-10-02T10:00:00',
+            'dateTime' => $dateFin,
             'timeZone' => 'Europe/Paris',
         ),
-        'attendees' => array(
-            array('email' => 'lpage@example.com'),
-            array('email' => 'sbrin@example.com'),
-        ),
+        'attendees' => $attendees,
     ));
-    
+    //print_r($event);
     $event = $service->events->insert($calendarId, $event);
     return array('message'=>'Event created', 'event'=>$event);
     
 }
-
-
+?>
