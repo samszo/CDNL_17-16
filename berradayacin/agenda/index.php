@@ -52,7 +52,7 @@ $service = new Google_Service_Drive( $client );
 	}
 	//
 } else {
-$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/hazemwehbi/agenda/callback.php';
+$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/berradayacin/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
