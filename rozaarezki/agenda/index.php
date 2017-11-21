@@ -34,7 +34,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	
 	//$_GET['q'] = 'present';
 
-	$_GET['id'] = 'roza.arezki1991@gmail.com';
+	$_GET['id'] = 'roza.arezki91@gmail.com';
 
 	
 	try {
