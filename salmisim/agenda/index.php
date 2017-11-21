@@ -31,7 +31,9 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	        case 'info':
 	            //Pour les infos d'un calendrier
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
-	            $r = getCalendarInfo($calendar,  $cal_service);//$_GET['startdate'], $_GET['enddate'],
+	            $r = getCalendarInfo($calendar,  $cal_service);
+				  $r=getAllEvent($cal_service,$_GET['id']);
+				//$_GET['startdate'], $_GET['enddate'],
 	            break;
 	        case 'present':
 	            //Pour ajouter un présent
@@ -71,40 +73,24 @@ function getAllCalendar($service)
     return $calendars;
     
 }
+function getAllEvent($service)
+{
+$events = $service->events->listEvents($_GET['id']);
+//var_dump($events);
+$ev=json_encode($events);
+return $events->{'items'};
+}
     
 function getCalendarInfo($cal, $service)
 {
-      if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
-		  $optParams = array(
-	    "timeMin" => $_GET['startdate'],
-	    "timeMax" => $_GET['enddate']
-	  );
-	}
-	else{
-			  $optParams = array(
-					"timeMin" => "2017-10-01T05:00:00-06:00",
-					"timeMax" => "2017-11-5T20:00:01-06:00"
-				  );
-	}
-	
-	         $eventDateStr = "";
-     $events = $service->events->listEvents($cal->getId(), $optParams);
-     $i=1;
-     foreach ($events->getItems() as $event) {
-        $eventDateStr = $event->start->dateTime;
-     if(empty($eventDateStr))
-     {
-         // it's an all day event
-         $eventDateStr = "";
-     }
-	 }
+      
     $r = array("summary"=>$cal->getSummary()
 	   
         ,"id"=>$cal->getId()
         ,"access"=>$cal->getAccessRole()
         ,"description"=>$cal->getDescription()
         ,"location"=>$cal->getLocation()
-		           ,"event"=>$eventDateStr
+		           
     
     );
         
