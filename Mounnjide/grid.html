@@ -16,7 +16,7 @@
 
 <script type="text/javascript">
 $(function () {
-	$.getJSON("/THYP_17-18/Mounnjide/agenda/index.php?q=all",
+	$.getJSON("/THYP_17-18/Mounnjide/agenda/.php?q=all",
 		function(data){
 		data.forEach(function(d){
 			d.recid = d.id;
@@ -45,12 +45,7 @@ $(function () {
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
         onClick: function (event) {
-		// enter the start Date for the search
-			var startdate = prompt("entrer la date","2017/10/01");
-			
-		// enter the End Date for the search
-			var enddate = prompt("selectionner la date","2017/11/05");
-			$.getJSON("request.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
+		
 					function(data){
 				
 			w2ui['grid2'].clear();

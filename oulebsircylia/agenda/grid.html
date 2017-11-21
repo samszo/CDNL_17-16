@@ -13,24 +13,27 @@
     <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
 </div>
-
 <script type="text/javascript">
-$(function () {
+$(function () 
+{
 	$.getJSON("/THYP_17-18/oulebsircylia/agenda/index.php?q=all",
-		function(data){
-		data.forEach(function(d){
-			d.recid = d.id;
-		});
-	    $('#grid1').w2grid({ 
-	        header: 'Liste des agendas',	    	
-	        name: 'grid1', 
-	        show: {
-	            header         : true,
-	            toolbar     : true,
-	            footer        : true,
-	            lineNumbers    : true,
-	            selectColumn: true,
-	            expandColumn: true
+		function(data)
+		{
+		data.forEach(function(d)
+			{
+				d.recid = d.id;
+			});
+	    $('#grid1').w2grid(
+	    	{ 
+		        header: 'Liste des agendas',	    	
+		        name: 'grid', 
+		        show: {
+		            header         : true,
+		            toolbar     : true,
+		            footer        : true,
+		            lineNumbers    : true,
+		            selectColumn: true,
+		            expandColumn: true
 	        },        
 	        
 	        //url: 'list.json',
@@ -43,34 +46,34 @@ $(function () {
 	            { field: 'id', caption: 'ID', size: '40%' },
 	            { field: 'location', caption: 'Lieux', size: '40%' },
 	            { field: 'summary', caption: 'Titre', size: '120px' }
-	        ],
-        onClick: function (event) {
-		// enter the start Date for the search
-			var startdate = prompt("entrer la date","2017/10/01");
-			
-		// enter the End Date for the search
-			var enddate = prompt("selectionner la date","2017/11/05");
-			$.getJSON("index.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
-					function(data){
-				
-			w2ui['grid2'].clear();
-            //var record = data;
-            w2ui['grid2'].add(data);				
-            });
+	        		],
+	    // ajout de la variable qui recupere l'evenement
+	    
+	    
+		onClick: function (event)
+         {
+            w2ui['grid2'].clear();
+            var record = this.get(event.recid);
+            w2ui['grid2'].add([
+                { recid: 0, name: 'ID:', value: record.id },
+                { recid: 1, name: 'Titre:', value: record.summary }
+                  ]);
         }
-	    }); 
-	    $('#grid2').w2grid({ 
+    });
+	});	
+
+	$('#grid2').w2grid({ 
         header: 'Details',
-        show: { header: true, columnHeaders: true },
+        show: { header: true, columnHeaders: false },
         name: 'grid2', 
         columns: [                
-            { field: 'title', caption: 'Titre'}
-        ] 
-    });		
-		
-	});		
+            { field: 'name', caption: 'Name', size: '100px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=right" },
+            { field: 'value', caption: 'Value', size: '100%' }
+        ]
+    });  
 });
 </script>
+
 </body>
 </html>
 

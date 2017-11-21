@@ -3,7 +3,7 @@ require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';//chemin
 session_start();
 $client = new Google_Client();
 $client->setAuthConfigFile('client_secret.json');
-$client->setRedirectUri('http://localhost/THYP_17-18/Mounnjide/agenda/callback.php');
+$client->setRedirectUri('http://localhost/CDNL_17-18/Mounnjide/agenda/callback.php');
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 //print_r($_GET);
 if (! isset($_GET['code'])) {

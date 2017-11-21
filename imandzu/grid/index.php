@@ -7,9 +7,6 @@
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 </head>
 <body>
-<form action="request.php?q=all">
-  <input type="submit" value="Connection">
-</form>
 <div style="position: relative; height: 300px;">
     <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
@@ -49,10 +46,10 @@ $(function () {
 
         onClick: function (event) {
 		// enter the start Date for the search
-			var startdate = prompt("Please enter the start date for the search","2017-10-01T05:00:00-06:00");
+			var startdate = prompt("la date de debut","2017-09-01T05:00:00-08:00");
 			
 		// enter the End Date for the search
-			var enddate = prompt("Please enter the end date for the search","2017-11-5T20:00:01-06:00");
+			var enddate = prompt("la date de fin","2017-11-5T21:00:01-08:00");
 
 			$.getJSON("request.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
 					function(data){
