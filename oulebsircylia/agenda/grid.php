@@ -50,7 +50,7 @@ $(function () {
 			
 		// enter the End Date for the search
 			var enddate = prompt("selectionner la date","2017/11/05");
-			$.getJSON("request.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
+			$.getJSON("index.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
 					function(data){
 				
 			w2ui['grid2'].clear();
