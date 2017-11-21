@@ -1,6 +1,4 @@
 <?php
-
-
 require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
@@ -26,15 +24,18 @@ if(isset($_GET['out'])){
 //pour supprimer les droits https://myaccount.google.com/permissions?pli=1
 
 //print_r($_SESSION['access_token']);
-//$_SESSION['access_token'] = array("access_token"=>"ya29.GlvYBAAizcoG4SH14m1nTmBnZXqgabVmkNJyd0d1wFBMfDOTDmJvHWaD86CRJjFXRSY0SEiTfZjpvpWGzFAAkTfuhCICZ_hznkuCkDtSI5OIlCAz2M4aPOwZp3jS","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1506954203);
-   // var connected = $_GET['connect'];
+//$_SESSION['access_token'] = array("access_token"=>"ya29.GlznBOwSIyspxzMQnUG7IVmqqUUnQ5c7GXY16rPPqPo6nrJ80rUK0WUQwootMzwuNPQLrTKUfITfN71XM-g0zii6yu_V6ugGE4Jsp56mV2bWH0UbsmUdV6-kyTnNMw","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1508238940);
+
 
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
-	//
-	try {		
-		
+	/*
+	$_GET['q'] = 'present';
+	$_GET['id'] = 'thyp1213@gmail.com';
+	*/
+	try {
+	    
 	    switch ($_GET['q']) {
 	        case 'all':
 	            //Pour la liste complète des calendrier de la personne
@@ -43,25 +44,22 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	        case 'info':
 	            //Pour les infos d'un calendrier
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
-	            $r = getCalendarInfo($calendar,  $cal_service);//$_GET['startdate'], $_GET['enddate'],
+	            $r = getCalendarInfo($calendar, $cal_service);
 	            break;
 	        case 'present':
 	            //Pour ajouter un présent
-	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
+	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
 	        default:
-	            header('Location: ../grid.html');
 	           break;
 	    }
-	    	echo json_encode($r);    
+	    	    echo json_encode($r);   
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/hazemwehbi/agenda/callbackCalender.php'; 
-	
-	//&id='.$_GET['id'].'&startdate=.'$_GET['startdate'].&enddate=.'.$_GET['enddate'];
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/imandzu/grid/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
@@ -85,45 +83,47 @@ function getAllCalendar($service)
     return $calendars;
     
 }
-// Function To Get Calender Information
-	
+     
 function getCalendarInfo($cal, $service)
 {
+	  if(isset($_GET['startdate']) && isset($_GET['enddate']) ){
+      $optParams = array(
+      "timeMin" => $_GET['startdate'],
+      "timeMax" => $_GET['enddate']
+      );
+	  
+	       $events = $service->events->listEvents($cal->getId(), $optParams);
 
-if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
+     $r = array();
 
-					  $optParams = array(
-						"timeMin" => $_GET['startdate'],
-						"timeMax" => $_GET['enddate']
-						);		  
-		}
-		else{
-			
-				      $optParams = array(
-						"timeMin" => '2017-10-01T05:00:00-06:00',
-						"timeMax" => '2017-11-5T20:00:01-06:00'
-					  );
-			
-		}
-
-     $events = $service->events->listEvents($cal->getId(), $optParams);
-
-     $i=1;
      foreach ($events->getItems() as $event) {
-       $eventDateStr .= $event->summary . ', ';
-	   $eventdescr .= $event->description . ', '; 
-	   $eventdate .= $event->created . ', ';
-       $i++;
+        
+        $info = array();
+        $info["recid"] = $event->getId();
+        $info["title"] = $event->summary;
+        $info["summary"]=$cal->getSummary();
+        $info["id"]=$cal->getId();
+        $info["access"]=$cal->getAccessRole();
+        $info["description"]=$cal->getDescription();
+        $info["location"]=$cal->getLocation();
+
+        array_push($r , $info);
+               
       }  
-  
-    $r = array("summary"=>$cal->getSummary()
+    return $r;
+
+  }
+  else{
+        $optParams = array(
+          "timeMin" => "2017-10-01T05:00:00-06:00",
+          "timeMax" => "2017-11-5T20:00:01-06:00"
+          );
+		  
+		  $r = array("summary"=>$cal->getSummary()
         ,"id"=>$cal->getId()
         ,"access"=>$cal->getAccessRole()
         ,"description"=>$cal->getDescription()
         ,"location"=>$cal->getLocation()
-		,"event"=>$eventDateStr
-		,"eventdesc"=>$eventdescr
-        ,"eventdate"=>$eventdate
     );
         
     //récupère les roles
@@ -131,11 +131,14 @@ if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
         $roles = getListeAcl($r["id"], $service);
         $r["roles"]=$roles;
     }
-  
+    
     return $r;
-}
+  }
 
-////////////////////
+
+    
+    
+}
 
 function getListeAcl($idCal, $service)
 {
@@ -163,14 +166,16 @@ function insertPresent($service, $calendarId, $desc, $mails){
     $date->add(new DateInterval('PT60S'));
     $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
     echo $dateDeb." - ".$dateFin;
-	
-
-$mails = explode(",", $mails);	
-$attendees = array();
- foreach ($mails  as $m) {
-      $attendees[]=array('email'=>$m);
-  }
-
+    $attendees = array();
+    foreach ($mails as $m) {
+        $attendees[]=array('email'=>$m);
+    }
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
     //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
     
     $event = new Google_Service_Calendar_Event(array(
@@ -185,13 +190,11 @@ $attendees = array();
             'dateTime' => $dateFin,
             'timeZone' => 'Europe/Paris',
         ),
-	'attendees' => $attendees,
+        'attendees' => $attendees,
     ));
     //print_r($event);
     $event = $service->events->insert($calendarId, $event);
     return array('message'=>'Event created', 'event'=>$event);
     
 }
-
-
 ?>

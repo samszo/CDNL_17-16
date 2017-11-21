@@ -5,7 +5,7 @@ session_start();
 
 
 $client = new Google_Client();
-$client->setAuthConfig('client_secret.json');
+$client->setAuthConfig('../agenda/client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
@@ -33,7 +33,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	//
 //$_GET['q'] = 'present';
 	//$_GET['id'] = 'amenibenmrad@gmail.com';
-	try {
+	/*try {
 
 	    switch ($_GET['q']) {
 	        case 'all':
@@ -61,10 +61,10 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	    	echo json_encode($r);
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
-	}
+	}*/
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/grid/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
@@ -196,3 +196,122 @@ function insertPresent($service, $calendarId, $desc, $mails){
 
 }
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>W2UI Demo: grid-1</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+</head>
+<body >
+
+<div id="grid" style="width: 100%; height: 350px;"></div>
+<div id="grid2" style="width: 100%; height: 350px;"></div>
+
+<script type="text/javascript">
+$(function () {
+	$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
+//$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
+		function(data){
+      console.log(data);
+		data.forEach(function(d){var h=0;h=h+1;
+			d.recid =d.id;
+
+		});
+    for (var i = 0; i < data.length; i++) {
+      data[i].recid="Calendar"+(i+1)
+    }
+
+	    $('#grid').w2grid({
+	        header: 'Liste des agendas',
+	        name: 'grid',
+	        show: {
+	            header         : true,
+	            toolbar     : true,
+	            footer        : true,
+	            lineNumbers    : true,
+	            selectColumn: true,
+	            expandColumn: true
+	        },
+
+	        //url: 'list.json',
+	        //method: 'GET', // need this to avoid 412 error on Safari
+	        records: data,
+	        columns: [
+	            { field: 'recid', caption: 'recid', size: '30%' },
+	            { field: 'access', caption: 'Autorisation', size: '30%' },
+	            { field: 'description', caption: 'Description', size: '30%' },
+	            { field: 'id', caption: 'ID', size: '40%' },
+	            { field: 'location', caption: 'Lieux', size: '40%' },
+	            { field: 'summary', caption: 'Titre', size: '120px' }
+	        ],
+          onClick: function(event) {
+
+          var tdId =$("#grid_grid_rec_"+event.recid).children('td')[4].getAttribute('id');
+          var divEl =$("#"+tdId).children('div')[0].getAttribute('title');
+          console.log(divEl);
+          showEvents(divEl);
+
+      //  console.log(colonnes[6].attr("title"))
+
+        //  alert($("#grid_grid_rec_"+event.recid).attr("id"));
+
+      }
+	    });
+    //  $("#bfCaptchaEntry").click(function(){ myFunction(); });
+
+	});
+
+  //$(".w2ui-footer-left").ready(function(){alert()})
+
+})
+var inc=2;
+function showEvents(EventId) {console.log(EventId);
+var url="/THYP_17-18/ameni26/agenda/index.php?q=info&id="+EventId;
+console.log(url);
+  $.getJSON(url,
+//  $.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=info&id="+EventId,
+//$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
+  function(data2){
+      console.log(data2);
+      for (var i = 0; i < data2.length; i++) {
+        data2[i].recid="event"+(i+1)
+      }
+inc++;
+        $('#grid2').w2grid({
+            header: 'Liste evenements',
+            name: 'grid'+inc,
+            show: {
+                header         : true,
+                toolbar     : true,
+                footer        : true,
+                lineNumbers    : true,
+                selectColumn: true,
+                expandColumn: true
+            },
+
+            //url: 'list.json',
+            //method: 'GET', // need this to avoid 412 error on Safari
+            records: data2,
+            columns: [
+                { field: 'recid', caption: 'recid', size: '30%' },
+                { field: 'summary', caption: 'resume', size: '30%' },
+                { field: 'creator.displayName', caption: 'createur', size: '30%' },
+                { field: 'start.dateTime', caption: 'debut', size: '30%' },
+
+
+            ]
+
+        });
+      //  $("#bfCaptchaEntry").click(function(){ myFunction(); });
+
+    });               // Function returns the product of a and b
+}
+
+
+</script>
+
+</body>
+</html>

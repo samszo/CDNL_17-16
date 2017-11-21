@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>W2UI Demo: grid-18</title>
+    <title>W2UI Demo: grid-1</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 </head>
-<body>
-<br><br>
-<form action="agenda/calender.php?q=r">
-  <input type="submit" value="Connect To Google API Calender">
-</form>
-<br>
+<body >
+
+
 <div style="position: relative; height: 300px;">
     <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
 </div>
 
-	
 <script type="text/javascript">
-var event_name,event_desc,event_date ;
-
 $(function () {
-	$.getJSON("agenda/calender.php?q=all",
+	$.getJSON("/THYP_17-18/oulebsircylia/agenda/index.php?q=all",
 		function(data){
 		data.forEach(function(d){
 			d.recid = d.id;
@@ -50,58 +44,45 @@ $(function () {
 	            { field: 'location', caption: 'Lieux', size: '40%' },
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
-
         onClick: function (event) {
 		// enter the start Date for the search
-			var startdate = prompt("Please enter the start date for the search","2017-10-01T05:00:00-06:00");
+			var startdate = prompt("entrer la date","2017/10/01");
 			
 		// enter the End Date for the search
-			var enddate = prompt("Please enter the end date for the search","2017-11-5T20:00:01-06:00");
-
-			$.getJSON("agenda/calender.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
+			var enddate = prompt("selectionner la date","2017/11/05");
+			$.getJSON("request.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
 					function(data){
 				
 			w2ui['grid2'].clear();
             //var record = data;
-			
-			event_name = data.event.split(",");
-			event_desc = data.eventdesc.split(",");
-			event_date  = data.eventdate.split(",");
-			
-				for (var i = 0; i < event_name.length; i++) {
-
-					w2ui['grid2'].add([
-
-							{ recid: i, name: 'The Event Name '+(i+1)+':', value:  event_name[i]}
-						
-					])}	
-			
-			});
+            w2ui['grid2'].add(data);				
+            });
         }
-
 	    }); 
-
 	    $('#grid2').w2grid({ 
         header: 'Details',
-        show: { header: true, columnHeaders: false },
+        show: { header: true, columnHeaders: true },
         name: 'grid2', 
         columns: [                
-            { field: 'name', caption: 'Name', size: '180px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=right" },
-            { field: 'value', caption: 'Value', size: '100%' }
-        ]
-		,        onClick: function (event) {
-
-						alert("Event Date: \n" + event_date[event.recid] + "\n \n Event Description:\n " + event_desc[event.recid]);
-
-						}
+            { field: 'title', caption: 'Titre'}
+        ] 
     });		
-	
 		
-	});	
-	
-	
+	});		
 });
 </script>
-
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
