@@ -33,14 +33,14 @@ foreach($rows as $row) {
 
 foreach ($csv as $key => $value) {
 
-	$link='http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'. $value['lien vers la photo'];
+	$link='img/'. $value['lien vers la photo'];
 
-  $headers = get_headers($link, 1);
-	if (strpos($headers['Content-Type'], 'image/') !== false) {
+    
+	if (!is_dir($link) && file_exists($link)) {
 	    $picture_link = $link;
 	} else {
 	    $picture_link =  "https://s-media-cache-ak0.pinimg.com/originals/ac/90/e9/ac90e95d1e6816448a5cb06e5b3b80fa.jpg";
-	}  
+	}
 
 ?>
 	<div class="col-sm-3 mb-4">

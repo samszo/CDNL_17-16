@@ -1,13 +1,11 @@
 <?php
-
-
 require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
 
 $client = new Google_Client();
-$client->setAuthConfig('client_secret.json');
+$client->setAuthConfig('../agenda/client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
@@ -26,42 +24,43 @@ if(isset($_GET['out'])){
 //pour supprimer les droits https://myaccount.google.com/permissions?pli=1
 
 //print_r($_SESSION['access_token']);
-//$_SESSION['access_token'] = array("access_token"=>"ya29.GlvYBAAizcoG4SH14m1nTmBnZXqgabVmkNJyd0d1wFBMfDOTDmJvHWaD86CRJjFXRSY0SEiTfZjpvpWGzFAAkTfuhCICZ_hznkuCkDtSI5OIlCAz2M4aPOwZp3jS","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1506954203);
-   // var connected = $_GET['connect'];
+//$_SESSION['access_token'] = array("access_token"=>"ya29.GlznBOwSIyspxzMQnUG7IVmqqUUnQ5c7GXY16rPPqPo6nrJ80rUK0WUQwootMzwuNPQLrTKUfITfN71XM-g0zii6yu_V6ugGE4Jsp56mV2bWH0UbsmUdV6-kyTnNMw","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1508238940);
+
 
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
 	//
-	try {		
-		
+	$_GET['q'] = 'present';
+	$_GET['q'] = '';
+	$_GET['id'] = 'amenibenmrad@gmail.com';
+	try {
+
 	    switch ($_GET['q']) {
 	        case 'all':
 	            //Pour la liste complète des calendrier de la personne
 	            $r = getAllCalendar($cal_service);
-        	        break;	        
+        	        break;
 	        case 'info':
 	            //Pour les infos d'un calendrier
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
-	            $r = getCalendarInfo($calendar,  $cal_service);//$_GET['startdate'], $_GET['enddate'],
+	            $r = getCalendarInfo($calendar, $cal_service);
 	            break;
 	        case 'present':
 	            //Pour ajouter un présent
-	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
+	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
 	        default:
-	            header('Location: ../grid.html');
+	            $r = ".";
 	           break;
 	    }
-	    	echo json_encode($r);    
+	    	echo json_encode($r);
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/hazemwehbi/agenda/callbackCalender.php'; 
-	
-	//&id='.$_GET['id'].'&startdate=.'$_GET['startdate'].&enddate=.'.$_GET['enddate'];
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/trombinoscope/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
@@ -69,7 +68,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 function getAllCalendar($service)
 {
     //Pour la liste complète des calendrier de la personne
-    $calendarList = 	$service->calendarList->listCalendarList();    
+    $calendarList = 	$service->calendarList->listCalendarList();
     while(true) {
         foreach ($calendarList->getItems() as $calendarListEntry) {
             $calendars[] = getCalendarInfo($calendarListEntry, $service);
@@ -83,59 +82,27 @@ function getAllCalendar($service)
         }
     }
     return $calendars;
-    
+
 }
-// Function To Get Calender Information
-	
+
 function getCalendarInfo($cal, $service)
 {
 
-if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
-
-					  $optParams = array(
-						"timeMin" => $_GET['startdate'],
-						"timeMax" => $_GET['enddate']
-						);		  
-		}
-		else{
-			
-				      $optParams = array(
-						"timeMin" => '2017-10-01T05:00:00-06:00',
-						"timeMax" => '2017-11-5T20:00:01-06:00'
-					  );
-			
-		}
-
-     $events = $service->events->listEvents($cal->getId(), $optParams);
-
-     $i=1;
-     foreach ($events->getItems() as $event) {
-       $eventDateStr .= $event->summary . ', ';
-	   $eventdescr .= $event->description . ', '; 
-	   $eventdate .= $event->created . ', ';
-       $i++;
-      }  
-  
     $r = array("summary"=>$cal->getSummary()
         ,"id"=>$cal->getId()
         ,"access"=>$cal->getAccessRole()
         ,"description"=>$cal->getDescription()
         ,"location"=>$cal->getLocation()
-		,"event"=>$eventDateStr
-		,"eventdesc"=>$eventdescr
-        ,"eventdate"=>$eventdate
     );
-        
+
     //récupère les roles
     if($r["access"]!="writer" && $r["access"]!="reader"){
         $roles = getListeAcl($r["id"], $service);
         $r["roles"]=$roles;
     }
-  
+
     return $r;
 }
-
-////////////////////
 
 function getListeAcl($idCal, $service)
 {
@@ -163,16 +130,18 @@ function insertPresent($service, $calendarId, $desc, $mails){
     $date->add(new DateInterval('PT60S'));
     $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
     echo $dateDeb." - ".$dateFin;
-	
-
-$mails = explode(",", $mails);	
-$attendees = array();
- foreach ($mails  as $m) {
-      $attendees[]=array('email'=>$m);
-  }
-
+    $attendees = array();
+    foreach ($mails as $m) {
+        $attendees[]=array('email'=>$m);
+    }
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
     //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
-    
+
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
         'location' => 'Paris 8',
@@ -185,13 +154,96 @@ $attendees = array();
             'dateTime' => $dateFin,
             'timeZone' => 'Europe/Paris',
         ),
-	'attendees' => $attendees,
+        'attendees' => $attendees,
     ));
     //print_r($event);
     $event = $service->events->insert($calendarId, $event);
     return array('message'=>'Event created', 'event'=>$event);
-    
+
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body{
+    width:1060px;
+    margin:50px auto;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+td,th{
+  padding:5px;
+}
+td{
+  height:200px
+}
+img{
+   -webkit-transform: rotate(90deg);
+   -moz-transform: rotate(90deg);
+   -o-transform: rotate(90deg);
+   -ms-transform: rotate(90deg);
+   transform: rotate(90deg);
+}
+</style>
+</head>
+<body>
+<h1 id="head">Liste de présence</h1>
+<div id="etu" >
+
+</div>
+<div id='dashboard'>
+</div><p></p>
+<form action="#" method="get">
+<table id="tableAppel" style="float:left;width:400">
+  <tr>
+    <th >Nom et prénom</th>
+    <th >Photo</th>
+    <th >Présence</th>
+  </tr>
+</table>
+<div style="width:200px;margin-left:600px;margin-top:100px" id="result">
+<input type="button" value="valider" style="margin-top:100px;width:70px;height:30px" onclick="validerPresence()"><br>
+</div>
+</form>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js" ></script>
+<script>
+function validerPresence(){
+  var h="";var c=0;
+  $('.presence:checked').each(function() {
+    if(c==0){
+  h=this.value;c++}
+  else {
+    h=h+"&"+this.value
+  }
+});
+ var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?desc=Presence&email[]="+h;
+ $.ajax({
+  url: lien,
+  context: document.body
+}).done(function() {
+  $("#result").append("Validé");
+});
 }
 
+var body=d3.select("body");
+d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefaJxHJWnLGS7xudeNJChpgpvqWdskujnlt03TkiWRHtW5uoTV8sYAH3HZ/pub?gid=642939185&single=true&output=csv",function(data){
+  data.forEach(function(d){
+    console.log(d);
+    var h='http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+d["lien vers la photo"];
+  //  $("<img/>").attr({src: h, height: "20px"}).appendTo("#tableAppel");
+  $("#tableAppel").append('<tr><td><b>'+d["Prénom"]+' '+d["Nom"]+'<b/></td><td><img src="'+h+'" height="100px;width:50px"></td><td> présent(e)<input type="checkbox" class="presence" name="présent(e)" value="'+d["E-mail"]+'"><br></td></tr>');
 
-?>
+  });
+  })
+
+
+
+
+</script>
+</body>
+</html>
