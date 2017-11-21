@@ -7,9 +7,6 @@
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 </head>
 <body>
-<form action="request.php?q=all">
-  <input type="submit" value="Connection">
-</form>
 <div style="position: relative; height: 300px;">
     <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
