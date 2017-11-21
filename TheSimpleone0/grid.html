@@ -55,10 +55,10 @@
     function evenements(grid) {
         console.log('selection:'+ grid.getSelection());
         $.getJSON('agenda/index.php?q=event&calendrier_id=' + grid.getSelection(),
-            function (lesEvenements) {
+            /*function (lesEvenements) {
                 lesEvenements.forEach(function (d_e) {
                     d_e.recid = d_e.id;
-                });
+                });*/
                 $('#grid_2').w2grid({
                     header: 'Evenement de l\'agendas',
                     name: 'grid_2',

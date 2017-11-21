@@ -34,8 +34,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	
 	//$_GET['q'] = 'present';
 
-	$_GET['id'] = 'roza.arezki91@gmail.com';
-
+	
 	
 	try {
 	    
@@ -49,6 +48,11 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
 	            $r = getCalendarInfo($calendar, $cal_service);
 	            break;
+                case 'event':
+                //Pour les infos d'un calendrier
+                $calendar = $cal_service->calendarList->get($_GET['id']);
+                $r = getCalendarInfo($calendar, $cal_service);
+                break;
 	        case 'present':
 	            //Pour ajouter un présent
 	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
