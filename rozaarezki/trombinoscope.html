@@ -9,7 +9,7 @@
 
  </head>
  <body style="background-color:#0000;">
- <h1 style="color: red ">FICHE DE PRESENCE THYP 2017-2018</h1>
+ <h1 style="color: red "><center> LISTE DE PRESENCE THYP 2017-2018</h1>
  	<div id="etuTrombi"/>
  	<div id="etuData"/>
  	<form id="myField"  method="post" action="agenda/calender.php?q=all" >
@@ -99,6 +99,16 @@ document.getElementById('myField').action ="../../rozaarezki/agenda/index.php?q=
 </script>
 <center><button style="color: blue;" onclick="save()" >Présent(e)</button></center><br> 
 <center><button style="color: blue;" onclick="save()" >Non présent(e)</button></center><br> 
+</form>
+<form method="post" action="traitement.php">
+    <p>
+        <label>Votre pseudo</label> : <input type="text" name="pseudo" />
+    </p>
+</form>
+<form method="post" action="traitement.php">
+    <p>
+        <label>description</label> : <input type="text" name="pseudo" />
+    </p>
 </form>
  </body>
 </html>
