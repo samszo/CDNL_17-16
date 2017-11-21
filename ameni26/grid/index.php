@@ -44,11 +44,12 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            //Pour les infos d'un calendrier
 	            $calendar = $cal_service->calendarList->get($_GET['id']);
 	            $r = getCalendarInfo($calendar, $cal_service);
-		    $r=getAllEvent($cal_service);
+		    $r=getAllEvent($cal_service,$_GET['id']);
 	            break;
           case 'event':
               //Pour les événements
-           getAllEvent($cal_service);
+
+           $r=getAllEvent($cal_service,$_GET['id']);
                  break;
 	        case 'present':
 	            //Pour ajouter un présent
@@ -89,9 +90,9 @@ function getAllCalendar($service)
 
 }
 
-function getAllEvent($service)
+function getAllEvent($service,$CalId)
 {
-$events = $service->events->listEvents($_GET['id']);
+$events = $service->events->listEvents('primary',$CalId);
 //var_dump($events);
 $ev=json_encode($events);
 return $events->{'items'};
