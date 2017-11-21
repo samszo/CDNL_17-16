@@ -19,7 +19,7 @@ $(function () {
 
 		function(data){
       console.log(data);
-		data.forEach(function(d){var h=0;h=h+1;
+		data.forEach(function(d, i){var h=0;h=h+1;
 			d.recid =d.id;
 		});
     for (var i = 0; i < data.length; i++) {
@@ -47,10 +47,11 @@ $(function () {
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
           onClick: function(event) {
-          var tdId =$("#grid_grid_rec_"+event.recid).children('td')[4].getAttribute('id');
-          var divEl =$("#"+tdId).children('div')[0].getAttribute('title');
-          console.log(divEl);
-          showEvents(divEl);
+        	  var record = w2ui['grid'].get(event.recid);
+          //var tdId =$("#grid_grid_rec_"+event.recid).children('td')[4].getAttribute('id');
+          //var divEl =$("#"+tdId).children('div')[0].getAttribute('title');
+          console.log(record.id);
+          showEvents(record.id);
       //  console.log(colonnes[6].attr("title"))
         //  alert($("#grid_grid_rec_"+event.recid).attr("id"));
       }
