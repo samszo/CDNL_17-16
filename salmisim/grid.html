@@ -8,8 +8,10 @@
 </head>
 <body >
 
-<div id="grid" style="width: 100%; height: 350px;"></div>
-<div id="grid2" style="width: 100%; height: 350px;"></div>
+<div style="position: relative; height: 300px;">
+    <div id="grid" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
+    <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
+</div>
 
 <script type="text/javascript">
 $(function () {
@@ -40,9 +42,8 @@ $(function () {
 	        columns: [
 	            { field: 'recid', caption: 'recid', size: '30%' },
 	            { field: 'access', caption: 'Autorisation', size: '30%' },
-	            { field: 'description', caption: 'Description', size: '30%' },
-	            { field: 'id', caption: 'ID', size: '40%' },
-	            { field: 'location', caption: 'Lieux', size: '40%' },
+	            { field: 'id', caption: 'ID', size: '30%' },
+	
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
           onClick: function(event) {
@@ -85,12 +86,11 @@ inc++;
             //url: 'list.json',
             //method: 'GET', // need this to avoid 412 error on Safari
             records: data2,
-            columns:  [                
-            { field: 'summary', caption: 'text evenement', size: '180px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=right" },
-            { field: 'start.dateTime', caption: 'debut', size: '100%' }
-        
+            columns: [
                 
-              
+                { field: 'summary', caption: 'text evenement', size: '30%' },
+                
+                { field: 'start.dateTime', caption: 'debut', size: '30%' },
             ]
         });
       //  $("#bfCaptchaEntry").click(function(){ myFunction(); });
