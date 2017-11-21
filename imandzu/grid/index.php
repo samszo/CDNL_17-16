@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>W2UI Demo: grid_2</title>
+    <title>W2UI Demo: grid-18</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 </head>
-<body >
+<body>
+<form action="request.php?q=all">
+  <input type="submit" value="Connection">
+</form>
 <div style="position: relative; height: 300px;">
-    <div id="grid" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
+    <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
 </div>
 
-
 <script type="text/javascript">
+
 $(function () {
-	$.getJSON("agenda/index2.php?q=all",
+	$.getJSON("request.php?q=all",
 		function(data){
 		data.forEach(function(d){
 			d.recid = d.id;
 		});
-	    $('#grid').w2grid({ 
+	    $('#grid1').w2grid({ 
 	        header: 'Liste des agendas',	    	
-	        name: 'grid', 
+	        name: 'grid1', 
 	        show: {
 	            header         : true,
 	            toolbar     : true,
@@ -43,36 +46,35 @@ $(function () {
 	            { field: 'location', caption: 'Lieux', size: '40%' },
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
-			onClick: function (event) {
-					// enter the start Date for the search
-						var startdate = "2014-10-01T05:00:00-06:00";
-						
-					// enter the End Date for the search
-						var enddate = "2017-11-5T20:00:01-06:00";
-						$.getJSON("agenda/index2.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
-								function(data){
-							
-						w2ui['grid2'].clear();
-						var record = data;
-						w2ui['grid2'].add([
-							{ recid: 0, name: 'The Events:', value: record.event }				
-						])});
-					}	
-	    });  
-		
-		$('#grid2').w2grid({ 
+
+        onClick: function (event) {
+		// enter the start Date for the search
+			var startdate = prompt("Please enter the start date for the search","2017-10-01T05:00:00-06:00");
+			
+		// enter the End Date for the search
+			var enddate = prompt("Please enter the end date for the search","2017-11-5T20:00:01-06:00");
+
+			$.getJSON("request.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
+					function(data){
+				
+			w2ui['grid2'].clear();
+            //var record = data;
+            w2ui['grid2'].add(data);				
+            });
+        }
+
+	    }); 
+
+	    $('#grid2').w2grid({ 
         header: 'Details',
-        show: { header: true, columnHeaders: false },
+        show: { header: true, columnHeaders: true },
         name: 'grid2', 
         columns: [                
-            { field: 'name', caption: 'Name', size: '100px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=right" },
-            { field: 'value', caption: 'Value', size: '100%' }
-        ]
-    });	
-
-				
+            { field: 'title', caption: 'Titre'}
+        ] 
+    });		
 		
-	});	
+	});		
 });
 </script>
 
