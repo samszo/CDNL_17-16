@@ -85,30 +85,34 @@ function getAllCalendar($service)
     return $calendars;
     
 }
-    
+// Function To Get Calender Information
+	
 function getCalendarInfo($cal, $service)
 {
-      if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
-		  $optParams = array(
-	    "timeMin" => $_GET['startdate'],
-	    "timeMax" => $_GET['enddate']
-	  );
 
-	}
-	else{
+if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
 
-			  $optParams = array(
-					"timeMin" => "2017-10-01T05:00:00-06:00",
-					"timeMax" => "2017-11-5T20:00:01-06:00"
-				  );
-
-	}
+					  $optParams = array(
+						"timeMin" => $_GET['startdate'],
+						"timeMax" => $_GET['enddate']
+						);		  
+		}
+		else{
+			
+				      $optParams = array(
+						"timeMin" => '2017-10-01T05:00:00-06:00',
+						"timeMax" => '2017-11-5T20:00:01-06:00'
+					  );
+			
+		}
 
      $events = $service->events->listEvents($cal->getId(), $optParams);
 
      $i=1;
      foreach ($events->getItems() as $event) {
-       $eventDateStr .= '<font color=red>'.'Event name'. $i .'= '. '</font>' . $event->summary . ', ';
+       $eventDateStr .= $event->summary . ', ';
+	   $eventdescr .= $event->description . ', '; 
+	   $eventdate .= $event->created . ', ';
        $i++;
       }  
   
@@ -118,6 +122,8 @@ function getCalendarInfo($cal, $service)
         ,"description"=>$cal->getDescription()
         ,"location"=>$cal->getLocation()
 		,"event"=>$eventDateStr
+		,"eventdesc"=>$eventdescr
+        ,"eventdate"=>$eventdate
     );
         
     //récupère les roles
@@ -128,6 +134,8 @@ function getCalendarInfo($cal, $service)
   
     return $r;
 }
+
+////////////////////
 
 function getListeAcl($idCal, $service)
 {
