@@ -77,8 +77,6 @@ function showEvents(EventId) {console.log(EventId);
 var url="/THYP_17-18/salmisim/agenda/index.php?q=info&id="+EventId;
 console.log(url);
   $.getJSON(url,
-//  $.getJSON("/THYP_17-18/salmisim/agenda/index.php?q=info&id="+EventId,
-//$.getJSON("/THYP_17-18/salmisim/agenda/index.php?q=all",
   function(data2){
       console.log(data2);
       for (var i = 0; i < data2.length; i++) {
