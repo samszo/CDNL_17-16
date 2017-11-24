@@ -43,9 +43,21 @@ $(function () {
 	            { field: 'recid', caption: 'recid', size: '30%' },
 	            { field: 'access', caption: 'Autorisation', size: '30%' },
 	            { field: 'id', caption: 'ID', size: '30%' },
-	
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
+        onAdd: function (event) {
+            w2alert('add');
+        },
+        onEdit: function (event) {
+            w2alert('edit');
+        },
+        onDelete: function (event) {
+            console.log('delete has default behavior');
+        },
+        onSave: function (event) {
+            w2alert('save');
+        },
+
           onClick: function(event) {
         	  var record = w2ui['grid'].get(event.recid);
           //var tdId =$("#grid_grid_rec_"+event.recid).children('td')[4].getAttribute('id');
