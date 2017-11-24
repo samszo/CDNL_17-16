@@ -9,14 +9,7 @@ if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
 }
-//vérifie que le token n'ets pas expéré
-//if ($client->isAccessTokenExpired()) {
-//    unset($_SESSION['access_token']);
-//}
-//pour supprimer les droits https://myaccount.google.com/permissions?pli=1
-//print_r($_SESSION['access_token']);
-//$_SESSION['access_token'] = array("access_token"=>"ya29.GlvYBAAizcoG4SH14m1nTmBnZXqgabVmkNJyd0d1wFBMfDOTDmJvHWaD86CRJjFXRSY0SEiTfZjpvpWGzFAAkTfuhCICZ_hznkuCkDtSI5OIlCAz2M4aPOwZp3jS","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1506954203);
-   // var connected = $_GET['connect'];
+
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
