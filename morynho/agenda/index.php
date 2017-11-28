@@ -1,5 +1,5 @@
 <?php
-require_once '../../vendor/autoload.php';
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
@@ -18,8 +18,6 @@ if (isset($_GET['out'])) {
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $client->setAccessToken($_SESSION['access_token']);
     $cal_service = new Google_Service_Calendar($client);
-
-    $_GET['q'] = 'all';
 
     try {
 
@@ -178,4 +176,3 @@ function insertPresent($service, $calendarId, $desc, $mails){
 
 }
 ?>
-

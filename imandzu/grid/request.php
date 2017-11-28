@@ -5,7 +5,7 @@ session_start();
 
 
 $client = new Google_Client();
-$client->setAuthConfig('client_secret.json');
+$client->setAuthConfig('../trombinoscope/client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 

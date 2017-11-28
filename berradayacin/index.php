@@ -1,5 +1,6 @@
-<?php
-require_once '../vendor/autoload.php';
+
+<?php 
+require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 session_start();
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
@@ -11,14 +12,13 @@ if (isset($_GET['out'])) {
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $client->setAccessToken($_SESSION['access_token']);
     $cal_service = new Google_Service_Calendar($client);
-   // $_GET['q'] = 'all';
-
+    
     try {
         switch ($_GET['q']) {
             case 'all':
                 //Pour la liste complète des calendrier de la personne
                 $r = getAllCalendar($cal_service);
-                header('http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/kahina92/grid.html');
+                header('http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/berradayacin/grid.html');
                 break;
             case 'info':
                 //Pour les infos d'un calendrier
@@ -47,7 +47,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     }
     //
 } else {
-    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/kahina92/agenda/callback.php';
+    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/berradayacin/agenda/callback.php';
     header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 function getAllCalendar($service)
@@ -166,7 +166,7 @@ function insertPresent($service, $calendarId, $desc, $mails){
              'timeZone' => 'America/Los_Angeles',
          ),
          'recurrence' => array(
-             'RRULE:FREQ=DAILY;COUNT=1'
+             'RRULE:FREQ=DAILY;COUNT=2'
          ),
          'attendees' => array(
              array('email' => 'lpage@example.com'),

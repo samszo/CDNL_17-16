@@ -38,7 +38,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
 	        default:
-	            header('Location: ../simpleGrid.html');
+	            header('Location: ../grid.html');
 	           break;
 	    }
 	    	echo json_encode($r);    
@@ -47,7 +47,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/CDNL_17-18/Mounnjide/agenda/callbackCalender.php'; 
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/Mounnjide/agenda/callbackCalender.php'; 
 	
 	//&id='.$_GET['id'].'&startdate=.'$_GET['startdate'].&enddate=.'.$_GET['enddate'];
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));

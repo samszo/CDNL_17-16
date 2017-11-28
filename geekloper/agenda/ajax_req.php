@@ -32,6 +32,9 @@
         case 'info_event':
           echo getInfoEvent( $cal_service , $_GET['id_cal'] , $_GET['id_event']);
           break;
+        case 'add_new_event':
+          echo json_encode(addEvent( $cal_service , $_GET['id_cal'] , $_GET['summary']));
+          break;
       }
       
 
@@ -87,6 +90,41 @@ function getInfoEvent($service, $id_cal , $id_event){
   $html = $html . "<h3> Description :  </h3><p>" . $event->getDescription() . "</p></br>";
   return $html;
 
+}
+
+
+function addEvent($service, $calendarId, $summary){
+
+    try {
+            
+        $event = new Google_Service_Calendar_Event(array(
+            'summary' => $summary,
+            'location' => 'Paris 8',
+            'description' => '',
+            'start' => array(
+                'dateTime' => $_GET['startdate'],
+                'timeZone' => 'Europe/Paris',
+            ),
+            'end' => array(
+                'dateTime' => $_GET['enddate'],
+                'timeZone' => 'Europe/Paris',
+            )
+        ));
+        
+        $event = $service->events->insert($calendarId, $event);
+    
+    } catch (Exception $e) {
+        echo $e->getMessage();    
+    }    
+    //print_r($event);
+    
+    //return array('message'=>'Event created', 'event'=>$event);
+    $info = array();
+    $info["recid"] = $event['id'];
+    $info["title"] = $event['summary'];
+    
+    return $info;
+    
 }
 
 ?>

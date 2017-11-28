@@ -8,22 +8,19 @@
 </head>
 <body >
 
-
-<div style="position: relative; height: 300px;">
-    <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
-    <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
-</div>
+<div id="grid" style="width: 100%; height: 350px;"></div>
 
 <script type="text/javascript">
 $(function () {
-	$.getJSON("/THYP_17-18/Mounnjide/agenda/.php?q=all",
+	$.getJSON("agenda/index.php?q=all",
 		function(data){
 		data.forEach(function(d){
 			d.recid = d.id;
 		});
-	    $('#grid1').w2grid({ 
+		//http://w2ui.com/web/
+	    $('#grid').w2grid({ 
 	        header: 'Liste des agendas',	    	
-	        name: 'grid1', 
+	        name: 'grid', 
 	        show: {
 	            header         : true,
 	            toolbar     : true,
@@ -44,27 +41,25 @@ $(function () {
 	            { field: 'location', caption: 'Lieux', size: '40%' },
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
-        onClick: function (event) {
-		
-					function(data){
-				
-			w2ui['grid2'].clear();
-            //var record = data;
-            w2ui['grid2'].add(data);				
-            });
+			  onAdd: function (event) {
+            w2alert('add');
+        },
+		    onClick: function (event) {
+            w2ui['grid2'].clear();
+            var record = this.get(event.recid);
+            w2ui['grid2'].add([
+                { recid: 0, name: 'ID:', value: record.recid },
+                { recid: 1, name: 'First Name:', value: record.fname },
+                { recid: 2, name: 'Last Name:', value: record.lname },
+                { recid: 3, name: 'Email:', value: record.email },
+                { recid: 4, name: 'Date:', value: record.sdate }
+            ]);
         }
-	    }); 
-	    $('#grid2').w2grid({ 
-        header: 'Details',
-        show: { header: true, columnHeaders: true },
-        name: 'grid2', 
-        columns: [                
-            { field: 'title', caption: 'Titre'}
-        ] 
-    });		
+	    });    
 		
-	});		
+	});	
 });
 </script>
+
 </body>
 </html>

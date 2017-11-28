@@ -3,8 +3,8 @@ require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
-
 $client = new Google_Client();
+
 $client->setAuthConfig('client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
@@ -54,6 +54,11 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            //Pour ajouter un présent
 	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
+          case 'presentDate':
+    	        //Pour ajouter un présent
+    	        $r = insertPresentDate($cal_service, $_GET['id'], $_GET['desc'],$_GET['date']);
+    	        break;
+
 	        default:
 	            $r = "rien";
 	           break;
@@ -157,9 +162,9 @@ function getAclInfo($acl)
     return $r;
 }
 
-function insertPresent($service, $calendarId, $desc, $mails){
+function insertPresent($service, $calendarId, $desc, $mails,$dates){
+  $date = new DateTime();
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-    $date = new DateTime();
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
     $date->add(new DateInterval('PT60S'));
     $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
@@ -178,6 +183,42 @@ function insertPresent($service, $calendarId, $desc, $mails){
 
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
+        'location' => 'Paris 8',
+        'description' => $desc,
+        'start' => array(
+            'dateTime' => $dateDeb,
+            'timeZone' => 'Europe/Paris',
+        ),
+        'end' => array(
+            'dateTime' => $dateFin,
+            'timeZone' => 'Europe/Paris',
+        ),
+        'attendees' => $attendees,
+    ));
+    //print_r($event);
+    $event = $service->events->insert($calendarId, $event);
+    return array('message'=>'Event created', 'event'=>$event);
+
+}
+function insertPresentDate($service, $calendarId, $desc, $dates){
+    //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+    $date = new DateTime();
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $date->add(new DateInterval('PT60S'));
+    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+    echo $dateDeb." - ".$dateFin;
+    $attendees = array();
+
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
+    //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
+
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => $desc,
         'location' => 'Paris 8',
         'description' => $desc,
         'start' => array(
