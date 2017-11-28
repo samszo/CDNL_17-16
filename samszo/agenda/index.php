@@ -30,9 +30,10 @@ if(isset($_GET['out'])){
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
-	//
+	/*
 	$_GET['q'] = 'present';
 	$_GET['id'] = 'thyp1213@gmail.com';
+	*/
 	try {
 	    
 	    switch ($_GET['q']) {
