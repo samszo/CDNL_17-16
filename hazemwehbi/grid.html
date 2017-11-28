@@ -1,6 +1,7 @@
-
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="utf-8">
 <style>
 
 .w2ui-field input {
@@ -35,12 +36,11 @@
 
 </style>
 
-<head>
     <title>Calender</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
-<script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 
 
 
@@ -63,7 +63,20 @@
 ///   code to refresh the page every minute unless someone presses a key or moves the mouse. 
 /// Thanks https://stackoverflow.com/questions/4644027/how-to-automatically-reload-a-page-after-a-given-period-of-inactivity
 var pstyle = 'padding-right: 3px; width:30px height:30px color: #828AA7; text-shadow: 1px 1px 3px white;';
-var people = ['George Washington', 'John Adams', 'Thomas Jefferson', 'James Buchanan', 'James Madison', 'Abraham Lincoln', 'James Monroe', 'Andrew Johnson', 'John Adams', 'Ulysses Grant', 'Andrew Jackson', 'Rutherford Hayes', 'Martin Van Buren', 'James Garfield', 'William Harrison', 'Chester Arthur', 'John Tyler', 'Grover Cleveland', 'James Polk', 'Benjamin Harrison', 'Zachary Taylor', 'Grover Cleveland', 'Millard Fillmore', 'William McKinley', 'Franklin Pierce', 'Theodore Roosevelt', 'John Kennedy', 'William Howard', 'Lyndon Johnson', 'Woodrow Wilson', 'Richard Nixon', 'Warren Harding', 'Gerald Ford', 'Calvin Coolidge', 'James Carter', 'Herbert Hoover', 'Ronald Reagan', 'Franklin Roosevelt', 'George Bush', 'Harry Truman', 'William Clinton', 'Dwight Eisenhower', 'George W. Bush', 'Barack Obama'];
+
+var dataForm, dtEtu = [];
+var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefaJxHJWnLGS7xudeNJChpgpvqWdskujnlt03TkiWRHtW5uoTV8sYAH3HZ/pub?gid=642939185&single=true&output=csv';
+//var url = "data/LPDesignWebMobile_17-18.csv";        
+d3.csv(url, function(data) {
+	dataForm = data;
+	dataForm.forEach(function(d){
+		var txt = d["Prénom"].substring(0,1).toUpperCase()+d["Prénom"].substring(1).toLowerCase()
+		+' '
+		+d["Nom"].substring(0,1).toUpperCase()+d["Nom"].substring(1).toLowerCase();
+		dtEtu.push({id:d["E-mail"],text:txt});
+	});
+})
+
 
 // Code to refreash the Actual page to stay connected with Google API Calender Service
      var time = new Date().getTime();
@@ -117,6 +130,82 @@ var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" fr
 +'<div><label>Choose Your Guest List:</label><div> <input id=enum> </div></div></td><td></td><td><label> Event Description:</label><br>'
 +' <div> <textarea id="desc_event" type="text" style="width: 385px; height: 80px; resize: none"></textarea> </div></td></tr></table>';
 
+ var frmEvent  = $().w2form({ 
+    name   : 'frmEvent',
+    header : 'New Events',
+    fields : [
+        { field: 'Choose The Start Date For the Event', type: 'us-datetime', required: true },
+        { field: 'Choose The End Date For the Event', type: 'us-datetime', required: true },
+        { field: 'Event description',  type: 'text', required: true },
+        { field: 'Choose Your Guest List',  type: 'enum', required: true 
+            , options: { items: dtEtu} 
+        },
+    ],
+    actions: {
+        reset: function () {
+            this.clear();
+        },
+        save: function () {
+            this.save();
+        }
+    }
+});
+
+ var lyEvent =  $().w2layout({
+     name: 'lyEvent',
+     panels: [
+         { type: 'top', size: 50, content:'<iframe src='+ src +' style="border: 0" width="975" height="410" frameborder="0"'
+        	 +'scrolling=no></iframe>'},
+         { type: 'main', size:"50%", content: '' },
+         { type: 'bottom', size:"50%", content: '' }
+     ]
+ });
+ 
+ w2popup.open({
+     title   : 'Ajouter un document',
+     buttons: '<button class="w2ui-btn" onclick="create_event()">Create New Event</button>',
+     body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
+     showMax : true,
+     onOpen  : function (event) {
+         event.onComplete = function () {
+     	 	if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
+     	 	if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
+        	 
+	        	    	$('#w2ui-popup #main').w2layout(lyEvent);
+	        	    	w2ui['lyEvent'].content('main', $().w2form(frmEvent));            		            		
+	        	    	w2ui['lyEvent'].load('bottom', "http://localhost/THYP_17-18/samszo/palette/1.svg"
+	        	    			, 'pop-in', function () {
+	        			    console.log('content loaded');
+	        			    /*
+	        			    d3.json("../"+dt.id+"/palette/palette.json", function(data) {
+	    			    		data.zones.forEach(function(d){
+	    			    			d3.select('svg').select("#"+d.id)
+	    			    				.attr('tweet',d.text)
+	    			    				.on("click",function(e){
+	    			    				var t = d3.select(this).attr('tweet');
+	    			    				w2ui['layout'].content('left', t, 'pop-out');
+	    			    			});
+	    			    		});
+	    			    		*/
+	    			    });
+
+	        			    
+	        	    	$('input[type=us-datetime]').w2field('datetime');
+	        	    	
+	        	    	$('#enum').w2field('enum', { 
+	        	        items: dtEtu,
+	        	        openOnFocus: true,
+	        	        selected: []
+	        	    });
+	        	    	
+	        	    	
+	            	w2popup.max();
+         		
+         };
+     },
+ });
+ 
+ /*
     w2popup.open({
         width: 1000,
         height: 2000,
@@ -125,14 +214,8 @@ var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" fr
         buttons: '<button class="w2ui-btn" onclick="create_event()">Create New Event</button>',
         showMax: true
     });
-	
-	$('input[type=us-datetime]').w2field('datetime');
-	
-	$('#enum').w2field('enum', { 
-    items: people,
-    openOnFocus: true,
-    selected: [{ id: 0, text: 'wehbihazem@gmail.com' }, { id: 0, text: 'max4solution@gmail.com' }]
-});
+*/
+
 }
 /*
 		function showevent(){ w2popup.close();
@@ -205,10 +288,10 @@ $(function () {
 	        columns: [                
 	            { field: 'recid', caption: 'recid', size: '30%' },
 	            { field: 'access', caption: 'Autorisation', size: '30%' },
-	            { field: 'description', caption: 'Description', size: '30%' },
+	            { field: 'description', sortable: true, caption: 'Description', size: '30%' },
 	            { field: 'id', caption: 'ID', size: '40%' },
 	            { field: 'location', caption: 'Lieux', size: '40%' },
-	            { field: 'summary', caption: 'Titre', size: '120px' }
+	            { field: 'summary', sortable: true, caption: 'Titre', size: '120px' }
 	        ],
         onAdd: function (event) {
 			popup(event_id);
