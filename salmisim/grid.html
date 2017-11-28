@@ -15,8 +15,8 @@
 
 <script type="text/javascript">
 $(function () {
+ w2utils.lock($("#grid"),"chargement...",true); 
 	$.getJSON("/THYP_17-18/salmisim/agenda/index.php?q=all",
-
 		function(data){
       console.log(data);
 		data.forEach(function(d, i){
@@ -45,19 +45,7 @@ $(function () {
 	            { field: 'id', caption: 'ID', size: '30%' },
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
-        onAdd: function (event) {
-            w2alert('add');
-        },
-        onEdit: function (event) {
-            w2alert('edit');
-        },
-        onDelete: function (event) {
-            console.log('delete has default behavior');
-        },
-        onSave: function (event) {
-            w2alert('save');
-        },
-
+        
           onClick: function(event) {
         	  var record = w2ui['grid'].get(event.recid);
           //var tdId =$("#grid_grid_rec_"+event.recid).children('td')[4].getAttribute('id');
@@ -74,6 +62,7 @@ $(function () {
 })
 var inc=2;
 function showEvents(EventId) {console.log(EventId);
+ w2utils.lock($("#grid2"),"chargement...",true);
 var url="/THYP_17-18/salmisim/agenda/index.php?q=info&id="+EventId;
 console.log(url);
   $.getJSON(url,
@@ -92,8 +81,25 @@ inc++;
                 footer        : true,
                 lineNumbers    : true,
                 selectColumn: true,
-                expandColumn: true
+                expandColumn: true,
+				 toolbarAdd: true,
             },
+			onAdd: function (event) {
+            w2alert('add<input id="inputDate" type="us-date">')
+ .ok(function () { console.log('ok'); alert($("#inputDate").val()) });
+
+var month = (new Date()).getMonth() + 1;
+var year  = (new Date()).getFullYear();
+
+
+// US Format
+$('input[type=us-date]').w2field('date');
+
+
+
+        },
+	
+           
             //url: 'list.json',
             //method: 'GET', // need this to avoid 412 error on Safari
             records: data2,
