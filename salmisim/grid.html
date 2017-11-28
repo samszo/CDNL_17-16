@@ -86,7 +86,7 @@ inc++;
             },
 onAdd: function (event) {
             w2alert('Add<input id="inputDate" type="us-date"><input  type="us-time">')
-          .ok(function () { console.log('ok'); alert($("#inputDate") .val()) });
+ .ok(function () { console.log('ok'); alert($("#inputDate") .val()) });
 var month = (new Date()).getMonth() + 1;
 var year  = (new Date()).getFullYear();
 
@@ -95,6 +95,7 @@ var year  = (new Date()).getFullYear();
 $('input[type=us-date]').w2field('date' );
 $('input[type=us-time]').w2field('time',  { format: 'h24' });
              
+			 
         },
 	
            
