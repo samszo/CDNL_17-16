@@ -91,7 +91,7 @@ function getAllCalendar($service)
 
 function getAllEvent($service)
 {
-$events = $service->events->listEvents($_GET['id']);
+$events = $calendarListEntry = $service->calendarList->get('keepup.gi2.ial@gmail.com');
 //var_dump($events);
 $ev=json_encode($events);
 return $events->{'items'};
