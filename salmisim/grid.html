@@ -84,19 +84,17 @@ inc++;
                 expandColumn: true,
 				 toolbarAdd: true,
             },
-			onAdd: function (event) {
-            w2alert('add<input id="inputDate" type="us-date">')
- .ok(function () { console.log('ok'); alert($("#inputDate").val()) });
-
+onAdd: function (event) {
+            w2alert('Add<input id="inputDate" type="us-date"><input  type="us-time">')
+          .ok(function () { console.log('ok'); alert($("#inputDate") .val()) });
 var month = (new Date()).getMonth() + 1;
 var year  = (new Date()).getFullYear();
 
 
 // US Format
-$('input[type=us-date]').w2field('date');
-
-
-
+$('input[type=us-date]').w2field('date' );
+$('input[type=us-time]').w2field('time',  { format: 'h24' });
+             
         },
 	
            
