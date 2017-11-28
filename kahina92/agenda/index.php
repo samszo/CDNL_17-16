@@ -154,16 +154,16 @@ function insertPresent($service, $calendarId, $desc, $mails){
 }
  function addEvent($service) {
      $event = new Google_Service_Calendar_Event(array(
-         'summary' => 'Google I/O 2017',
-         'location' => '800 Howard St., San Francisco, CA 94103',
+        'summary' => 'Google I/O 2017',
+         'location' => ' Paris, 75003',
          'description' => 'A chance to hear more about Google\'s developer products.',
          'start' => array(
              'dateTime' => '2017-11-28T09:00:00-07:00',
-             'timeZone' => 'America/Los_Angeles',
+             'timeZone' => 'Europe/Paris',
          ),
          'end' => array(
              'dateTime' => '2017-11-28T17:00:00-07:00',
-             'timeZone' => 'America/Los_Angeles',
+             'timeZone' => 'Europe/Paris',
          ),
          'recurrence' => array(
              'RRULE:FREQ=DAILY;COUNT=1'
