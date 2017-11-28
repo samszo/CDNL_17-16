@@ -40,10 +40,10 @@ $(function () {
 	        //method: 'GET', // need this to avoid 412 error on Safari
 	        records: data,
 	        columns: [
-	            { field: 'recid', caption: 'recid', size: '30%' },
-	            { field: 'access', caption: 'Autorisation', size: '30%' },
-	            { field: 'id', caption: 'ID', size: '30%' },
-	            { field: 'summary', caption: 'Titre', size: '120px' }
+	            { field: 'recid', caption: 'recid', sortable: true,size: '30%' },
+	            { field: 'access', caption: 'Autorisation',sortable: true, size: '30%' },
+	            { field: 'id', caption: 'ID', sortable: true,size: '30%' },
+	            { field: 'summary', caption: 'Titre', sortable: true,size: '120px' }
 	        ],
         
           onClick: function(event) {

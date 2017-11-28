@@ -5,12 +5,17 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css"/>
+    <!--ajout-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+    <meta charset="UTF-8">
 </head>
 <body>
 
-<div id="grid" style="width: 100%; height: 350px;"></div>
-<br>
-<div id="grid_2" style="width: 100%; height: 350px;"></div>
+
+<div style="position: relative; height: 300px;">
+    <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
+    <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
+</div>
 
 <script type="text/javascript">
     $(function () {
@@ -20,9 +25,9 @@
                 data.forEach(function (d) {
                     d.recid = d.id;
                 });
-                $('#grid').w2grid({
+                $('#grid1').w2grid({
                     header: 'Liste des agendas',
-                    name: 'grid',
+                    name: 'grid1',
                     show: {
                         header: true,
                         toolbar: true,
@@ -59,13 +64,14 @@
                 lesEvenements.forEach(function (d_e) {
                     d_e.recid = d_e.id;
                 });
-                $('#grid_2').w2grid({
+                $('#grid2').w2grid({
                     header: 'Evenement de l\'agendas',
-                    name: 'grid_2',
+                    name: 'grid2',
                     show: {
                         header: true,
                         toolbar: true,
                         footer: true,
+                         toolbarAdd: true,
                         lineNumbers: true,
                         selectColumn: true,
                         expandColumn: true
@@ -74,11 +80,51 @@
                     columns: [
                         {field: 'recid', caption: 'ID', size: '50%'},
                         {field: 'summary', caption: 'Titre', size: '50%'}
-                    ]
-                });
+                    ],
+            onAdd: function (event)
+            {
+                w2popup.open({
+                        title     : 'Popup ',
+                        body      : '<div class="w2ui-centered">'+
+                        //titre
+                                    '<div class="w2ui-field">'+
+                                        '<label>Titre d\'evenement:</label>'+
+                                        '<div> <input type="text"> </div>'+
+                                    '</div>'+
+                        //date
+
+                                    '<div class="w2ui-field">'+
+                                        '<label>Date:</label>'+
+                                        '<div> <input type="eu-date"> </div>'+
+                                    '</div>'+
+
+                        //heure
+                                    '<div class="w2ui-field">'+
+                                    '<label>Time:</label>'+
+                                    ' <div> <input type="eu-time"> </div>'+
+                                    
+
+                                    //
+                                    '</div>',
+
+
+
+                        buttons   : '<button class="w2ui-btn" onclick="w2popup.close();">Annuler</button> '+
+                                    '<button class="w2ui-btn" onclick="w2popup.lock(\'Loading\', true); '+
+                                    '        setTimeout(function () { w2popup.unlock(); }, 2000);">Insérer</button>',
+                        width     : 500,
+                        height    : 300,
+                        
+                    });
+
+                $('input[type=eu-date]').w2field('date',  { format: 'd.m.yyyy' });
+                $('input[type=eu-time]').w2field('time',  { format: 'heure' });
+}
+            
+        
+            });
             });
     }
 </script>
-
 </body>
 </html>
