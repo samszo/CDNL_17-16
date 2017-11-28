@@ -89,7 +89,13 @@ function getAllCalendar($service)
 	
 function getCalendarInfo($cal, $service)
 {
+	//echo $_GET['start_date']."  1111 ".$_GET['end_date'];
+    $date = new DateTime($_GET['startdate']);  $date1 = new DateTime($_GET['enddate']);
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+  //  $date->add(new DateInterval('PT60S'));
+    $dateFin = $date1->format('Y-m-d').'T'.$date1->format('H:i:s');
 
+	
 if(isset($_GET['startdate']) & isset($_GET['enddate']) ){
 
 					  $optParams = array(
@@ -158,11 +164,20 @@ function getAclInfo($acl)
 
 function insertPresent($service, $calendarId, $desc, $mails){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-    $date = new DateTime();
+	
+
+	
+	//echo $_GET['start_date']."  1111 ".$_GET['end_date'];
+    $date = new DateTime($_GET['start_date']);  $date1 = new DateTime($_GET['end_date']);
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
-    $date->add(new DateInterval('PT60S'));
-    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
-    echo $dateDeb." - ".$dateFin;
+  //  $date->add(new DateInterval('PT60S'));
+    $dateFin = $date1->format('Y-m-d').'T'.$date1->format('H:i:s');
+	
+	
+	//$dateDeb = $_GET['start_date'];
+   // $dateFin = $_GET['end_date'];
+	
+   // echo $dateDeb." - ".$dateFin;
 	
 
 $mails = explode(",", $mails);	
