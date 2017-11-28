@@ -1,21 +1,180 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>W2UI Demo: grid-18</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+    <style type="text/css">
+      .sk-cube-grid {
+        width: 40px;
+        height: 40px;
+        margin: 100px auto;
+      }
+
+      .sk-cube-grid .sk-cube {
+        width: 33%;
+        height: 33%;
+        background-color: #333;
+        float: left;
+        -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+                animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out; 
+      }
+      .sk-cube-grid .sk-cube1 {
+        -webkit-animation-delay: 0.2s;
+                animation-delay: 0.2s; }
+      .sk-cube-grid .sk-cube2 {
+        -webkit-animation-delay: 0.3s;
+                animation-delay: 0.3s; }
+      .sk-cube-grid .sk-cube3 {
+        -webkit-animation-delay: 0.4s;
+                animation-delay: 0.4s; }
+      .sk-cube-grid .sk-cube4 {
+        -webkit-animation-delay: 0.1s;
+                animation-delay: 0.1s; }
+      .sk-cube-grid .sk-cube5 {
+        -webkit-animation-delay: 0.2s;
+                animation-delay: 0.2s; }
+      .sk-cube-grid .sk-cube6 {
+        -webkit-animation-delay: 0.3s;
+                animation-delay: 0.3s; }
+      .sk-cube-grid .sk-cube7 {
+        -webkit-animation-delay: 0s;
+                animation-delay: 0s; }
+      .sk-cube-grid .sk-cube8 {
+        -webkit-animation-delay: 0.1s;
+                animation-delay: 0.1s; }
+      .sk-cube-grid .sk-cube9 {
+        -webkit-animation-delay: 0.2s;
+                animation-delay: 0.2s; }
+
+      @-webkit-keyframes sk-cubeGridScaleDelay {
+        0%, 70%, 100% {
+          -webkit-transform: scale3D(1, 1, 1);
+                  transform: scale3D(1, 1, 1);
+        } 35% {
+          -webkit-transform: scale3D(0, 0, 1);
+                  transform: scale3D(0, 0, 1); 
+        }
+      }
+
+      @keyframes sk-cubeGridScaleDelay {
+        0%, 70%, 100% {
+          -webkit-transform: scale3D(1, 1, 1);
+                  transform: scale3D(1, 1, 1);
+        } 35% {
+          -webkit-transform: scale3D(0, 0, 1);
+                  transform: scale3D(0, 0, 1);
+        } 
+      }
+    </style>
 </head>
 <body>
 <br><br>
 <br>
+<div class="sk-cube-grid" id="loading">
+  <div class="sk-cube sk-cube1"></div>
+  <div class="sk-cube sk-cube2"></div>
+  <div class="sk-cube sk-cube3"></div>
+  <div class="sk-cube sk-cube4"></div>
+  <div class="sk-cube sk-cube5"></div>
+  <div class="sk-cube sk-cube6"></div>
+  <div class="sk-cube sk-cube7"></div>
+  <div class="sk-cube sk-cube8"></div>
+  <div class="sk-cube sk-cube9"></div>
+</div>
 <div style="position: relative; height: 300px;">
     <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
 </div>
-<p id="info_event">Selectionner un event !</p>
+<div class="sk-cube-grid" id="spinner">
+  <div class="sk-cube sk-cube1"></div>
+  <div class="sk-cube sk-cube2"></div>
+  <div class="sk-cube sk-cube3"></div>
+  <div class="sk-cube sk-cube4"></div>
+  <div class="sk-cube sk-cube5"></div>
+  <div class="sk-cube sk-cube6"></div>
+  <div class="sk-cube sk-cube7"></div>
+  <div class="sk-cube sk-cube8"></div>
+  <div class="sk-cube sk-cube9"></div>
+</div>
+<p id="info_event"></p>
 
 <script type="text/javascript">
+$("#spinner").hide();
+
+function insert_event(calendarid){
+  if(calendarid == "null"){alert("Vous devez séléctionner un calendrier avant de créer un événement");w2popup.close();}
+  else{
+    if($("#startevent").val()== "" || $("#endevent").val() == "")
+        alert('Tout les champs sont obligatoires');
+    else{
+
+      var startdate = ISODateString(Date.parse($("#startevent").val())); //" 2017-11-20T05:00:00-06:00"
+      var enddate = ISODateString(Date.parse($("#endevent").val()));
+      if(startdate<enddate){
+            w2popup.lock('Loading', true);
+            $.getJSON("ajax_req.php?q=add_new_event&id_cal="+calendarid+"&startdate="+ startdate +"&enddate="+ enddate +"&summary="+ $("#summary").val(),
+              function(data){
+                //console.log(data);
+                w2ui['grid2'].add(data);
+
+              });
+            w2popup.unlock();
+            w2popup.close();
+          }
+
+
+
+      else
+        alert('La date de debut est plus petite que la date de fin !');
+      }
+
+
+  }
+}
+function get_events(calendarid){
+  
+  if($("#startdate").val()== "" || $("#enddate").val() == "")
+      alert('Tout les champs sont obligatoires');
+  else{
+
+  var startdate = ISODateString(Date.parse($("#startdate").val())); //" 2017-11-20T05:00:00-06:00"
+  var enddate = ISODateString(Date.parse($("#enddate").val()));
+  
+  
+
+  if(startdate<enddate){
+    $("#spinner").show();
+
+    $.getJSON("ajax_req.php?q=info&id="+calendarid+"&startdate="+ startdate +"&enddate="+ enddate,
+        function(data){
+      
+          w2ui['grid2'].clear();
+
+          w2ui['grid2'].add(data);
+          $("#spinner").hide();
+        });
+
+    w2popup.close();
+  }
+  else
+    alert('La date de debut est plus petite que la date de fin !');
+  }
+}
+
+/* COPIED FROM STACKOVERFLOW // use a function for the exact format desired... */
+function ISODateString(d){
+ function pad(n){return n<10 ? '0'+n : n}
+ return d.getUTCFullYear()+'-'
+      + pad(d.getUTCMonth()+1)+'-'
+      + pad(d.getUTCDate())+'T'
+      + pad(d.getUTCHours())+':'
+      + pad(d.getUTCMinutes())+':'
+      + pad(d.getUTCSeconds())+'Z'}
+
 
 $(function () {
   $.getJSON("ajax_req.php?q=all",
@@ -31,8 +190,8 @@ $(function () {
               toolbar     : true,
               footer        : true,
               lineNumbers    : true,
-              selectColumn: true,
-              expandColumn: true
+              selectColumn: false,
+              expandColumn: false
           },        
           
           //url: 'list.json',
@@ -48,42 +207,98 @@ $(function () {
           ],
 
         onClick: function (event) {
-    // enter the start Date for the search
-      var startdate = prompt("Please enter the start date for the search","2017-11-20T05:00:00-06:00");
-      
-    // enter the End Date for the search
-      var enddate = prompt("Please enter the end date for the search","2017-11-22T20:00:01-06:00");
-
-      $.getJSON("ajax_req.php?q=info&id="+event.recid+"&startdate="+startdate+"&enddate="+enddate,
-          function(data){
-        
-      w2ui['grid2'].clear();
-
-            w2ui['grid2'].add(data);
+    
+          w2popup.open({
+            width: 400,
+            height: 200,
+            modal     : true,
+            showClose : true,
+            title: 'Set an interval',
+            body: '<div class="w2ui-field dt">'+
+                  '<label>Date de debut :</label>'+
+                  '<div> <input type="us-datetime" id="startdate"> </div>'+
+                  '</div>'+
+                  '<div class="w2ui-field dt">'+
+                  '<label>Date de fin : </label>'+
+                  '<div> <input type="us-datetime" id="enddate"> </div>'+
+                  '</div>',
+            buttons : '<button class="w2ui-btn" onclick="get_events(\''+ event.recid +'\');">Ok</button>',
+            showMax: true
           });
+
+      $('input[type=us-datetime]').w2field('datetime');
+
         }
 
       }); 
 
       $('#grid2').w2grid({ 
         header: 'Details',
-        show: { header: true, columnHeaders: true },
-        name: 'grid2', 
+        show: { header: true, columnHeaders: true, toolbar: true, toolbarAdd: true },
+        name: 'grid2',
+        onAdd: function (event) {
+      
+          w2popup.open({
+            width: 550,
+            height: 740,
+            title: 'Événement',
+            body    : '<div id="svgOutputDiv" class="svgDiv">'+
+                  '<?xml version="1.0" encoding="utf-8"?> <!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --> <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500" enable-background="new 0 0 500 500" xml:space="preserve"> <g id="C"> <g> <circle fill="#2980B9" cx="383" cy="250" r="100"/> <g> <path fill="#FFFFFF" d="M416.2,291c-4.2,2.1-12.5,4.2-23.1,4.2c-24.7,0-43.3-15.6-43.3-44.3c0-27.4,18.6-46,45.8-46 c10.9,0,17.8,2.3,20.8,3.9l-2.7,9.2c-4.3-2.1-10.4-3.6-17.7-3.6c-20.5,0-34.2,13.1-34.2,36.1c0,21.5,12.4,35.2,33.7,35.2 c6.9,0,13.9-1.4,18.5-3.6L416.2,291z"/> </g> </g> </g> <g id="D"> <g> <circle fill="#2C3E50" cx="117" cy="250" r="100"/> <g> <path fill="#FFFFFF" d="M81.1,207.3c6.9-1,15.1-1.8,24.1-1.8c16.3,0,27.8,3.8,35.5,10.9c7.8,7.2,12.4,17.3,12.4,31.5 c0,14.3-4.4,26-12.6,34.1c-8.2,8.2-21.7,12.6-38.7,12.6c-8.1,0-14.8-0.4-20.5-1V207.3z M92.4,284.8c2.9,0.5,7,0.7,11.4,0.7 c24.2,0,37.3-13.5,37.3-37.2c0.1-20.7-11.6-33.8-35.5-33.8c-5.9,0-10.3,0.5-13.3,1.2V284.8z"/> </g> </g> </g> <g id="B"> <g> <circle fill="#16A085" cx="250" cy="400" r="100"/> <g> <path fill="#FFFFFF" d="M222.4,357.3c4.9-1,12.7-1.8,20.7-1.8c11.3,0,18.6,2,24.1,6.4c4.6,3.4,7.3,8.6,7.3,15.5 c0,8.5-5.6,15.9-14.8,19.2v0.3c8.3,2.1,18.1,9,18.1,22c0,7.5-3,13.3-7.4,17.6c-6.1,5.6-16,8.2-30.3,8.2c-7.8,0-13.8-0.5-17.6-1 V357.3z M233.7,393.2H244c12,0,19-6.2,19-14.7c0-10.3-7.8-14.3-19.2-14.3c-5.2,0-8.2,0.4-10,0.8V393.2z M233.7,435.2 c2.2,0.4,5.5,0.5,9.5,0.5c11.7,0,22.5-4.3,22.5-17c0-12-10.3-16.9-22.6-16.9h-9.4V435.2z"/> </g> </g> </g> <g id="A"> <g> <circle fill="#8E44AD" cx="250" cy="100" r="100"/> <g> <path fill="#FFFFFF" d="M234.1,116.3l-9.1,27.6h-11.7l29.8-87.6h13.7l29.9,87.6h-12.1l-9.4-27.6H234.1z M262.9,107.4l-8.6-25.2 c-2-5.7-3.3-10.9-4.6-16h-0.3c-1.3,5.2-2.7,10.5-4.4,15.9l-8.6,25.4H262.9z"/> </g> </g> </g> </svg>'+
+                  '</div>'+
+                  '    <div class="w2ui-field">'+
+                  '        <label>Summary:</label>'+
+                  '        <div>'+
+                  '            <input type="text" id="summary" disabled/>'+
+                  '        </div>'+
+                  '    </div>'+
+                  '<div class="w2ui-field dt">'+
+                  '<label>Date de debut :</label>'+
+                  '<div> <input type="us-datetime" id="startevent"> </div>'+
+                  '</div>'+
+                  '<div class="w2ui-field dt">'+
+                  '<label>Date de fin : </label>'+
+                  '<div> <input type="us-datetime" id="endevent"> </div>'+
+                  '</div>',
+            buttons : '<button class="w2ui-btn" onclick="insert_event(\''+ w2ui['grid1'].getSelection()[0] +'\');">Ok</button>'+
+                  '<button class="w2ui-btn" onclick="w2popup.close()">Cancel</button>',
+            showMax: true
+          });
+
+          $('input[type=us-datetime]').w2field('datetime');
+
+          $('#A').click(function() {
+            $("#summary").val("Titre A");
+          });
+
+          $('#B').click(function() {
+            $("#summary").val("Titre B");
+          });
+
+          $('#C').click(function() {
+            $("#summary").val("Titre C");
+          });
+
+          $('#D').click(function() {
+            $("#summary").val("Titre D");
+          });
+
+        }, 
         columns: [                
             { field: 'title', caption: 'Title'}
         ] ,
 
         onClick: function (event) {
-
+          $("#spinner").show();
           $.get( "ajax_req.php?q=info_event&id_cal="+ w2ui['grid1'].getSelection()[0] +"&id_event="+event.recid, function( data ) {
              $("#info_event").html( data );
+             $("#spinner").hide();
           });
 
         }
     });   
-    
+    $("#loading").hide();
   }); 
-  
+
   
 });
 </script>
