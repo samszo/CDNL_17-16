@@ -11,7 +11,7 @@ if (isset($_GET['out'])) {
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $client->setAccessToken($_SESSION['access_token']);
     $cal_service = new Google_Service_Calendar($client);
-    $_GET['q'] = 'all';
+   // $_GET['q'] = 'all';
 
     try {
         switch ($_GET['q']) {
@@ -47,7 +47,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     }
     //
 } else {
-    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/kahina92/saimi1/callback.php';
+    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/saimi1/agenda/callback.php';
     header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 function getAllCalendar($service)
@@ -154,19 +154,19 @@ function insertPresent($service, $calendarId, $desc, $mails){
 }
  function addEvent($service) {
      $event = new Google_Service_Calendar_Event(array(
-         'summary' => 'Google I/O 2017',
-         'location' => '800 Howard St., San Francisco, CA 94103',
+        'summary' => 'Google I/O 2017',
+         'location' => ' Paris, 75003',
          'description' => 'A chance to hear more about Google\'s developer products.',
          'start' => array(
              'dateTime' => '2017-11-28T09:00:00-07:00',
-             'timeZone' => 'America/Los_Angeles',
+             'timeZone' => 'Europe/Paris',
          ),
          'end' => array(
              'dateTime' => '2017-11-28T17:00:00-07:00',
-             'timeZone' => 'America/Los_Angeles',
+             'timeZone' => 'Europe/Paris',
          ),
          'recurrence' => array(
-             'RRULE:FREQ=DAILY;COUNT=2'
+             'RRULE:FREQ=DAILY;COUNT=1'
          ),
          'attendees' => array(
              array('email' => 'lpage@example.com'),
