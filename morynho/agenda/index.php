@@ -38,7 +38,12 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
                 break;
             case 'event':
                 //Pour la liste complète des evenement du calendrier
-                $r = getAllEvent($cal_service, $_GET['calendrier_id']) ;
+                $r = getAllEvent($cal_service, $_GET['calendrier_id']);
+                break;
+
+            case 'add_event':
+                //Pour la liste complète des evenement du calendrier
+                $r = addCalendarEvent($cal_service, $_GET['calendrier_id'], $_GET['titre'], $_GET['date'], $_GET['start'], $_GET['end']);
                 break;
             default:
                 $r = "rien";
@@ -46,7 +51,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
         }
         echo json_encode($r);
     } catch (Exception $e) {
-        echo 'ERREUR : ',  $e->getMessage(), "\n";
+        echo 'ERREUR : ', $e->getMessage(), "\n";
     }
     //
 } else {
@@ -58,8 +63,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 function getAllCalendar($service)
 {
     //Pour la liste complète des calendrier de la personne
-    $calendarList = 	$service->calendarList->listCalendarList();
-    while(true) {
+    $calendarList = $service->calendarList->listCalendarList();
+    while (true) {
         foreach ($calendarList->getItems() as $calendarListEntry) {
             $calendars[] = getCalendarInfo($calendarListEntry, $service);
         }
@@ -80,7 +85,7 @@ function getAllEvent($service, $calendar_id)
 
     $events = $service->events->listEvents($calendar_id);
 
-    while(true) {
+    while (true) {
         foreach ($events->getItems() as $event) {
             $calendars[] = $event;
         }
@@ -102,28 +107,48 @@ function getAllEvent($service, $calendar_id)
 function getCalendarInfo($cal, $service)
 {
 
-    $r = array("summary"=>$cal->getSummary()
-    ,"id"=>$cal->getId()
-    ,"access"=>$cal->getAccessRole()
-    ,"description"=>$cal->getDescription()
-    ,"location"=>$cal->getLocation()
+    $r = array("summary" => $cal->getSummary()
+    , "id" => $cal->getId()
+    , "access" => $cal->getAccessRole()
+    , "description" => $cal->getDescription()
+    , "location" => $cal->getLocation()
     );
 
     //récupère les roles
-    if($r["access"]!="writer" && $r["access"]!="reader"){
+    if ($r["access"] != "writer" && $r["access"] != "reader") {
         $roles = getListeAcl($r["id"], $service);
-        $r["roles"]=$roles;
+        $r["roles"] = $roles;
     }
 
     return $r;
 }
 
+function addCalendarEvent($service, $cal, $titre, $date, $heure_debut, $heure_fin)
+{
+
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => $titre,
+        'start' => array(
+            'dateTime' => $date . 'T' . $heure_debut . ':00',
+            'timeZone' => 'Europe/Paris',
+        ),
+        'end' => array(
+            'dateTime' => $date . 'T' . $heure_fin . ':00',
+            'timeZone' => 'Europe/Paris',
+        ),
+    ));
+
+    $event = $service->events->insert($cal, $event);
+    $r = "evenement créer";
+    return $r;
+}
+
 function getListeAcl($idCal, $service)
 {
-    $acls ="";
+    $acls = "";
     $acl = $service->acl->listAcl($idCal);
     foreach ($acl->getItems() as $rule) {
-        $acls[]=getAclInfo($rule);
+        $acls[] = getAclInfo($rule);
     }
     return $acls;
 }
@@ -131,22 +156,23 @@ function getListeAcl($idCal, $service)
 
 function getAclInfo($acl)
 {
-    $r = array("id"=>$acl->getId()
-    ,"role"=>$acl->getRole()
+    $r = array("id" => $acl->getId()
+    , "role" => $acl->getRole()
     );
     return $r;
 }
 
-function insertPresent($service, $calendarId, $desc, $mails){
+function insertPresent($service, $calendarId, $desc, $mails)
+{
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
     $date = new DateTime();
-    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $dateDeb = $date->format('Y-m-d') . 'T' . $date->format('H:i:s');//'2017-10-17T14:30:00'
     $date->add(new DateInterval('PT60S'));
-    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
-    echo $dateDeb." - ".$dateFin;
+    $dateFin = $date->format('Y-m-d') . 'T' . $date->format('H:i:s');
+    echo $dateDeb . " - " . $dateFin;
     $attendees = array();
     foreach ($mails as $m) {
-        $attendees[]=array('email'=>$m);
+        $attendees[] = array('email' => $m);
     }
     /*
      * array(
@@ -172,7 +198,8 @@ function insertPresent($service, $calendarId, $desc, $mails){
     ));
     //print_r($event);
     $event = $service->events->insert($calendarId, $event);
-    return array('message'=>'Event created', 'event'=>$event);
+    return array('message' => 'Event created', 'event' => $event);
 
 }
+
 ?>

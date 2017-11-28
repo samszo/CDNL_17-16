@@ -10,10 +10,10 @@ $client->setAuthConfig('client_secret.json');
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
 
-if(isset($_GET['out'])){
+/*if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
-}
+}*/
 
 //vérifie que le token n'ets pas expéré
 //if ($client->isAccessTokenExpired()) {
@@ -59,7 +59,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/samszo/agenda/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/rabiata/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
