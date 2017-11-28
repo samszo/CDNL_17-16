@@ -211,7 +211,7 @@ function insertPresent($service, $calendarId, $desc, $mails){
 <div id="grid2" style="width: 100%; height: 350px;"></div>
 
 <script type="text/javascript">
-$(function () {
+$(function () { w2utils.lock($("#grid"),"loading...",true);
 	$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
 //$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
 		function(data){
@@ -268,7 +268,7 @@ $(function () {
 
 })
 var inc=2;
-function showEvents(EventId) {console.log(EventId);
+function showEvents(EventId) {console.log(EventId); w2utils.lock($("#grid2"),"loading...",true);
 var url="/THYP_17-18/ameni26/agenda/index.php?q=info&id="+EventId;
 console.log(url);
   $.getJSON(url,
@@ -289,17 +289,38 @@ inc++;
                 footer        : true,
                 lineNumbers    : true,
                 selectColumn: true,
-                expandColumn: true
+                expandColumn: true,
+		toolbarAdd: true,
             },
+	onAdd: function (event) {
+            w2alert('Add event:<br>sujet<SELECT name="nom" id="inputTitre" size="1"><OPTION>Présence</option><OPTION>Réunion</option><OPTION>Sortie</option><OPTION>RDV</option></SELECT><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
+ .ok(function () { console.log('ok'); var sujet= $("#inputTitre option:selected").text();alert($("#inputDate").val())
+ var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+sujet+"&date="+$("#inputDate").val();
+ $.ajax({
+  url: lien,
+  context: document.body
+}).done(function(data) {
+  console.log(data);showEvents(EventId);
+//  $("#result").append("Validé");
+});
+});
 
+var month = (new Date()).getMonth() + 1;
+var year  = (new Date()).getFullYear();
+
+$('input[type=us-time]').w2field('time',  { format: 'h12' });
+
+// US Format
+$('input[type=us-date]').w2field('date');
+        },
             //url: 'list.json',
             //method: 'GET', // need this to avoid 412 error on Safari
             records: data2,
             columns: [
                 { field: 'recid', caption: 'recid', size: '30%' },
                 { field: 'summary', caption: 'resume', size: '30%' },
-                { field: 'creator.displayName', caption: 'createur', size: '30%' },
-                { field: 'start.dateTime', caption: 'debut', size: '30%' },
+                { field: 'creator.displayName', caption: 'createur', size: '30%' }
+
 
 
             ]

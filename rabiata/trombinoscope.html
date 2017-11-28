@@ -11,65 +11,23 @@
  <body>
  	<div id="etuTrombi"/>
  	<div id="etuData"/>
- 	<form id="myField"  method="post" action="" >
-
+ 	
 	<script>
-
-	var person = [];
-	person["36831301933"] = "mans@gmail.com";
-	person["36831301813"] = "mansour.ismail.pro@gmail.com";
-	person["37469324182"] = "wehbihazem@gmail.com";
-	person["37500371201"] = "fb.mory@gmail.com"; 
-    person["37469326552"] = "elmounjide.hamza@gmail.com";
-	person["37469306082"] = "saadhamdani1995@gmail.com"; 
-    person["36790405664"] = "derfoufiabdel@gmail.com";
-	person["36790405044"] = "berradayacin@gmail.com"; 
-    person["36790360594"] = "bouna.nadia.isamm@gmail.com"; 
-	person["37469269022"] = "rabia.taleb@yhoo.fr"; 
-    person["37242244670"] = "nourhenyahyaoui@gmail.com"; 
-	person["37452460846"] = "lydia.lebaz@gmail.com"; 
-    person["37469229002"] = "hassina.salmi90@gmail.com"; 
-	person["23647903238"] = "aoua.kahina@gmail.com"; 
-    person["37500282781"] = "roza.arezki@outlook.fr"; 
-	person["36790307514"] = "rabahmaakni@gmail.com"; 
-    person["23647865848"] = "soukaynamanessoub@gmail.com"; 
-	person["23647866988"] = "hatim.elmabrouk@gmail.com"; 
-    person["37469188442"] = "frdfhdewl@gmail.com"; 
-	person["37583377632"] = "nourhenyahyaoui@gmail.com"; 
-    person["37583374782"] = "nouryadef@gmail.com"; 
-	person["37617449841"] = "cylia.oulebsir@yahoo.fr"; 	
-
-	var fruits = [];
-	
-
-	function save(){
-	var str=[];
-		for (i = 0; i < fruits.length; i++) {
-			if(document.getElementById(fruits[i]).checked)  { str.push(person[fruits[i]]);}
-}
-
-document.getElementById('myField').action ="agenda/calender.php?q=present&id="+document.getElementById('id').value+"&desc="+document.getElementById('desc').value+"&email="+str.toString();
-
-
-}
-
 	//merci beaucoup à https://etienner.fr/flickr-json
 	$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686924962130&extras=original_format&format=json&jsoncallback=?",
 	function(data){
-
 	    // Debut de la boucle
 	    $.each(data.photoset.photo, function(i,item){
-		 fruits.push(item.id); 
 	        // Sockage de l'image dans une variable
 	        var photo = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_s.jpg';
 	        // Sockage de l'url dans une variable
 	        var url= 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_c.jpg';
 	        // Affichage des images dans la balise ul#images avec le l'url dans la balise li
-	        $("<img/>").attr({src: photo, alt: item.title}).appendTo("#etuTrombi").wrap("<li> <input type='checkbox'  name='"+item.id+"' id='"+item.id +"' /><a href=' "+ url +"' title=' "+ item.title +" ' ></a></li>");
-	  }); //Fin de la boucle
+	        $("<img/>").attr({src: photo, alt: item.title}).appendTo("#etuTrombi").wrap("<li><a href=' "+ url +"' title=' "+ item.title +" ' ></a></li>");
+	    }); //Fin de la boucle
 	});
 	// Fin appel JSON 	
-
+ 	
  	/*
     <script type="text/javascript">
 	    var urlPhoto = "php/lecteurFlux.php?url=THYP1617photo";
@@ -97,16 +55,8 @@ document.getElementById('myField').action ="agenda/calender.php?q=present&id="+d
    	    })
    	  */
    	    
-		
 </script>
-	<input type="hidden" id="q" value=""><br>
-<label/>l'email
-	<input type="text" id="id" value=""><br><br>
-<label/>
-	<input type="text" id="desc" value="la date d'entrée"><br>
-	<input type="hidden" id="email" value=""><br>
-	<input type="hidden" id="présent" value=""><br>
-<center><button onclick="save()" >submit</button></center><br> 
-</form>
+
+
  </body>
 </html>
