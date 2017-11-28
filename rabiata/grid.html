@@ -42,7 +42,8 @@ $(function () {
 	            { field: 'summary', caption: 'Titre', size: '120px' }
 	        ],
 			  onAdd: function (event) {
-            w2alert('add');
+           w2alert('Add event:<br>sujet<inpu type="text"><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
+ .ok(function () { };
         },
 		    onClick: function (event) {
             w2ui['grid2'].clear();
