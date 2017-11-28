@@ -106,13 +106,16 @@ $(function () {
 		onAdd: function () {
 			
 			
+			if(id_calender == null){alert('choisissez agenda');}
+			else {
+			
 							w2popup.open({
 								width: 550,
-								height: 600,
+								height: 670,
 								title: 'Événement',
 								body    :   '<div id="svgOutputDiv" class="svgDiv">'+
 											'<br><br><center>Choisissez le type d\'événement</center>'+
-											'<svg width="500" height="500" fill="none" stroke-width="1px">'+
+											'<svg width="400" height="450" fill="none" stroke-width="1px">'+
 											'<g id="polygon"></g>'+
 											'<g id="innerArc"></g>'+
 											'<g id="arc">'+
@@ -123,13 +126,16 @@ $(function () {
 											'</g>'+
 											'</svg>'+
 											'</div>'+
-										  '</palettediv></center>',
+										  '</palettediv><center><FONT COLOR="#B1AFB7"> Cours Techniques informatiques web</FONT> <br>'+
+										  '<FONT COLOR="#0E6790"> Cours E-service Open source</FONT><br>'+
+										  '<FONT COLOR="#6AEE9C"> Cours Developpement Mobile</FONT> <br>'+ 
+										  '<FONT COLOR="#967659"> Cours Gestion conduite de projet</FONT> </center>',
 								buttons : 
 										  '<button class="w2ui-btn" onclick="w2popup.close()">Cancel</button>',
 								showMax: true
 							});
 							
-							
+			}
 
 							//-------------------------------------------------------------------------------------------
 							$('.palette').click(function() 
