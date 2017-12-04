@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>W2UI Demo: grid-1</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css"/>
+</head>
+<body >
+
+<div id="grid" style="width: 100%; height: 350px;"></div>
+<br>
+<div id="grid_2" style="width: 100%; height: 350px;"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $.getJSON("agenda/index.php?q=all",
+            function (data) {
+                console.log(data);
+                data.forEach(function (d) {
+                    d.recid = d.id;
+                });
+                $('#grid').w2grid({
+                        header: 'Liste des agendas',
+                        name: 'grid',
+                        show: {
+                            header: true,
+                            toolbar: true,
+                            footer: true,
+                            toolbarAdd: true,
+                            lineNumbers: true,
+                            selectColumn: true,
+                            expandColumn: true
+                        },
+
+                        //url: 'list.json',
+                        //method: 'GET', // need this to avoid 412 error on Safari
+                        records: data,
+                        columns: [
+                            {field: 'recid', caption: 'recid', size: '30%'},
+                            {field: 'summary', caption: 'Evenement', size: '30%'},
+                            {field: 'description', caption: 'Description', size: '30%'},
+                            {field: 'id', caption: 'ID', size: '40%'},
+                            {field: 'location', caption: 'Lieux', size: '40%'},
+                        ],
+                            onAdd: function (event) {
+                            w2popup.open({
+                                width: 500,
+                                height: 300,
+                                title: 'Popup Title',
+                                body:'<svg width="500" height="500" fill="none" stroke-width="1px"><g id="polygon"><path fill-opacity="0.5" fill="rgb(161,67,166)" stroke="rgb(243,254,222)" d="M 250 250 L400 249.99999999706205 325.00000000296836 379.90381056595197z"></path><path fill-opacity="0.5" fill="rgb(128,220,45)" stroke="rgb(32,208,62)" d="M 250 250 L324.99999999787974 120.09618943111005 400 249.99999999706205z"></path><path fill-opacity="0.5" fill="rgb(224,107,230)" stroke="rgb(187,85,50)" d="M 250 250 L174.9999999983038 120.09618943331353 324.99999999787974 120.09618943111005z"></path><path fill-opacity="0.5" fill="rgb(124,16,44)" stroke="rgb(5,153,216)" d="M 250 250 L100 250.00000000146898 174.9999999983038 120.09618943331353z"></path><path fill-opacity="0.5" fill="rgb(112,19,135)" stroke="rgb(158,145,136)" d="M 250 250 L175.0000000008481 379.90381056815545 100 250.00000000146898z"></path><path fill-opacity="0.5" fill="rgb(219,128,58)" stroke="rgb(63,78,82)" d="M 250 250 L325.00000000042405 379.903810567421 175.0000000008481 379.90381056815545z"></path></g><g id="innerArc"><path fill-opacity="0.5" fill="rgb(161,67,166)" stroke="rgb(243,254,222)" d="M 250 250 L400 249.99999999706205 A 150 150 0 0 0 325.00000000296836 379.90381056595197z"></path><path fill-opacity="0.5" fill="rgb(128,220,45)" stroke="rgb(32,208,62)" d="M 250 250 L324.99999999787974 120.09618943111005 A 150 150 0 0 0 400 249.99999999706205z"></path><path fill-opacity="0.5" fill="rgb(224,107,230)" stroke="rgb(187,85,50)" d="M 250 250 L174.9999999983038 120.09618943331353 A 150 150 0 0 0 324.99999999787974 120.09618943111005z"></path><path fill-opacity="0.5" fill="rgb(124,16,44)" stroke="rgb(5,153,216)" d="M 250 250 L100 250.00000000146898 A 150 150 0 0 0 174.9999999983038 120.09618943331353z"></path><path fill-opacity="0.5" fill="rgb(112,19,135)" stroke="rgb(158,145,136)" d="M 250 250 L175.0000000008481 379.90381056815545 A 150 150 0 0 0 100 250.00000000146898z"></path><path fill-opacity="0.5" fill="rgb(219,128,58)" stroke="rgb(63,78,82)" d="M 250 250 L325.00000000042405 379.903810567421 A 150 150 0 0 0 175.0000000008481 379.90381056815545z"></path></g><g id="arc"><path fill-opacity="0.5" fill="rgb(161,67,166)" stroke="rgb(243,254,222)" d="M 250 250 L400 249.99999999706205 A 150 150 0 0 1 325.00000000296836 379.90381056595197z"></path><path fill-opacity="0.5" fill="rgb(128,220,45)" stroke="rgb(32,208,62)" d="M 250 250 L324.99999999787974 120.09618943111005 A 150 150 0 0 1 400 249.99999999706205z"></path><path fill-opacity="0.5" fill="rgb(224,107,230)" stroke="rgb(187,85,50)" d="M 250 250 L174.9999999983038 120.09618943331353 A 150 150 0 0 1 324.99999999787974 120.09618943111005z"></path><path fill-opacity="0.5" fill="rgb(124,16,44)" stroke="rgb(5,153,216)" d="M 250 250 L100 250.00000000146898 A 150 150 0 0 1 174.9999999983038 120.09618943331353z"></path><path fill-opacity="0.5" fill="rgb(112,19,135)" stroke="rgb(158,145,136)" d="M 250 250 L175.0000000008481 379.90381056815545 A 150 150 0 0 1 100 250.00000000146898z"></path><path fill-opacity="0.5" fill="rgb(219,128,58)" stroke="rgb(63,78,82)" d="M 250 250 L325.00000000042405 379.903810567421 A 150 150 0 0 1 175.0000000008481 379.90381056815545z"></path></g></svg>' +
+                                '    <div> <input type="text"> </div>\n' +
+                                '</div>'+
+                                '<div class="w2ui-field">\n' +
+                                '    <label>Date:</label>\n' +
+                                '    <div> <input type="us-date"> </div>\n' +
+                                '</div>'+
+                                '<div class="w2ui-field">\n' +
+                                    '    <label>Time:</label>\n' +
+                                '    <div> <input type="us-time"> </div>\n' +
+                                '</div>',
+
+
+
+                                buttons: '<button class="w2ui-btn" onclick="lock(\'\')">Lock</button>' +
+                                '<button class="w2ui-btn" onclick="lock(\'Loading...\')">Lock With a Message</button>',
+                                showMax: true
+                            });
+                                $('input[type=us-date]').w2field('date', {format: 'd/m/yyyy'});
+                                $('input[type=us-time]').w2field('time',  { format: 'h24' });
+                        }
+                ,
+
+                    onClick: function (event) {
+                        event.onComplete = function () {
+                            if (typeof  w2ui['grid_2'] !== 'undefined') {
+                                w2ui['grid_2'].destroy();
+                            }
+                            evenements(this);
+                        };
+                    }
+                });
+            });
+    });
+    function lock (msg) {
+        $.getJSON('agenda/index.php?q=addEvent');
+
+    }
+    function evenements(grid) {
+        console.log('selection:'+ grid.getSelection());
+        $.getJSON('agenda/index.php?q=event&calendrier_id=' + grid.getSelection(),
+            function (lesEvenements) {
+                lesEvenements.forEach(function (d_e) {
+                    d_e.recid = d_e.id;
+                });
+                $('#grid_2').w2grid({
+                    header: 'Evenement de l\'agendas',
+                    name: 'grid_2',
+                    show: {
+                        header: true,
+                        toolbar: true,
+                        footer: true,
+                        lineNumbers: true,
+                        selectColumn: true,
+                        expandColumn: true
+                    },
+                    records: lesEvenements,
+                    columns: [
+                        {field: 'recid', caption: 'ID', size: '50%'},
+                        {field: 'summary', caption: 'Titre', size: '50%'}
+                    ]
+                });
+            });
+    }
+</script>
+
+</body>
+</html>

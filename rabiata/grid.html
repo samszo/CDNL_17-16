@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>W2UI Demo: grid-1</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+</head>
+<body >
+
+<div id="grid" style="width: 100%; height: 350px;"></div>
+
+<script type="text/javascript">
+$(function () {
+	$.getJSON("agenda/index.php?q=all",
+		function(data){
+		data.forEach(function(d){
+			d.recid = d.id;
+		});
+		//http://w2ui.com/web/
+	    $('#grid').w2grid({ 
+	        header: 'Liste des agendas',	    	
+	        name: 'grid', 
+	        show: {
+	            header         : true,
+	            toolbar     : true,
+	            footer        : true,
+	            lineNumbers    : true,
+	            selectColumn: true,
+	            expandColumn: true
+	        },        
+	        
+	        //url: 'list.json',
+	        //method: 'GET', // need this to avoid 412 error on Safari
+	        records: data,
+	        columns: [                
+	            { field: 'recid', caption: 'recid', size: '30%' },
+	            { field: 'access', caption: 'Autorisation', size: '30%' },
+	            { field: 'description', caption: 'Description', size: '30%' },
+	            { field: 'id', caption: 'ID', size: '40%' },
+	            { field: 'location', caption: 'Lieux', size: '40%' },
+	            { field: 'summary', caption: 'Titre', size: '120px' }
+	        ],
+			  onAdd: function (event) {
+           w2alert('Add event:<br>sujet<inpu type="text"><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
+ .ok(function () { };
+        },
+		    onClick: function (event) {
+            w2ui['grid2'].clear();
+            var record = this.get(event.recid);
+            w2ui['grid2'].add([
+                { recid: 0, name: 'ID:', value: record.recid },
+                { recid: 1, name: 'First Name:', value: record.fname },
+                { recid: 2, name: 'Last Name:', value: record.lname },
+                { recid: 3, name: 'Email:', value: record.email },
+                { recid: 4, name: 'Date:', value: record.sdate }
+            ]);
+        }
+	    });    
+		
+	});	
+});
+</script>
+
+</body>
+</html>

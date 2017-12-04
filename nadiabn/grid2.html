@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>W2UI Demo: grid-17</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+</head>
+<body>
+
+<div id="grid" style="width: 100%; height: 400px;"></div>
+<div class="w2ui-field" id="date">
+		<!-- <label>Date:</label>  -->
+     <!-- <div> <input type="eu-date"> </div> -->
+</div>
+<div class="w2ui-field" id="time">
+     <!-- <label>Time:</label> -->
+     <!-- <div> <input type="eu-time"> </div>  -->
+</div>
+<form id="eventagenda" action="agenda/index.php" method="post"></form>
+<script type="text/javascript">
+$(function () {    
+	$.getJSON("/THYP_17-18/nadiabn/agenda/index.php?q=all",
+		function(data){
+      console.log(data);
+		data.forEach(function(d, i){var h=0;h=h+1;
+			d.recid =d.id;
+		});
+    for (var i = 0; i < data.length; i++) {
+      data[i].recid="Calendar"+(i+1)
+    }
+    $('#grid').w2grid({ 
+        name: 'grid', 
+        show: { 
+            toolbar: true,
+            footer: true,
+            toolbarAdd: true,
+            toolbarDelete: true,
+            toolbarSave: true,
+            toolbarEdit: true
+        },
+        searches: [                
+            { field: 'lname', caption: 'Last Name', type: 'text' },
+            { field: 'fname', caption: 'First Name', type: 'text' },
+            { field: 'email', caption: 'Email', type: 'text' }
+        ],
+        columns: [                
+            { field: 'recid', caption: 'recid', size: '30%' },
+	        { field: 'access', caption: 'Autorisation', size: '30%' },
+	        { field: 'id', caption: 'ID', size: '30%' },
+			{ field: 'summary', caption: 'Titre', size: '120px' }
+	
+        ],
+        onAdd: function (event) {
+            //$('input[type=eu-date]').w2field('date',  { format: 'd.m.yyyy' });
+			popup();
+        },
+        onEdit: function (event) {
+            //w2alert('edit');
+			//palette();
+        },
+        onDelete: function (event) {
+            console.log('delete has default behavior');
+        },
+        onSave: function (event) {
+            w2alert('save');
+        },
+        /*records: [
+            { recid: 1, fname: 'Jane', lname: 'Doe', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 2, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 3, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 4, fname: 'Susan', lname: 'Ottie', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 5, fname: 'Kelly', lname: 'Silver', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 6, fname: 'Francis', lname: 'Gatos', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 7, fname: 'Mark', lname: 'Welldo', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 8, fname: 'Thomas', lname: 'Bahh', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 9, fname: 'Sergei', lname: 'Rachmaninov', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 20, fname: 'Jill', lname: 'Doe', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 21, fname: 'Frank', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 22, fname: 'Peter', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 23, fname: 'Andrew', lname: 'Ottie', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 24, fname: 'Manny', lname: 'Silver', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 25, fname: 'Ben', lname: 'Gatos', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 26, fname: 'Doer', lname: 'Welldo', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 27, fname: 'Shashi', lname: 'Bahh', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+            { recid: 28, fname: 'Av', lname: 'Rachmaninov', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
+        ]*/
+		records: data,
+	        columns: [
+	            { field: 'recid', caption: 'recid', size: '30%' },
+	            { field: 'access', caption: 'Autorisation', size: '30%' },
+	            { field: 'id', caption: 'ID', size: '30%' },
+	            { field: 'summary', caption: 'Titre', size: '120px' }
+	        ],
+    });    
+});
+function popup() {
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    var svgNS = svg.namespaceURI;
+
+    /*var rect = document.createElementNS(svgNS,'rect');
+    rect.setAttribute('x',5);
+    rect.setAttribute('y',5);
+    rect.setAttribute('width',500);
+    rect.setAttribute('height',500);
+    rect.setAttribute('fill','#95B3D7');
+    svg.appendChild(rect);
+    document.body.appendChild(svg);
+
+    var h=document.createElement('a');
+    var t=document.createTextNode('Hello World');
+    h.appendChild(t);
+    document.body.appendChild(h); */
+    w2popup.open({
+		
+        width   : 580,
+        height  : 350,
+        title   : 'Creer votre evenement',
+        body    : '<div>'+ '<a href="agenda/index.php?q=all">'+'<svg height="100" width="100"> '+' <text x="0" y="15" fill="pink">'+'anniversaire</text>'+' <text x="0" y="30" fill="grey">'+'conferences</text>'+' <text x="0" y="45" fill="blue">'+'entretiens</text>'+'</svg>'+'</a>'+'</div>'+'<div class="w2ui-field" id="time">'+
+                  '     Entrer les donnees. <br><br>'+
+                  '    	Date: <input type="eu-date"><br>'+
+                  '     Heure: <input type="eu-time"> </div><br>'+
+                  <!-- '     Text 3: <input class="w2ui-input" style="margin-bottom: 5px"><br>'+ -->
+                  '</div>',
+        buttons : '<button class="w2ui-btn" onclick="addevent()">Creer</button>'+
+                  '<button class="w2ui-btn" onclick="w2popup.close()">Annuler</button>'+
+				  '<button class="w2ui-btn" onclick="lock(\'Chargement en cours...\')">Verouiller</button>',
+        showMax: true
+				  
+    });
+	
+	
+}
+function lock (msg) {
+    w2popup.lock(msg, true);
+    setTimeout(function () { w2popup.unlock(); }, 2000);
+}
+/*
+function palette() {
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    var svgNS = svg.namespaceURI;
+
+    var rect = document.createElementNS(svgNS,'rect');
+    rect.setAttribute('x',5);
+    rect.setAttribute('y',5);
+    rect.setAttribute('width',500);
+    rect.setAttribute('height',500);
+    rect.setAttribute('fill','#95B3D7');
+    svg.appendChild(rect);
+    document.body.appendChild(svg);
+
+    var h=document.createElement('a');
+    var t=document.createTextNode('Hello World');
+    h.appendChild(t);
+    document.body.appendChild(h);
+}*/
+function addevent() {
+document.getElementById('eventagenda').action ="index.php?q=present";
+}
+});
+
+</script>
+
+</body>
+</html>
