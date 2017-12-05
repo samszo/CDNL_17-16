@@ -1,0 +1,17 @@
+{
+	"titre": "Cours Master 2 THYP",
+	"zones": [{
+			"id": "path16",
+			"text": "Cours Techniques informatiques web"
+		},
+		{
+			"id": "path18",
+			"text": "Cours E-service Open source"
+		},
+		{
+			"id": "path20",
+			"text": "Cours Developpement Mobile"
+		}
+
+	]
+}
