@@ -19,7 +19,7 @@
 </div>
 <form id="eventagenda" action="agenda/index.php" method="post"></form>
 <script type="text/javascript">
-$(function () {    
+$(function () { w2utils.lock($("#grid"),"loading...",true); 
     $.getJSON("/THYP_17-18/nourhenyh/agenda/index.php?q=all",
         function(data){
       console.log(data);
@@ -115,16 +115,21 @@ function popup() {
         
         width   : 580,
         height  : 350,
-        title   : 'Creer votre evenement',
-        body    : '<div>'+ '<a href="agenda/index.php?q=all">'+'<svg height="100" width="100"> '+' <text x="0" y="15" fill="red">'+'anniversaire</text><br>'+' <text x="0" y="15" fill="blue">'+'conferences</text>'+'</svg>'+'</a>'+'</div>'+'<div class="w2ui-field" id="time">'+
-                  '     Entrer les donnees. <br><br>'+
-                  '     Date: <input type="eu-date"><br>'+
-                  '     Heure: <input type="eu-time"> </div><br>'+
+        title   : 'Ajouter votre Événement',
+        body    : '<div class="w2ui-field" id="time">'+
+                  '     Bonjour , Veuillez entrer votre evenement, Merci. <br><br>'+
+                  '     Evenement:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="eu-date"><br>'+
+                  '     Agenda:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="eu-date"><br>'+
+                  '     Description: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="eu-date"><br>'+
+                  '     Remarque: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp<input type="eu-date"><br>'+
+                  '     Date: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<input type="eu-date"><br>'+
                   <!-- '     Text 3: <input class="w2ui-input" style="margin-bottom: 5px"><br>'+ -->
                   '</div>',
-        buttons : '<button class="w2ui-btn" onclick="addevent()">Creer</button>'+
-                  '<button class="w2ui-btn" onclick="w2popup.close()">Annuler</button>',
-                  
+
+        buttons : '<a class="w2ui-btn" href="agenda/index.php?q=all"><input type="button"value="Creer" style="margin-top: 10px;" ></a>'+
+                  '<a class="w2ui-btn" onclick="w2popup.close() "><input type="button"value="Annuler" style="margin-top: 10px;" ></a>'
+                  ,
+                 
     });
     
     
