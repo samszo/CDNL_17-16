@@ -134,15 +134,29 @@ inc++;
            
        ],
 
-       actions: {
+     actions: {
            reset: function () {
+
                this.clear();
            },
-           save: function () {
+           save: function () {var debut_ev=w2ui['frmEvent'].record['debut_ev'];
+           var fin_ev=w2ui['frmEvent'].record['fin_ev'];
+           var description_ev=w2ui['frmEvent'].record['description_ev'];
+           var lien="http://localhost/THYP_17-18/salmisim/agenda/index.php?q=presentDate&id="+EventId+"&desc="+description_ev+"&date="+debut_ev;
+            $.ajax({
+             url: lien,
+             context: document.body
+           }).done(function(data) {
+             console.log(data);showEvents(EventId);
+           //  $("#result").append("Validé");
+           });
                this.save();
-           }
+           },
+   
        }
    });
+   //   alert($('input[type=us-time]').value);
+
     w2popup.open({
         title   : 'Creer un nouveau evenement',
         body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
