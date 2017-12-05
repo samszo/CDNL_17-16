@@ -15,6 +15,8 @@ if(isset($_GET['out'])){
     $client->revokeToken();
 }
 
+
+
 //vérifie que le token n'ets pas expéré
 //if ($client->isAccessTokenExpired()) {
 //    unset($_SESSION['access_token']);
@@ -211,6 +213,8 @@ function insertPresent($service, $calendarId, $desc, $mails){
 <div id="grid2" style="width: 100%; height: 350px;"></div>
 
 <script type="text/javascript">
+dtEtu = [];
+
 $(function () { w2utils.lock($("#grid"),"loading...",true);
 	$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
 //$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
@@ -267,6 +271,7 @@ $(function () { w2utils.lock($("#grid"),"loading...",true);
   //$(".w2ui-footer-left").ready(function(){alert()})
 
 })
+
 var inc=2;
 function showEvents(EventId) {console.log(EventId); w2utils.lock($("#grid2"),"loading...",true);
 var url="/THYP_17-18/ameni26/agenda/index.php?q=info&id="+EventId;
@@ -293,16 +298,97 @@ inc++;
 		toolbarAdd: true,
             },
 	onAdd: function (event) {
-            w2alert('Add event:<br>sujet<SELECT name="nom" id="inputTitre" size="1"><OPTION>Présence</option><OPTION>Réunion</option><OPTION>Sortie</option><OPTION>RDV</option></SELECT><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
+    var lyEvent =  $().w2layout({
+        name: 'lyEvent',
+        panels: [
+            { type: 'top', size: 50, content:'<iframe  style="border: 0" width="975" height="410" frameborder="0"'
+              +'scrolling=no></iframe>'},
+            { type: 'main', size:"50%", content: '' },
+            { type: 'bottom', size:"50%", content: '' }
+        ]
+    });
+    //var src = "https://calendar.google.com/calendar/embed?src=amenibenmrad@gmail.com&ctz=Europe/Paris";
+    var frmEvent  = $().w2form({
+       name   : 'frmEvent',
+       header : '',
+       fields : [
+           { name: 'debut_ev',field: 'Date de début', type: 'us-datetime', required: true },
+           { name: 'fin_ev',field: 'Date de fin', type: 'us-time', required: true },
+           { name: 'description_ev',field: 'Description',  type: 'text', required: true },
+
+       ],
+       actions: {
+           reset: function () {
+
+               this.clear();
+           },
+           save: function () {var debut_ev=w2ui['frmEvent'].record['debut_ev'];
+           var fin_ev=w2ui['frmEvent'].record['fin_ev'];
+           var description_ev=w2ui['frmEvent'].record['description_ev'];
+
+               this.save();
+           },
+    onLoad: function(event) {
+      $('#debut_ev').w2field('date');
+      $('#fin_ev').w2field('date');
+
+
+    }
+       }
+   });
+   //   alert($('input[type=us-time]').value);
+
+    w2popup.open({
+        title   : 'Créer un nouveau événement',
+        body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
+        showMax : true,
+        onOpen  : function (event) {
+            event.onComplete = function () {
+           if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
+           if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
+
+                     $('#w2ui-popup #main').w2layout(lyEvent);
+                     w2ui['lyEvent'].content('main', $().w2form(frmEvent));
+                     w2ui['lyEvent'].load('bottom', "http://localhost/THYP_17-18/ameni26/palette/1.svg"
+                         , 'pop-in', function () {
+                       console.log('content loaded');
+                       /*
+                       d3.json("../"+dt.id+"/palette/palette.json", function(data) {
+                       data.zones.forEach(function(d){
+                         d3.select('svg').select("#"+d.id)
+                           .attr('tweet',d.text)
+                           .on("click",function(e){
+                           var t = d3.select(this).attr('tweet');
+                           w2ui['layout'].content('left', t, 'pop-out');
+                         });
+                       });
+                       */
+                   });
+
+
+                     $('input[type=us-datetime]').w2field('datetime');
+
+                     $('#enum').w2field('enum', {
+                       items: dtEtu,
+                       openOnFocus: true,
+                       selected: []
+                   });
+
+
+                   w2popup.max();
+
+            };
+        },
+          /*  w2alert('Add event:<br>sujet<SELECT name="nom" id="inputTitre" size="1"><OPTION>Présence</option><OPTION>Réunion</option><OPTION>Sortie</option><OPTION>RDV</option></SELECT><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
  .ok(function () { console.log('ok'); var sujet= $("#inputTitre option:selected").text();alert($("#inputDate").val())
  var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+sujet+"&date="+$("#inputDate").val();
  $.ajax({
   url: lien,
   context: document.body
 }).done(function(data) {
-  console.log(data);showEvents(EventId);
+  console.log(data);showEvents(EventId);*/
 //  $("#result").append("Validé");
-});
+
 });
 
 var month = (new Date()).getMonth() + 1;
@@ -320,8 +406,6 @@ $('input[type=us-date]').w2field('date');
                 { field: 'recid', caption: 'recid', size: '30%' },
                 { field: 'summary', caption: 'resume', size: '30%' },
                 { field: 'creator.displayName', caption: 'createur', size: '30%' }
-
-
 
             ]
 
