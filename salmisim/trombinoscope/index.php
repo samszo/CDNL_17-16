@@ -226,7 +226,7 @@ function validerPresence(){
   url: lien,
   context: document.body
 }).done(function() {
-  $("#result").append("Validé");
+        $("#result").append("la présence est Validé");
 });
 }
 
