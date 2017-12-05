@@ -9,7 +9,14 @@ if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
 }
-
+//vérifie que le token n'ets pas expéré
+//if ($client->isAccessTokenExpired()) {
+//    unset($_SESSION['access_token']);
+//}
+//pour supprimer les droits https://myaccount.google.com/permissions?pli=1
+//print_r($_SESSION['access_token']);
+//$_SESSION['access_token'] = array("access_token"=>"ya29.GlvYBAAizcoG4SH14m1nTmBnZXqgabVmkNJyd0d1wFBMfDOTDmJvHWaD86CRJjFXRSY0SEiTfZjpvpWGzFAAkTfuhCICZ_hznkuCkDtSI5OIlCAz2M4aPOwZp3jS","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1506954203);
+   // var connected = $_GET['connect'];
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
@@ -32,6 +39,10 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            //Pour ajouter un présent
 	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
+				 case 'presentDate':
+    	        //Pour ajouter un présent
+    	        $r = insertPresentDate($cal_service, $_GET['id'], $_GET['desc'],$_GET['date']);
+    	        break;
 	        default:
 	            header('Location: ../grid.html');
 	           break;
@@ -111,19 +122,19 @@ function getAclInfo($acl)
     );
     return $r;
 }
-function insertPresent($service, $calendarId, $desc, $mails){
+function insertPresentDate($service, $calendarId, $desc, $dates){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
     $date = new DateTime();
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
     $date->add(new DateInterval('PT60S'));
     $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
     echo $dateDeb." - ".$dateFin;
-	
-$mails = explode(",", $mails);	
-$attendees = array();
- foreach ($mails  as $m) {
-      $attendees[]=array('email'=>$m);
-  }
+    $attendees = array();
+   foreach ($mails as $m) {
+        $attendees[]=array('email'=>$m);
+    }
+
+  
     //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
     
     $event = new Google_Service_Calendar_Event(array(

@@ -57,17 +57,27 @@ hidePreloader();
  var frmEvent  = $().w2form({ 
     name   : 'frmEvent',
     header : 'Details',
-    fields : [
-        { field: 'Date de debut : ', type:'datetime', required: true },
-        { field: 'Date de fin : ', type:'datetime', required: true },
-        { field: 'Description : ' ,type: 'text', required: true }
-    ],
+	record: {
+									Start_date : '',
+									End_date : '',
+									Description : ''
+								},
+								fields : [
+									{ name: 'Start_date', type:'datetime', required: true },
+									{ name: 'End_date', type:'datetime', required: true },
+									{ name: 'Description', type: 'text', required: true },
+
+								],
     actions: {
-        reset: function () {
+        effacer: function () {
             this.clear();
         },
-        save: function () {
-            create_event(); //this.save(); 
+        sauvegarder: function () {
+            create_event(); 
+        },
+		quitter: function () {
+			close_event();
+             
         }
     }
 });
@@ -86,10 +96,37 @@ hidePreloader();
 		}
 	],
 	onClick: function (event) {
+		
 		element = event.target;
-		w2ui['layout'].load('main', "palette/" + element+".svg", 'pop-in', function () {
+					w2ui['layout'].load('main', "palette/"+element+".svg", 'pop-in' , function () {
 						
-		console.log('content loaded');});
+			
+			d3.json("palette/" + element+".json", function(data) {
+			    		console.log(data.titre);
+						w2ui['frmEvent'].record['Description'] = data.titre; 
+									
+									
+								    w2ui['frmEvent'].refresh();
+						/*data.zones.forEach(function(d){
+			    			var g = d3.select('svg').select("#"+d.id)
+			    				.attr('class','zones')
+			    				.on("click",function(e){
+
+									
+									
+									w2ui['frmEvent'].record['Description'] = d.text; 
+									
+									
+								    w2ui['frmEvent'].refresh();
+									
+
+			    				});
+			    		});	*/								
+			    });
+			
+			
+			
+			});
 										
 			
 	
@@ -111,7 +148,12 @@ hidePreloader();
 		{ type: 'bottom', size:"50%", content: '' }
     ]
  });
+	//------------------------------------------------------------------------
+	function close_event(){
+		
+	w2popup.close();
 	
+	}
 	//--------------------------------------------------------------------------------------------------
 	
 function popup(calender_id) {	
@@ -142,32 +184,7 @@ function popup(calender_id) {
 	        w2ui['layout'].load('main');
 			//w2ui['layout'].refresh('main');
 			
-			w2ui['layout'].load('main', "palette/"+element+".svg", 'pop-in' , function () {
-						
-			console.log('content loaded');
-			d3.json("palette/" + element+".json", function(data) {
-			    		
-						console.log(data);
-						data.zones.forEach(function(d){
-			    			var g = d3.select('svg').select("#"+d.id)
-			    				/*.attr('tweet',function(dt){
-			    					return d.text;
-			    				})*/
-			    				.attr('class','zones')
-			    				.on("click",function(e){
-			    					
-									
-									console.log(d.text); 
-									
-									
-			    				});
-			    			
-			    		});									
-			    });
-			
-			
-			
-			});
+
 										
 			
 			
@@ -179,6 +196,22 @@ function popup(calender_id) {
  });
 	
 }
+
+
+//------------------------------------------------------------------------------------------------------
+function create_event(){
+		
+
+
+$.get( "request.php?q=present&id_cal="+ id_calender +"&titre="+w2ui['frmEvent'].record['Description']+"&start="+w2ui['frmEvent'].record['Start_date']+"&end="+w2ui['frmEvent'].record['End_date'], 
+																		 function( data ) {$("#info_event").html( data );});
+																		 alert("event created");
+																		 w2popup.close();
+
+  
+
+	
+			}
 	//---------------------------------------------------------------------------------------------------
 	
 $(function () {
