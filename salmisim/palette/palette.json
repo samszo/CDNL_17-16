@@ -2,20 +2,17 @@
 	"titre": "cible des courtisans"
 	"zones": [
 		{
-			"id": "path10",
+			"id": "path14",
 			"text": "1"
 			},
 			{
-				"id": "path12",
+				"id": "path10",
 				"text": "2"
 			},
-			{
-				"id": "path14"
-				"text": "3"
-			},
-      		{
-				"id": "path16"
-				"text": "4"
+			
+{
+				"id": "path72"
+				"text": "etoile"
 			}
       
 			]

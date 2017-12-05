@@ -1,38 +1,28 @@
 <?php
 require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
-
 session_start();
-
-
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
-
-
-/*if(isset($_GET['out'])){
+if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
-}*/
-
+}
 //vérifie que le token n'ets pas expéré
 //if ($client->isAccessTokenExpired()) {
 //    unset($_SESSION['access_token']);
 //}
-
-
 //pour supprimer les droits https://myaccount.google.com/permissions?pli=1
-
 //print_r($_SESSION['access_token']);
 //$_SESSION['access_token'] = array("access_token"=>"ya29.GlznBOwSIyspxzMQnUG7IVmqqUUnQ5c7GXY16rPPqPo6nrJ80rUK0WUQwootMzwuNPQLrTKUfITfN71XM-g0zii6yu_V6ugGE4Jsp56mV2bWH0UbsmUdV6-kyTnNMw","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1508238940);
-
-
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
-	//
+	/*
 	$_GET['q'] = 'present';
 	$_GET['id'] = 'thyp1213@gmail.com';
+	*/
 	try {
 	    
 	    switch ($_GET['q']) {
@@ -62,8 +52,6 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/rabiata/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
-
-
 function getAllCalendar($service)
 {
     //Pour la liste complète des calendrier de la personne
@@ -102,7 +90,6 @@ function getCalendarInfo($cal, $service)
     
     return $r;
 }
-
 function getListeAcl($idCal, $service)
 {
     $acls ="";
@@ -112,8 +99,6 @@ function getListeAcl($idCal, $service)
     }
     return $acls;
 }
-
-
 function getAclInfo($acl)
 {
     $r = array("id"=>$acl->getId()
@@ -121,7 +106,6 @@ function getAclInfo($acl)
     );
     return $r;
 }
-
 function insertPresent($service, $calendarId, $desc, $mails){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
     $date = new DateTime();
@@ -161,4 +145,3 @@ function insertPresent($service, $calendarId, $desc, $mails){
     
 }
 ?>
-

@@ -3,9 +3,11 @@
 <head>
     <title>W2UI Demo: grid-18</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <form action="request.php?q=all">
@@ -47,6 +49,171 @@ hidePreloader();
 
 	var str_array = Array();
 	var id_calender;
+	var element;
+	
+	
+//-------------------------------------------------------------------------
+
+ var frmEvent  = $().w2form({ 
+    name   : 'frmEvent',
+    header : 'Details',
+	record: {
+									Start_date : '',
+									End_date : '',
+									Description : ''
+								},
+								fields : [
+									{ name: 'Start_date', type:'datetime', required: true },
+									{ name: 'End_date', type:'datetime', required: true },
+									{ name: 'Description', type: 'text', required: true },
+
+								],
+    actions: {
+        effacer: function () {
+            this.clear();
+        },
+        sauvegarder: function () {
+            create_event(); 
+        },
+		quitter: function () {
+			close_event();
+             
+        }
+    }
+});
+	
+//-------------------------------------------------------------------------------------------------
+	
+	var sidbarEvent  = $().w2sidebar({
+	name: 'sidebar',
+	img: null,
+	nodes: [ 
+		{ id: 'level', text: 'Type d\'événement', img: 'icon-folder', expanded: true, group: true,
+		  nodes: [ { id: 'model_2', text: 'Université', icon: 'fa fa-university' },
+				   { id: 'model_3', text: 'Entreprise', icon: 'fa fa-building' },
+				   { id: 'model_1', text: 'Club', icon: 'fa fa-futbol-o' }
+				 ]
+		}
+	],
+	onClick: function (event) {
+		
+		element = event.target;
+					w2ui['layout'].load('main', "palette/"+element+".svg", 'pop-in' , function () {
+						
+			
+			d3.json("palette/" + element+".json", function(data) {
+			    		console.log(data.titre);
+						w2ui['frmEvent'].record['Description'] = data.titre; 
+									
+									
+								    w2ui['frmEvent'].refresh();
+						/*data.zones.forEach(function(d){
+			    			var g = d3.select('svg').select("#"+d.id)
+			    				.attr('class','zones')
+			    				.on("click",function(e){
+
+									
+									
+									w2ui['frmEvent'].record['Description'] = d.text; 
+									
+									
+								    w2ui['frmEvent'].refresh();
+									
+
+			    				});
+			    		});	*/								
+			    });
+			
+			
+			
+			});
+										
+			
+	
+	
+			    
+				
+	    			    		
+	    	
+}
+	});
+
+//---------------------------------------------------------------------------------------------------------
+
+  var lyEvent =  $().w2layout({
+     name: 'layout',
+    panels: [
+        { type: 'left', size: 200, resizable: true, style: 'background-color: #F5F6F7;', content: '' },
+        { type: 'main',size:"50%", style: 'background-color: #F5F6F7; padding: 5px;', content: '' },
+		{ type: 'bottom', size:"50%", content: '' }
+    ]
+ });
+	//------------------------------------------------------------------------
+	function close_event(){
+		
+	w2popup.close();
+	
+	}
+	//--------------------------------------------------------------------------------------------------
+	
+function popup(calender_id) {	
+	 w2popup.open({
+     title   : 'Ajouter un événement',
+	 width: 650,
+	 height: 550,
+     buttons: '', //<button class="w2ui-btn" onclick="">Create New Event</button>
+     body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
+     showMax : true,
+     onOpen  : function (event) {
+	 
+         event.onComplete = function () {
+		 								
+										
+     	 	if(w2ui['sidebar'])w2ui['sidebar'].destroy();
+			
+     	 	if(w2ui['layout'])w2ui['layout'].destroy();
+        	 
+	        
+												
+			$('#w2ui-popup #main').w2layout(lyEvent); 
+			
+			w2ui['layout'].content('bottom', frmEvent);			
+					
+	        w2ui['layout'].content('left', sidbarEvent);
+						
+	        w2ui['layout'].load('main');
+			//w2ui['layout'].refresh('main');
+			
+
+										
+			
+			
+
+					
+         		
+         };
+     },
+ });
+	
+}
+
+
+//------------------------------------------------------------------------------------------------------
+function create_event(){
+		
+
+
+$.get( "request.php?q=present&id_cal="+ id_calender +"&titre="+w2ui['frmEvent'].record['Description']+"&start="+w2ui['frmEvent'].record['Start_date']+"&end="+w2ui['frmEvent'].record['End_date'], 
+																		 function( data ) {$("#info_event").html( data );});
+																		 alert("event created");
+																		 w2popup.close();
+
+  
+
+	
+			}
+	//---------------------------------------------------------------------------------------------------
+	
 $(function () {
 	
 	$("#spinner").show();
@@ -113,7 +280,9 @@ $(function () {
 			
 			if(id_calender == null){alert('choisissez agenda');}
 			else {
-			
+				
+				popup(id_calender);
+			/*
 							w2popup.open({
 								width: 550,
 								height: 670,
@@ -139,10 +308,12 @@ $(function () {
 										  '<button class="w2ui-btn" onclick="w2popup.close()">Cancel</button>',
 								showMax: true
 							});
-							
+				*/			
 			}
 
 							//-------------------------------------------------------------------------------------------
+							/* 
+							
 							$('.palette').click(function() 
 											{
 												
@@ -185,7 +356,7 @@ $(function () {
 																		
 																});
 																	
-											});
+											});*/
 											
 											
 											

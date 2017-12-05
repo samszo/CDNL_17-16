@@ -1,6 +1,16 @@
-
 <!DOCTYPE html>
 <html>
+<head>
+
+<title>Calender</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+<meta charset="utf-8">
+
 <style>
 
 .w2ui-field input {
@@ -31,46 +41,55 @@
     margin-left: 20px;
 }
 
-
-
+h2 {
+    width: 100%;
+    height: 600px;
+    background-image: url('agenda/doodle-for-google-graphic.png');
+    background-size: 100% 100%;
+}
 </style>
+</head>
 
-<head>
-    <title>Calender</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
-<script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js"></script>
-
-
-
-	
-	</head>
-<body style="background-image:url(agenda/doodle-for-google-graphic.png);background-repeat: repeat-y;">
+<body >
 <br><br>
+
 
 <center><a href="agenda/calender.php?q=r" ><img src="agenda/sign_in.jpg"></a></center>
 
-<br>
+<h2><br>
 <div style="position: relative; height: 300px;">
     <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
 </div>
- 	
+ 	</h2>
 
 <script type="text/javascript">
 
 ///   code to refresh the page every minute unless someone presses a key or moves the mouse. 
 /// Thanks https://stackoverflow.com/questions/4644027/how-to-automatically-reload-a-page-after-a-given-period-of-inactivity
 var pstyle = 'padding-right: 3px; width:30px height:30px color: #828AA7; text-shadow: 1px 1px 3px white;';
-var people = ['George Washington', 'John Adams', 'Thomas Jefferson', 'James Buchanan', 'James Madison', 'Abraham Lincoln', 'James Monroe', 'Andrew Johnson', 'John Adams', 'Ulysses Grant', 'Andrew Jackson', 'Rutherford Hayes', 'Martin Van Buren', 'James Garfield', 'William Harrison', 'Chester Arthur', 'John Tyler', 'Grover Cleveland', 'James Polk', 'Benjamin Harrison', 'Zachary Taylor', 'Grover Cleveland', 'Millard Fillmore', 'William McKinley', 'Franklin Pierce', 'Theodore Roosevelt', 'John Kennedy', 'William Howard', 'Lyndon Johnson', 'Woodrow Wilson', 'Richard Nixon', 'Warren Harding', 'Gerald Ford', 'Calvin Coolidge', 'James Carter', 'Herbert Hoover', 'Ronald Reagan', 'Franklin Roosevelt', 'George Bush', 'Harry Truman', 'William Clinton', 'Dwight Eisenhower', 'George W. Bush', 'Barack Obama'];
+
+var dataForm, dtEtu = [];
+var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefaJxHJWnLGS7xudeNJChpgpvqWdskujnlt03TkiWRHtW5uoTV8sYAH3HZ/pub?gid=642939185&single=true&output=csv';
+//var url = "data/LPDesignWebMobile_17-18.csv";
+        
+d3.csv(url, function(data) {
+	dataForm = data;
+	dataForm.forEach(function(d){
+		var txt = d["Prénom"].substring(0,1).toUpperCase()+d["Prénom"].substring(1).toLowerCase()
+		+' '
+		+d["Nom"].substring(0,1).toUpperCase()+d["Nom"].substring(1).toLowerCase();
+		dtEtu.push({id:d["E-mail"],text:txt});
+	});
+})
+
 
 // Code to refreash the Actual page to stay connected with Google API Calender Service
      var time = new Date().getTime();
      $(document.body).bind("mousemove keypress", function(e) {
          time = new Date().getTime();
      });
-
+/*
      function refresh() {
          if(new Date().getTime() - time >= 60000) 
              window.location.reload(true);
@@ -78,7 +97,7 @@ var people = ['George Washington', 'John Adams', 'Thomas Jefferson', 'James Buch
              setTimeout(refresh, 10000);
      }
 
-     setTimeout(refresh, 10000);
+     setTimeout(refresh, 10000);*/
 	 
 // Function to close the opened popup
 	 function refresh1() {
@@ -95,8 +114,6 @@ var year  = (new Date()).getFullYear();
 
 // US Format
 $('input[type=us-date]').w2field('date');
-$('input[type=us-datetime]').w2field('datetime');
-
 
 var event_name,event_desc,event_date,event_id;
 
@@ -105,9 +122,6 @@ function popup(calender_id) {
 
 
 var src = "https://calendar.google.com/calendar/embed?src="+ calender_id +"&ctz=Europe/Paris";
-var res = $(' <input id=inpu> ').w2field('datetime');
-var res1 = $(' <input id=inpu1> ').w2field('datetime');
-
 
 
 var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" frameborder="0"'
@@ -117,22 +131,104 @@ var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" fr
 +'<div><label>Choose Your Guest List:</label><div> <input id=enum> </div></div></td><td></td><td><label> Event Description:</label><br>'
 +' <div> <textarea id="desc_event" type="text" style="width: 385px; height: 80px; resize: none"></textarea> </div></td></tr></table>';
 
-    w2popup.open({
-        width: 1000,
-        height: 2000,
-        title: 'The Calender Board',
-        body: frame,
-        buttons: '<button class="w2ui-btn" onclick="create_event()">Create New Event</button>',
-        showMax: true
-    });
-	
-	$('input[type=us-datetime]').w2field('datetime');
-	
-	$('#enum').w2field('enum', { 
-    items: people,
-    openOnFocus: true,
-    selected: [{ id: 0, text: 'wehbihazem@gmail.com' }, { id: 0, text: 'max4solution@gmail.com' }]
-});
+										
+if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
+if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
+			
+ var frmEvent  =  $().w2form({ 
+								name   : 'frmEvent',
+								header : 'New Events',
+								record: {
+									Start_date : '',
+									End_date : '',
+									Description : '',
+									Guest_List : ''
+								},
+								fields : [
+									{ name: 'Start_date', type:'datetime', required: true },
+									{ name: 'End_date',type:'datetime', required: true },
+									{ name: 'Description',type: 'textarea', required: true },
+									{ name: 'Guest_List',  type: 'enum', required: true 
+										, options: { items: dtEtu} 
+									},
+								],
+								actions: {
+									reset: function () {
+										this.clear();
+									},
+									save: function () {
+										create_event(); 
+									}
+								}
+						});
+
+
+
+ var lyEvent =  $().w2layout({
+     name: 'lyEvent',
+     panels: [
+         { type: 'top', size: "50%", content:'<iframe src='+ src +' style="border: 0" width=100% height="300" frameborder="0"'
+        	 +'scrolling=no></iframe>'},
+         { type: 'main', size:"40%", content: '' },
+         { type: 'bottom', size:"10%", content: '' }
+     ]
+ });
+ 
+
+ w2popup.open({
+     title   : 'Ajouter un document',
+     buttons: '', //<button class="w2ui-btn" onclick="create_event()">Create New Event</button>
+     body    : '<div id="main"  style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
+     showMax : true,
+     onOpen  : function (event) {
+	 
+         event.onComplete = function () {
+		 								var dt = $(this).data('selected'); 
+										
+     	 	if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
+     	 	if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
+        	 
+				$('#w2ui-popup #main').w2layout(lyEvent); 
+												
+	        	w2ui['lyEvent'].content('main', $().w2form(frmEvent));
+				
+				//$('#w2ui-popup #main #frmEvent #input[type=us-date]').w2field('datetime');
+				//$('#frmEvent').w2field('datetime');
+						
+	        w2ui['lyEvent'].load('bottom', "palette/1.svg", 'pop-in' , function () {
+						
+
+			    d3.json("palette/palette.json", function(data) {
+			    		
+						data.zones.forEach(function(d){
+			    			var g = d3.select('svg').select("#"+d.id)
+			    				.attr('class','zones')
+			    				.on("click",function(e){
+
+									//$('input[type=list]').w2field('list', { items: people });
+									
+									w2ui['frmEvent'].record['Start_date'] = d.start; 
+									w2ui['frmEvent'].record['End_date'] = d.end; 
+									w2ui['frmEvent'].record['Description'] = d.desc; 
+									w2ui['frmEvent'].record['Guest_List'] = d.guest; 
+									
+								    w2ui['frmEvent'].refresh();
+									//w2alert(w2ui['frmEvent'].fields['name']);
+									console.log(w2ui['frmEvent'].record['Guest_List']);
+
+			    				});
+			    		});		    	
+					});
+					    		
+				});  	
+	        	    	
+	            	w2popup.max();
+					
+         		
+         };
+     },
+ });
+
 }
 /*
 		function showevent(){ w2popup.close();
@@ -162,13 +258,14 @@ function create_event(){
 //alert(document.getElementById('enum').value);
 
 	$.getJSON("agenda/calender.php?q=present&id="+ event_id +"&desc=HelloWorld&start_date="+
-                                 	document.getElementById('sta_date').value +"&end_date="+
-                                    document.getElementById('end_dat').value +"&email="+event_id +"&desc="
-									+ document.getElementById('desc_event').value, 
+                                 	w2ui['frmEvent'].record['Start_date'] +"&end_date="+
+                                    w2ui['frmEvent'].record['End_date'] +"&email="+event_id +"&desc="
+									+ w2ui['frmEvent'].record['Description'], 
 	
 					function(data){   if (data) w2alert('The Event Created'); });
 					
-		w2popup.clear(); popup(event_id);  
+					//w2popup.clear();
+					popup(event_id);  
 
 					// alert to show notification for creation new event
 			       //setTimeout(refresh1, 1000); 
@@ -191,7 +288,7 @@ $(function () {
 	        name: 'grid1', 
 	        show: {
 	            header         : true,
-	            toolbar     : true,
+	            toolbar     : false,
 	            footer        : true,
 				toolbarAdd: true,
 	            lineNumbers    : true,
@@ -205,15 +302,11 @@ $(function () {
 	        columns: [                
 	            { field: 'recid', caption: 'recid', size: '30%' },
 	            { field: 'access', caption: 'Autorisation', size: '30%' },
-	            { field: 'description', caption: 'Description', size: '30%' },
+	            { field: 'description', sortable: true, caption: 'Description', size: '30%' },
 	            { field: 'id', caption: 'ID', size: '40%' },
 	            { field: 'location', caption: 'Lieux', size: '40%' },
-	            { field: 'summary', caption: 'Titre', size: '120px' }
+	            { field: 'summary', sortable: true, caption: 'Titre', size: '120px' }
 	        ],
-        onAdd: function (event) {
-			popup(event_id);
-        },
-		
         onClick: function (event) {
 		
 		 event_id  = event.recid; 
@@ -260,18 +353,33 @@ $(function () {
 	    }); 
 
 	    $('#grid2').w2grid({ 
-        header: 'Details',
-        show: { header: true, columnHeaders: false },
+        header: 'Liste des Events',
+        show: { 	            header         : true,
+	            toolbar     : true,
+	            footer        : true,
+				toolbarAdd: true},
         name: 'grid2', 
         columns: [                
-            { field: 'name', caption: 'Name', size: '180px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=right" },
+            { field: 'name', caption: 'Name', size: '180px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=left" },
             { field: 'value', caption: 'Value', size: '100%' }
-        ]
-		,        onClick: function (event) {
+        ],		
+		onAdd: function (event) {
+			popup(event_id);
+        },
+		onClick: function (event) {
+		
+		
+		    w2popup.open({
+				width: 400,
+				height: 400,
+				title: 'Event Details',
+				body: "<br>Event Date: <br>" + event_date[event.recid]+ "<br><br> Event Description:<br><br> " + event_desc[event.recid],
+				showMax: true
+			});
 
-						alert("Event Date: \n" + event_date[event.recid] + "\n \n Event Description:\n " + event_desc[event.recid]);
-
-						}
+		}
+						
+						
     });		
 	
 		
@@ -280,11 +388,6 @@ $(function () {
 	
 });
 </script>
-
-
-
-
-
 
 </body>
 </html>
