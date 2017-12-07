@@ -106,7 +106,7 @@ function dashboard(id, fData){
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
                 .append("g").attr("class", "bar");
         
-        //create the rectangles.
+        //crée les rectangles.
         bars.append("rect")
             .attr("x", function(d) { return x(d[0]); })
             .attr("y", function(d) { return y(d[1]); })
