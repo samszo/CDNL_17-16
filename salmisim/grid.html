@@ -76,17 +76,13 @@ $(function () {
         
           onClick: function(event) {
         	  var record = w2ui['grid'].get(event.recid);
-          //var tdId =$("#grid_grid_rec_"+event.recid).children('td')[4].getAttribute('id');
-          //var divEl =$("#"+tdId).children('div')[0].getAttribute('title');
           console.log(record.id);
           showEvents(record.id);
-      //  console.log(colonnes[6].attr("title"))
-        //  alert($("#grid_grid_rec_"+event.recid).attr("id"));
       }
 	    });
-    //  $("#bfCaptchaEntry").click(function(){ myFunction(); });
+
 	});
-  //$(".w2ui-footer-left").ready(function(){alert()})
+  
 })
 var inc=2;
 function showEvents(EventId) {console.log(EventId);
@@ -148,14 +144,14 @@ inc++;
              context: document.body
            }).done(function(data) {
              console.log(data);showEvents(EventId);
-           //  $("#result").append("Validé");
+        
            });
                this.save();
            },
    
        }
    });
-   //   alert($('input[type=us-time]').value);
+
 
     w2popup.open({
         title   : 'Creer un nouveau evenement',
@@ -198,15 +194,7 @@ inc++;
 
             };
         },
-          /*  w2alert('Add event:<br>sujet<SELECT name="nom" id="inputTitre" size="1"><OPTION>Présence</option><OPTION>Réunion</option><OPTION>Sortie</option><OPTION>RDV</option></SELECT><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
- .ok(function () { console.log('ok'); var sujet= $("#inputTitre option:selected").text();alert($("#inputDate").val())
- var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+sujet+"&date="+$("#inputDate").val();
- $.ajax({
-  url: lien,
-  context: document.body
-}).done(function(data) {
-  console.log(data);showEvents(EventId);*/
-//  $("#result").append("Validé");
+
 
 });
 
@@ -218,8 +206,7 @@ $('input[type=us-time]').w2field('time',  { format: 'h12' });
 // US Format
 $('input[type=us-datetime]').w2field('date');
         },
-            //url: 'list.json',
-            //method: 'GET', // need this to avoid 412 error on Safari
+          
             records: data2,
             columns: [
                 { field: 'recid', caption: 'recid', size: '30%' },
@@ -229,9 +216,9 @@ $('input[type=us-datetime]').w2field('date');
             ]
 
         });
-      //  $("#bfCaptchaEntry").click(function(){ myFunction(); });
+ 
 
-    });               // Function returns the product of a and b
+    });               
 }
 
 </script>
