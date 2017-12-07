@@ -106,7 +106,7 @@ inc++;
                 lineNumbers    : true,
                 selectColumn: true,
                 expandColumn: true,
-				 toolbarAdd: true,
+		toolbarAdd: true,
             },
 	onAdd: function (event) {
     var lyEvent =  $().w2layout({
@@ -124,8 +124,8 @@ inc++;
        name   : 'frmEvent',
        header : 'Nouveaux Evenements',
        fields : [
-           { field: ' la date de début: ', type: 'us-datetime', required: true },
-           { field: ' la date de fin: ', type: 'us-datetime', required: true },
+           { field: ' la date de début: ', type: 'datetime', required: true },
+           { field: ' la date de fin: ', type: 'datetime', required: true },
            { field: 'Description:',  type: 'text', required: true },
            
        ],
