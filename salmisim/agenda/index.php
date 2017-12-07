@@ -32,8 +32,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            //Pour ajouter un présent
 	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
-				 case 'presentDate':
-    	        //Pour ajouter un présent
+		case 'presentDate':
+    	        //Pour ajouter un présent par date 
     	        $r = insertPresentDate($cal_service, $_GET['id'], $_GET['desc'],$_GET['date']);
     	        break;
 	        default:
@@ -115,6 +115,7 @@ function getAclInfo($acl)
     );
     return $r;
 }
+// insert la presence des personne par date 
 function insertPresentDate($service, $calendarId, $desc, $dates){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
     $date = new DateTime();
