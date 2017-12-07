@@ -15,16 +15,7 @@ if(isset($_GET['out'])){
     $client->revokeToken();
 }
 
-//vérifie que le token n'ets pas expéré
-//if ($client->isAccessTokenExpired()) {
-//    unset($_SESSION['access_token']);
-//}
 
-
-//pour supprimer les droits https://myaccount.google.com/permissions?pli=1
-
-//print_r($_SESSION['access_token']);
-//$_SESSION['access_token'] = array("access_token"=>"ya29.GlznBOwSIyspxzMQnUG7IVmqqUUnQ5c7GXY16rPPqPo6nrJ80rUK0WUQwootMzwuNPQLrTKUfITfN71XM-g0zii6yu_V6ugGE4Jsp56mV2bWH0UbsmUdV6-kyTnNMw","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1508238940);
 
 
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
