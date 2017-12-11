@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>W2UI Demo: grid-1</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css"/>
+</head>
+<body >
+
+<div id="grid" style="width: 100%; height: 350px;"></div>
+<br>
+<div id="grid_2" style="width: 100%; height: 350px;"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $.getJSON("agenda/index.php?q=all",
+            function (data) {
+                console.log(data);
+                data.forEach(function (d) {
+                    d.recid = d.id;
+                });
+                $('#grid').w2grid({
+                        header: 'Liste des agendas',
+                        name: 'grid',
+                        show: {
+                            header: true,
+                            toolbar: true,
+                            footer: true,
+                            toolbarAdd: true,
+                            lineNumbers: true,
+                            selectColumn: true,
+                            expandColumn: true
+                        },
+
+                        //url: 'list.json',
+                        //method: 'GET', // need this to avoid 412 error on Safari
+                        records: data,
+                        columns: [
+                            {field: 'recid', caption: 'recid', size: '30%'},
+                            {field: 'summary', caption: 'Evenement', size: '30%'},
+                            {field: 'description', caption: 'Description', size: '30%'},
+                            {field: 'id', caption: 'ID', size: '40%'},
+                            {field: 'location', caption: 'Lieux', size: '40%'},
+                        ],
+                            onAdd: function (event) {
+                            w2popup.open({
+                                width: 500,
+                                height: 300,
+                                title: 'Popup Title',
+                                body:'<svg width="500" height="500" fill="none" stroke-width="1px"><g id="polygon"><path fill-opacity="0.5" fill="rgb(19,56,60)" stroke="rgb(116,221,231)" d="M 250 250 L400 249.99999999706205 356.0660171803193 356.06601717564496z"></path><path fill-opacity="0.5" fill="rgb(35,253,9)" stroke="rgb(51,117,91)" d="M 250 250 L356.0660171761644 143.93398282020016 400 249.99999999706205z"></path><path fill-opacity="0.5" fill="rgb(78,4,29)" stroke="rgb(65,96,209)" d="M 250 250 L249.99999999779652 100 356.0660171761644 143.93398282020016z"></path><path fill-opacity="0.5" fill="rgb(32,110,244)" stroke="rgb(87,222,175)" d="M 250 250 L143.93398282071945 143.93398282331628 249.99999999779652 100z"></path><path fill-opacity="0.5" fill="rgb(32,198,37)" stroke="rgb(100,98,66)" d="M 250 250 L100 250.00000000146898 143.93398282071945 143.93398282331628z"></path><path fill-opacity="0.5" fill="rgb(108,79,17)" stroke="rgb(180,248,225)" d="M 250 250 L143.9339828227969 356.0660171787612 100 250.00000000146898z"></path><path fill-opacity="0.5" fill="rgb(120,238,14)" stroke="rgb(221,185,246)" d="M 250 250 L250.0000000007345 400 143.9339828227969 356.0660171787612z"></path><path fill-opacity="0.5" fill="rgb(65,47,143)" stroke="rgb(164,19,172)" d="M 250 250 L356.0660171782418 356.0660171777224 250.0000000007345 400z"></path></g><g id="innerArc"><path fill-opacity="0.5" fill="rgb(19,56,60)" stroke="rgb(116,221,231)" d="M 250 250 L400 249.99999999706205 A 100 100 0 0 0 356.0660171803193 356.06601717564496z"></path><path fill-opacity="0.5" fill="rgb(35,253,9)" stroke="rgb(51,117,91)" d="M 250 250 L356.0660171761644 143.93398282020016 A 100 100 0 0 0 400 249.99999999706205z"></path><path fill-opacity="0.5" fill="rgb(78,4,29)" stroke="rgb(65,96,209)" d="M 250 250 L249.99999999779652 100 A 100 100 0 0 0 356.0660171761644 143.93398282020016z"></path><path fill-opacity="0.5" fill="rgb(32,110,244)" stroke="rgb(87,222,175)" d="M 250 250 L143.93398282071945 143.93398282331628 A 100 100 0 0 0 249.99999999779652 100z"></path><path fill-opacity="0.5" fill="rgb(32,198,37)" stroke="rgb(100,98,66)" d="M 250 250 L100 250.00000000146898 A 100 100 0 0 0 143.93398282071945 143.93398282331628z"></path><path fill-opacity="0.5" fill="rgb(108,79,17)" stroke="rgb(180,248,225)" d="M 250 250 L143.9339828227969 356.0660171787612 A 100 100 0 0 0 100 250.00000000146898z"></path><path fill-opacity="0.5" fill="rgb(120,238,14)" stroke="rgb(221,185,246)" d="M 250 250 L250.0000000007345 400 A 100 100 0 0 0 143.9339828227969 356.0660171787612z"></path><path fill-opacity="0.5" fill="rgb(65,47,143)" stroke="rgb(164,19,172)" d="M 250 250 L356.0660171782418 356.0660171777224 A 100 100 0 0 0 250.0000000007345 400z"></path></g><g id="arc"><path fill-opacity="0.5" fill="rgb(19,56,60)" stroke="rgb(116,221,231)" d="M 250 250 L400 249.99999999706205 A 100 100 0 0 1 356.0660171803193 356.06601717564496z"></path><path fill-opacity="0.5" fill="rgb(35,253,9)" stroke="rgb(51,117,91)" d="M 250 250 L356.0660171761644 143.93398282020016 A 100 100 0 0 1 400 249.99999999706205z"></path><path fill-opacity="0.5" fill="rgb(78,4,29)" stroke="rgb(65,96,209)" d="M 250 250 L249.99999999779652 100 A 100 100 0 0 1 356.0660171761644 143.93398282020016z"></path><path fill-opacity="0.5" fill="rgb(32,110,244)" stroke="rgb(87,222,175)" d="M 250 250 L143.93398282071945 143.93398282331628 A 100 100 0 0 1 249.99999999779652 100z"></path><path fill-opacity="0.5" fill="rgb(32,198,37)" stroke="rgb(100,98,66)" d="M 250 250 L100 250.00000000146898 A 100 100 0 0 1 143.93398282071945 143.93398282331628z"></path><path fill-opacity="0.5" fill="rgb(108,79,17)" stroke="rgb(180,248,225)" d="M 250 250 L143.9339828227969 356.0660171787612 A 100 100 0 0 1 100 250.00000000146898z"></path><path fill-opacity="0.5" fill="rgb(120,238,14)" stroke="rgb(221,185,246)" d="M 250 250 L250.0000000007345 400 A 100 100 0 0 1 143.9339828227969 356.0660171787612z"></path><path fill-opacity="0.5" fill="rgb(65,47,143)" stroke="rgb(164,19,172)" d="M 250 250 L356.0660171782418 356.0660171777224 A 100 100 0 0 1 250.0000000007345 400z"></path></g></svg>\n'+
+                                '<div class="w2ui-field">\n' +
+                                '    <label>titre:</label>\n' +
+                                '    <div> <input type="text"> </div>\n' +
+                                '</div>'+
+                                '<div class="w2ui-field">\n' +
+                                '    <label>Date:</label>\n' +
+                                '    <div> <input type="us-date"> </div>\n' +
+                                '</div>'+
+                                '<div class="w2ui-field">\n' +
+                                    '    <label>Time:</label>\n' +
+                                '    <div> <input type="us-time"> </div>\n' +
+                                '</div>',
+
+
+
+                                buttons: '<button class="w2ui-btn" onclick="lock(\'\')">Lock</button>' +
+                                '<button class="w2ui-btn" onclick="lock(\'Loading...\')">Lock With a Message</button>',
+                                showMax: true
+                            });
+                                $('input[type=us-date]').w2field('date');
+                                $('input[type=us-time]').w2field('time',  { format: 'h24' });
+                        }
+                ,
+
+                    onClick: function (event) {
+                        event.onComplete = function () {
+                            if (typeof  w2ui['grid_2'] !== 'undefined') {
+                                w2ui['grid_2'].destroy();
+                            }
+                            evenements(this);
+                        };
+                    }
+                });
+            });
+    });
+    function lock (msg) {
+        $.getJSON('agenda/index.php?q=addEvent');
+
+    }
+    function evenements(grid) {
+        console.log('selection:'+ grid.getSelection());
+        $.getJSON('agenda/index.php?q=event&calendrier_id=' + grid.getSelection(),
+            function (lesEvenements) {
+                lesEvenements.forEach(function (d_e) {
+                    d_e.recid = d_e.id;
+                });
+                $('#grid_2').w2grid({
+                    header: 'Evenement de l\'agendas',
+                    name: 'grid_2',
+                    show: {
+                        header: true,
+                        toolbar: true,
+                        footer: true,
+                        lineNumbers: true,
+                        selectColumn: true,
+                        expandColumn: true
+                    },
+                    records: lesEvenements,
+                    columns: [
+                        {field: 'recid', caption: 'ID', size: '50%'},
+                        {field: 'summary', caption: 'Titre', size: '50%'}
+                    ]
+                });
+            });
+    }
+</script>
+
+</body>
+</html>

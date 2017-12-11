@@ -1,0 +1,22 @@
+
+{
+	"titre": "cible des courtisans"
+	"zones": [
+		{
+			"id": "path40",
+			"text": "Faible"
+			},
+			{
+				"id": "path42",
+				"text": "Assez Bien"
+			}
+			{
+				"id": "path44",
+				"text": "Bien"
+			}
+			{
+				"id": "path48",
+				"text": "Trés Bien"
+			}
+			]
+}

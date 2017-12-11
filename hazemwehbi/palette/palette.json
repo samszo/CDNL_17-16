@@ -1,0 +1,33 @@
+{
+	"titre": "",
+	"zones": [{
+			"id": "path4138",
+			"start": "2017-10-21T05:00:00-06:00",
+			"end": "2017-11-13T20:00:01-06:00",
+			"desc": "hu",
+			"guest": "ismail@hotmail.com"
+		},
+		{
+			"id": "path4140",
+			"start": "2017-10-11T05:00:00-06:00",
+			"end": "2017-11-15T20:00:01-06:00",
+			"desc": "barca",
+			"guest": "abd@hotmail.com"
+		},
+		{
+			"id": "path4142",
+			"start": "2017-10-04T05:00:00-06:00",
+			"end": "2017-11-5T20:00:01-06:00",
+			"desc": "barca",
+			"guest": "hazem@hotmail.com"			
+		},
+		{
+			"id": "path4152",
+			"start": "2017-10-01T05:00:00-06:00",
+			"end": "2017-11-23T20:00:01-06:00",
+			"desc": "barca",
+			"guest": "samzo@hotmail.com"			
+		}
+
+	]
+}

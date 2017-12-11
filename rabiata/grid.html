@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+.w2ui-field input {
+    width: 400px;
+}
+.w2ui-field > div > span {
+    margin-left: 20px;
+}
+.example{
+	max-width: 700px;
+	margin: 0 auto;
+}
+.block {
+    padding-top: 20px; 
+    padding-bottom: 10px; 
+    color: #999;
+}
+.w2ui-field input {
+    width: 90px;
+}
+.w2ui-field.dt input {
+    width: 140px;
+}
+.w2ui-field > div > span {
+    margin-left: 20px;
+}
+</style>
+
+    <title>Calender</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+
+	
+	</head>
+<body style="background-image:url(agenda/doodle-for-google-graphic.png);background-repeat: repeat-y;">
+<br><br>
+
+<center><a href="agenda/calender.php?q=r" ><img src="agenda/sign_in.jpg"></a></center>
+
+<br>
+<div style="position: relative; height: 300px;">
+    <div id="grid1" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
+    <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
+</div>
+ 	
+
+<script type="text/javascript">
+///   code to refresh the page every minute unless someone presses a key or moves the mouse. 
+/// Thanks https://stackoverflow.com/questions/4644027/how-to-automatically-reload-a-page-after-a-given-period-of-inactivity
+var pstyle = 'padding-right: 3px; width:30px height:30px color: #828AA7; text-shadow: 1px 1px 3px white;';
+var dataForm, dtEtu = [];
+var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefaJxHJWnLGS7xudeNJChpgpvqWdskujnlt03TkiWRHtW5uoTV8sYAH3HZ/pub?gid=642939185&single=true&output=csv';
+//var url = "data/LPDesignWebMobile_17-18.csv";        
+d3.csv(url, function(data) {
+	dataForm = data;
+	dataForm.forEach(function(d){
+		var txt = d["Prénom"].substring(0,1).toUpperCase()+d["Prénom"].substring(1).toLowerCase()
+		+' '
+		+d["Nom"].substring(0,1).toUpperCase()+d["Nom"].substring(1).toLowerCase();
+		dtEtu.push({id:d["E-mail"],text:txt});
+	});
+})
+// Code to refreash the Actual page to stay connected with Google API Calender Service
+     var time = new Date().getTime();
+     $(document.body).bind("mousemove keypress", function(e) {
+         time = new Date().getTime();
+     });
+     function refresh() {
+         if(new Date().getTime() - time >= 60000) 
+             window.location.reload(true);
+         else 
+             setTimeout(refresh, 10000);
+     }
+     setTimeout(refresh, 10000);
+	 
+// Function to close the opened popup
+	 function refresh1() {
+         if(new Date().getTime()  >= 2000) 
+             w2popup.close();
+         else 
+             setTimeout(refresh1, 1000);
+     }
+///////////////////////////////////////////////////////////////
+var month = (new Date()).getMonth() + 1;
+var year  = (new Date()).getFullYear();
+// US Format
+$('input[type=us-date]').w2field('date');
+$('input[type=us-datetime]').w2field('datetime');
+var event_name,event_desc,event_date,event_id;
+function popup(calender_id) {
+var src = "https://calendar.google.com/calendar/embed?src="+ calender_id +"&ctz=Europe/Paris";
+var res = $(' <input id=inpu> ').w2field('datetime');
+var res1 = $(' <input id=inpu1> ').w2field('datetime');
+var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" frameborder="0"'
++'scrolling=no></iframe><br><label>Create New Event:</label>'+
+'<table><tr><td> <br><br><div><label>Choose The Start Date For the Event:</label><div> <input id=sta_date type="us-datetime"> </div></div>'+
+'<br><div><label>Choose The End Date For The Event: </label><div> <input id=end_dat type="us-datetime"> </div></div><br>'
++'<div><label>Choose Your Guest List:</label><div> <input id=enum> </div></div></td><td></td><td><label> Event Description:</label><br>'
++' <div> <textarea id="desc_event" type="text" style="width: 385px; height: 80px; resize: none"></textarea> </div></td></tr></table>';
+ var frmEvent  = $().w2form({ 
+    name   : 'frmEvent',
+    header : 'New Events',
+    fields : [
+        { field: 'Choose The Start Date For the Event', type: 'us-datetime', required: true },
+        { field: 'Choose The End Date For the Event', type: 'us-datetime', required: true },
+        { field: 'Event description',  type: 'text', required: true },
+        { field: 'Choose Your Guest List',  type: 'enum', required: true 
+            , options: { items: dtEtu} 
+        },
+    ],
+    actions: {
+        reset: function () {
+            this.clear();
+        },
+        save: function () {
+            this.save();
+        }
+    }
+});
+ var lyEvent =  $().w2layout({
+     name: 'lyEvent',
+     panels: [
+         { type: 'top', size: 50, content:'<iframe src='+ src +' style="border: 0" width="975" height="410" frameborder="0"'
+        	 +'scrolling=no></iframe>'},
+         { type: 'main', size:"50%", content: '' },
+         { type: 'bottom', size:"50%", content: '' }
+     ]
+ });
+ 
+ w2popup.open({
+     title   : 'Ajouter un document',
+     buttons: '<button class="w2ui-btn" onclick="create_event()">Create New Event</button>',
+     body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
+     showMax : true,
+     onOpen  : function (event) {
+         event.onComplete = function () {
+     	 	if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
+     	 	if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
+        	 
+	        	    	$('#w2ui-popup #main').w2layout(lyEvent);
+	        	    	w2ui['lyEvent'].content('main', $().w2form(frmEvent));            		            		
+	        	    	w2ui['lyEvent'].load('bottom', "palette/1.svg"
+	        	    			, 'pop-in', function () {
+	        			    console.log('content loaded');
+	        			    
+	        			    d3.json("palette/palette.json", function(data) {
+	    			    		data.zones.forEach(function(d){
+	    			    			d3.select('svg').select("#"+d.id)
+	    			    				
+	    			    				.on("click",function(e){
+	    			    				var t = d3.select(this).attr('tweet');
+	    			    				w2ui['layout'].content('left', t, 'pop-out');
+	    			    			});
+	    			    		});
+	    			    		
+	    			    });
+	        			    
+	        	    	$('input[type=us-datetime]').w2field('datetime');
+	        	    	
+	        	    	$('#enum').w2field('enum', { 
+	        	        items: dtEtu,
+	        	        openOnFocus: true,
+	        	        selected: []
+	        	    });
+	        	    	
+	        	    	
+	            	w2popup.max();
+         		
+         };
+     },
+ });
+ 
+ /*
+    w2popup.open({
+        width: 1000,
+        height: 2000,
+        title: 'The Calender Board',
+        body: frame,
+        buttons: '<button class="w2ui-btn" onclick="create_event()">Create New Event</button>',
+        showMax: true
+    });
+*/
+}
+/*
+		function showevent(){ w2popup.close();
+					$.getJSON("agenda/calender.php?q=info&id="+event.recid+"&startdate=2017-10-01T05:00:00-06:00&enddate=2017-11-30T05:00:00-06:00",
+					function(data){
+				
+			w2ui['grid2'].clear();
+            //var record = data;
+			
+			event_name = data.event.split(",");
+			event_desc = data.eventdesc.split(",");
+			event_date  = data.eventdate.split(",");
+			
+				for (var i = 0; i < event_name.length; i++) {
+					w2ui['grid2'].add([
+							{ recid: i, name: 'The Event Name '+(i+1)+':', value:  event_name[i]}
+						
+					])}	
+			
+			});
+			w2ui['grid2'].reload(); 
+		}*/
+function create_event(){
+//alert(document.getElementById('enum').value);
+	$.getJSON("agenda/calender.php?q=present&id="+ event_id +"&desc=HelloWorld&start_date="+
+                                 	document.getElementById('sta_date').value +"&end_date="+
+                                    document.getElementById('end_dat').value +"&email="+event_id +"&desc="
+									+ document.getElementById('desc_event').value, 
+	
+					function(data){   if (data) w2alert('The Event Created'); });
+					
+		w2popup.clear(); popup(event_id);  
+					// alert to show notification for creation new event
+			       //setTimeout(refresh1, 1000); 
+					/*
+						var w = window.open('','','width=500,height=500')
+						w.document.write('The Event Created')
+						w.focus()
+						setTimeout(function() {w.close();}, 2500)
+							*/
+	
+			}
+$(function () {
+	$.getJSON("agenda/calender.php?q=all",
+		function(data){
+		data.forEach(function(d){
+			d.recid = d.id;
+		});
+	    $('#grid1').w2grid({ 
+	        header: 'Liste des agendas',	    	
+	        name: 'grid1', 
+	        show: {
+	            header         : true,
+	            toolbar     : true,
+	            footer        : true,
+				toolbarAdd: true,
+	            lineNumbers    : true,
+	            selectColumn: true,
+	            expandColumn: true
+	        },        
+	        
+	        //url: 'list.json',
+	        //method: 'GET', // need this to avoid 412 error on Safari
+	        records: data,
+	        columns: [                
+	            { field: 'recid', caption: 'recid', size: '30%' },
+	            { field: 'access', caption: 'Autorisation', size: '30%' },
+	            { field: 'description', sortable: true, caption: 'Description', size: '30%' },
+	            { field: 'id', caption: 'ID', size: '40%' },
+	            { field: 'location', caption: 'Lieux', size: '40%' },
+	            { field: 'summary', sortable: true, caption: 'Titre', size: '120px' }
+	        ],
+        onAdd: function (event) {
+			popup(event_id);
+        },
+		
+        onClick: function (event) {
+		
+		 event_id  = event.recid; 
+		// enter the start Date for the search
+			//var startdate = prompt("Please enter the start date for the search","2017-10-01T05:00:00-06:00");
+			
+		// enter the End Date for the search
+	    	//var enddate = prompt("Please enter the end date for the search","2017-11-5T20:00:01-06:00");
+/*
+			    w2popup.open({
+					width: 300,
+					height: 210,
+					title: 'Event Date',
+					body: '<div><label>Choose The End Date of The Event: </label><div> <input id=startdate1 type="us-datetime"> </div></div><br>'+
+					'<div><label>Choose The End Date of The Event: </label><div> <input id=enddate1 type="us-datetime"> </div></div><br>',
+					buttons: '<button class="w2ui-btn" onclick="">Submit</button>',
+					showMax: true
+				});	$('input[type=us-datetime]').w2field('datetime');
+				 w2popup.close();*/
+					$.getJSON("agenda/calender.php?q=info&id="+event.recid+"&startdate=2017-10-01T05:00:00-06:00&enddate=2017-11-30T05:00:00-06:00",
+					function(data){
+				
+			w2ui['grid2'].clear();
+            //var record = data;
+			event_name = data.event.split(",");
+			event_desc = data.eventdesc.split(",");
+			event_date  = data.eventdate.split(",");
+			
+				for (var i = 0; i < event_name.length; i++) {
+					w2ui['grid2'].add([
+							{ recid: i, name: 'The Event Name '+(i+1)+':', value:  event_name[i]}
+						
+					])}	
+			
+			});
+			
+        }
+	    }); 
+	    $('#grid2').w2grid({ 
+        header: 'Details',
+        show: { header: true, columnHeaders: false },
+        name: 'grid2', 
+        columns: [                
+            { field: 'name', caption: 'Name', size: '180px', style: 'background-color: #efefef; border-bottom: 1px solid white; padding-right: 5px;', attr: "align=right" },
+            { field: 'value', caption: 'Value', size: '100%' }
+        ]
+		,        onClick: function (event) {
+						alert("Event Date: \n" + event_date[event.recid] + "\n \n Event Description:\n " + event_desc[event.recid]);
+						}
+    });		
+	
+		
+	});	
+	
+	
+});
+</script>
+
+
+
+
+
+
+</body>

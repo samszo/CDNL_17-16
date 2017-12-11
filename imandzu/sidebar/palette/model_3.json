@@ -1,0 +1,17 @@
+{
+	"titre": "Type d'entrainement FootBall",
+	"zones": [{
+			"id": "path10",
+			"text": "Entrainement Physique"
+		},
+		{
+			"id": "ellipse12",
+			"text": "Entrainement Ballon"
+		},
+		{
+			"id": "ellipse14",
+			"text": "Entrainement tactique"
+		}
+
+	]
+}
