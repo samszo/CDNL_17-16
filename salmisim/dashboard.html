@@ -70,7 +70,20 @@ rect:hover {  fill:blue; }
 <script>
 function dashboard(id, fData){
     var barColor = 'steelblue';
-   
+    /*
+    function segColor(c){ 
+        return {
+            HTML:"#807dba", 
+            Javascript:"#e08214",
+            Java:"#41ab5d"}[c]; 
+        }    
+    // compute total for each state.
+    fData.forEach(function(d){
+        d.total =   d.freq.HTML
+                    +d.freq.Javascript
+                    +d.freq.Java;}
+                    );
+   	*/
    var segColor = d3.scale.category20b();
    var sltEtu = false;	
     fData.forEach(function(d){
@@ -106,7 +119,7 @@ function dashboard(id, fData){
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
                 .append("g").attr("class", "bar");
         
-        //crée les rectangles.
+        //create the rectangles.
         bars.append("rect")
             .attr("x", function(d) { return x(d[0]); })
             .attr("y", function(d) { return y(d[1]); })
@@ -368,7 +381,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
 		return d["Nom"].substring(0,1).toUpperCase()+""+d["Nom"].substring(2,1)+" "+d["Prénom"].substring(0,1).toUpperCase();
 	}
 
-	récupère les photos
+	/*récupère les photos
 	d3.xml("php/lecteurFlux.php?url=THYP1617photo", "application/xml", function(xml) {
 		var tofs = xml.documentElement.getElementsByTagName("group"); 
        	for (i = 0; i < tofs.length; i++) { 
@@ -378,7 +391,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
     	dashboard('#dashboard',freqData);
        	
 	});
-	
+	*/
 	dashboard('#dashboard',freqData);
 	
 });
