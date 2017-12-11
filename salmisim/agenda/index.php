@@ -32,12 +32,12 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            //Pour ajouter un présent
 	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
-		case 'presentDate':
-    	        //Pour ajouter un présent par date 
+				 case 'presentDate':
+    	        //Pour ajouter un présent
     	        $r = insertPresentDate($cal_service, $_GET['id'], $_GET['desc'],$_GET['date']);
     	        break;
 	        default:
-	            header('Location: ../grid.html');
+	            $r="rien";
 	           break;
 	    }
 	    	echo json_encode($r);    
@@ -115,13 +115,12 @@ function getAclInfo($acl)
     );
     return $r;
 }
-// insert la presence des personne par date 
 function insertPresentDate($service, $calendarId, $desc, $dates){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-    $date = new DateTime();
+   $date = new DateTime($_GET['date']);
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
-    $date->add(new DateInterval('PT60S'));
-    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+    $dateF = new DateTime($_GET['dateF']);
+    $dateFin = $dateF->format('Y-m-d').'T'.$dateF->format('H:i:s');
     echo $dateDeb." - ".$dateFin;
     $attendees = array();
    foreach ($mails as $m) {
