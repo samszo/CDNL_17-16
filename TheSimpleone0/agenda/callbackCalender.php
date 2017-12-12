@@ -1,3 +1,4 @@
+
 <?php
 require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
@@ -15,7 +16,7 @@ if (! isset($_GET['code'])) {
 } else {
 	$client->authenticate($_GET['code']);
 	$_SESSION['access_token'] = $client->getAccessToken();
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/TheSimpleone0/agenda/calender.php?q=all';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/TheSimpleone0/agenda/calender.php?q=r';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 ?>
