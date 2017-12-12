@@ -34,7 +34,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 //$_GET['q'] = 'present';
 	//$_GET['id'] = 'amenibenmrad@gmail.com';
 
-	
+
 	//
 } else {
 	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/grid/callback.php';
@@ -370,6 +370,15 @@ inc++;
                      w2ui['lyEvent'].load('bottom', "http://localhost/THYP_17-18/ameni26/palette/1.svg"
                          , 'pop-in', function () {
                        console.log('content loaded');
+                       $( "#path93-1" ).click(function() {
+                        $('#description_evenemnt').val("Rendez-vous");
+                      });
+                      $( "#path93-2" ).click(function() {
+                       $('#description_evenemnt').val("Sortie");
+                      });
+                      $( "#path93" ).click(function() {
+                       $('#description_evenemnt').val("Travail");
+                      });
                        /*
                        d3.json("../"+dt.id+"/palette/palette.json", function(data) {
                        data.zones.forEach(function(d){
