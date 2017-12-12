@@ -5,7 +5,7 @@
 <style>
 body{
     width:1060px;
-    margin:50px auto;
+   /* margin:50px 50px;*/
 }
 path {  stroke: #fff; }
 path:hover {  opacity:0.9; }
@@ -37,15 +37,15 @@ rect:hover {  fill:blue; }
     width:50px;
 }
 #etu{
-	width:500px;
+	width:200px;
 	height:200px;
 }
 #dashboard{
-	width:100%;
+	width:1000px;
 	float:left;
 }
 #photoEtu{
-	float:right;
+	float:left;
 	height:200px;
 	width:200px;
 	-o-transform: rotate(90deg);
@@ -57,13 +57,25 @@ rect:hover {  fill:blue; }
 </head>
 <body>
 <h1>Les compétences des étudiants</h1>
-<div id="etu" >
-	<img id="photoEtu" src="http://www.samszo.univ-paris8.fr/THYP/17-18/photo/" />
-	<h2 id="sltEtu"></h2>
-	<p id="mailEtu"></p>
-</div>
-<div id='dashboard'>
-</div>
+
+<table>
+
+<td>
+    <div id="etu" >
+    	<img id="photoEtu" src="http://www.samszo.univ-paris8.fr/THYP/17-18/photo/" />
+    	<h2 id="sltEtu"></h2>
+    	<p id="mailEtu"></p>
+    </div>
+</td>
+
+<td >
+    <div id='dashboard'>
+    </div>
+</td>
+
+</table>
+
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 function dashboard(id, fData){
@@ -304,17 +316,24 @@ function dashboard(id, fData){
         'JAVA',
         'SQL',
         'Python',
-        'ASP',
+        'ASP',        
+        'JS',
+        'RUBY',
+        'CPP',
+        'ObjectiveC',
+        'PERL',
+        'TypeScript',
+        'SCALA',
+        'Prolog',
 		'JS'].map(function(d){ 
               return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
           });    
 
-    
     // calculate total frequency by state for all segment.
     var sF = fData.map(function(d){return [d.State,d.total];});
 
     var
-	hG = histoGram(sF), // create the histogram.
+	    hG = histoGram(sF), // create the histogram.
         pC = pieChart(tF), // create the pie-chart.
         leg= legend(tF);  // create the legend.
 }
@@ -343,6 +362,15 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
                 Python:comp[d["Vos compétences : langage informatique [Phyton]"]],
                 ASP:comp[d["Vos compétences : langage informatique [ASP]"]],
                 JS:comp[d["Vos compétences : langage informatique [JS]"]],
+                RUBY:comp[d["Vos compétences : langage informatique [RUBY]"]], 
+                CPP:comp[d["Vos compétences : langage informatique [C++]"]],
+                ObjectiveC:comp[d["Vos compétences : langage informatique [Objective C]"]],
+                PERL:comp[d["Vos compétences : langage informatique [PERL]"]],
+                TypeScript:comp[d["Vos compétences : langage informatique [TypeScript]"]],
+                SCALA:comp[d["Vos compétences : langage informatique [SCALA]"]],
+                Prolog:comp[d["Vos compétences : langage informatique [Prolog]"]],
+               
+
             }
 		};
 		d.state = getKeyLine(d);	
@@ -355,7 +383,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
 	});
 	
 	function getKeyLine(d){
-		return d["Nom"].substring(0,1).toUpperCase()+""+d["Nom"].substring(2,1)+" "+d["Prénom"].substring(0,1).toUpperCase();
+		return d["Nom"].substring(0,1).toUpperCase()+" "+d["Nom"].substring(2,1)+" "+d["Prénom"].substring(0,1).toUpperCase();
 	}
 
 	/*récupère les photos

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <style>
-body{
+body{ background-color:red;
     width:1060px;
-    margin:50px auto;
+    margin:50px 50px;//auto
 }
 path {  stroke: #fff; }
 path:hover {  opacity:0.9; }
@@ -35,10 +35,13 @@ rect:hover {  fill:blue; }
     width:50px;
 }
 #etu{
+    background-color: green;
 	width:80%;
 	height:200px;
 }
 #dashboard{
+
+    background-color: red;
 	width:100%;
     float:left;
 }
@@ -69,7 +72,7 @@ rect:hover {  fill:blue; }
 </div>
 <div id='dashboard'>
 </div>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>  <!--an interactive and dynamic data visualization library for the web.-->
 <script>
 function dashboard(id, fData){
     var barColor = 'steelblue';
@@ -88,37 +91,39 @@ function dashboard(id, fData){
                     );
    	*/
    var segColor = d3.scale.category20b();
-   var sltEtu = false;	
+   var sltEtu = false;
+
     fData.forEach(function(d){
         d.total =   d.freq.PHP+d.freq.HTML+d.freq.JSON+d.freq.CSS+d.freq.XML+d.freq.JAVA+d.freq.SQL+d.freq.Python+d.freq.ASP+d.freq.JS;}
                     );
     
     // function to handle histogram.
     function histoGram(fD){
-        var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-        hGDim.w = 500 - hGDim.l - hGDim.r, 
-        hGDim.h = 300 - hGDim.t - hGDim.b;
+        var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};// espace entre le fond de haut  et l'histogram
+        hGDim.w = 500 - hGDim.l - hGDim.r, //largeur de l'espace resérvé à l'histograme
+        hGDim.h = 300 - hGDim.t - hGDim.b; //hauteur de l'espace resérvé à l'histograme
             
-        //create svg for histogram.
-        var hGsvg = d3.select(id).append("svg")
+    //create svg for histogram.
+       var hGsvg = d3.select(id).append("svg")
             .attr("width", hGDim.w + hGDim.l + hGDim.r)
             .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
             .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
-        // create function for x-axis mapping.
-        var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
+    // create function for x-axis mapping.
+        var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)  //largeur des bares  
                 .domain(fD.map(function(d) { return d[0]; }));
-        // Add x-axis to the histogram svg.
+
+    // Add x-axis to the histogram svg.
         hGsvg.append("g").attr("class", "x axis")
             .attr("transform", "translate(0," + hGDim.h + ")")
             .call(d3.svg.axis().scale(x).orient("bottom"));
-        // Create function for y-axis map.
+    // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
                 .domain([0, d3.max(fD, function(d) { return d[1]; })]);
-        // Create bars for histogram to contain rectangles and freq labels.
+    // Create bars for histogram to contain rectangles and freq labels.
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
                 .append("g").attr("class", "bar");
         
-        //create the rectangles.
+    //create the rectangles.
         bars.append("rect")
             .attr("x", function(d) { return x(d[0]); })
             .attr("y", function(d) { return y(d[1]); })
@@ -126,6 +131,7 @@ function dashboard(id, fData){
             .attr("height", function(d) { return hGDim.h - y(d[1]); })
             .attr('fill',barColor)
             .on("click",function(d){
+
             	sltEtu = true;
             	})
             .on("mouseover",mouseover)// mouseover is defined below.
@@ -153,7 +159,10 @@ function dashboard(id, fData){
         			d3.select("#mailEtu").text(etu["E-mail"]);
         			//var urlTof = tofEtu[etu["lien vers la photo"]] ? tofEtu[etu["lien vers la photo"]].large : "";
 					var urlTof = 'http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+etu["lien vers la photo"];
-        			d3.select("#photoEtu").attr('src', urlTof);        			
+        			d3.select("#photoEtu").attr('src', urlTof); //donner un id pour quil ramene le style de la photo
+
+
+                           			
         			
         		}
 	
@@ -172,25 +181,25 @@ function dashboard(id, fData){
 			d3.select("#sltEtu").text("---");
 			d3.select("#mailEtu").text("---");
 			d3.select("#photoEtu").attr('src', "https://dummyimage.com/356x200/000/000");        			
-        		// reset the pie-chart and legend.    
+    // reset the pie-chart and legend.    
             pC.update(tF);
             leg.update(tF);
         }
         
-        // create function to update the bars. This will be used by pie-chart.
+    // create function to update the bars. This will be used by pie-chart.
         hG.update = function(nD, color){
-            // update the domain of the y-axis map to reflect change in frequencies.
+    // update the domain of the y-axis map to reflect change in frequencies.
             y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
             
-            // Attach the new data to the bars.
+    // Attach the new data to the bars.
             var bars = hGsvg.selectAll(".bar").data(nD);
             
-            // transition the height and color of rectangles.
+    // transition the height and color of rectangles.
             bars.select("rect").transition().duration(500)
                 .attr("y", function(d) {return y(d[1]); })
                 .attr("height", function(d) { return hGDim.h - y(d[1]); })
                 .attr("fill", color);
-            // transition the frequency labels location and change value.
+    // transition the frequency labels location and change value.
             bars.select("text").transition().duration(500)
                 .text(function(d){ return d3.format(",")(d[1])})
                 .attr("y", function(d) {return y(d[1])-5; });            
