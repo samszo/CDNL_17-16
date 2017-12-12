@@ -18,4 +18,3 @@ function curl($url){
     
     echo $response;
 }
-
