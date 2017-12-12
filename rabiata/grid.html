@@ -32,7 +32,7 @@
     <title>Calender</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
-<<<<<<< HEAD
+
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css"/>
 </head>
 <body>
@@ -190,7 +190,7 @@
 <body style="background-image:url(agenda/doodle-for-google-graphic.png);background-repeat: repeat-y;">
 <br><br>
 
-<center><a href="agenda/calender.php?q=r" ><img src="agenda/sign_in.jpg"></a></center>
+
 
 <br>
 <div style="position: relative; height: 300px;">
@@ -325,7 +325,7 @@ var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" fr
      },
  });
  
- /*
+ 
     w2popup.open({
         width: 1000,
         height: 2000,
@@ -334,15 +334,15 @@ var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" fr
         buttons: '<button class="w2ui-btn" onclick="create_event()">Create New Event</button>',
         showMax: true
     });
-*/
+
 }
-/*
+
 		function showevent(){ w2popup.close();
 					$.getJSON("agenda/calender.php?q=info&id="+event.recid+"&startdate=2017-10-01T05:00:00-06:00&enddate=2017-11-30T05:00:00-06:00",
 					function(data){
 				
 			w2ui['grid2'].clear();
-            //var record = data;
+            var record = data;
 			
 			event_name = data.event.split(",");
 			event_desc = data.eventdesc.split(",");
@@ -356,7 +356,7 @@ var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" fr
 			
 			});
 			w2ui['grid2'].reload(); 
-		}*/
+		}
 function create_event(){
 //alert(document.getElementById('enum').value);
 	$.getJSON("agenda/calender.php?q=present&id="+ event_id +"&desc=HelloWorld&start_date="+
@@ -367,15 +367,14 @@ function create_event(){
 					function(data){   if (data) w2alert('The Event Created'); });
 					
 		w2popup.clear(); popup(event_id);  
-					// alert to show notification for creation new event
-			       //setTimeout(refresh1, 1000); 
-					/*
+					 alert to show notification for creation new event
+			       setTimeout(refresh1, 1000); 
+					
 						var w = window.open('','','width=500,height=500')
 						w.document.write('The Event Created')
 						w.focus()
 						setTimeout(function() {w.close();}, 2500)
-							*/
-	
+							
 			}
 $(function () {
 	$.getJSON("agenda/calender.php?q=all",
@@ -396,7 +395,7 @@ $(function () {
 	            expandColumn: true
 	        },        
 	        
-	        //url: 'list.json',
+	        url: 'list.json',
 	        //method: 'GET', // need this to avoid 412 error on Safari
 	        records: data,
 	        columns: [                
@@ -467,7 +466,7 @@ $(function () {
 	
 	
 });
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
+
 </script>
 
 
