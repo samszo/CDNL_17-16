@@ -5,50 +5,31 @@
 	<meta charset="utf-8">    
     <script type="text/javascript" src="js/d3.v3.js"></script>
  	<script type="text/javascript" src="js/jquery.min.js" ></script>
- 
+	<script type="text/javascript" src="js/array_of_std.js"></script>
 
  </head>
- <body>
+ <body style="background-color:pink;">
  	<div id="etuTrombi"/>
  	<div id="etuData"/>
  	<form id="myField"  method="post" action="" >
 
 	<script>
 
-	var person = [];
-	person["36831301933"] = "mans@gmail.com";
-	person["36831301813"] = "mansour.ismail.pro@gmail.com";
-	person["37469324182"] = "wehbihazem@gmail.com";
-	person["37500371201"] = "fb.mory@gmail.com"; 
-    person["37469326552"] = "elmounjide.hamza@gmail.com";
-	person["37469306082"] = "saadhamdani1995@gmail.com"; 
-    person["36790405664"] = "derfoufiabdel@gmail.com";
-	person["36790405044"] = "berradayacin@gmail.com"; 
-    person["36790360594"] = "bouna.nadia.isamm@gmail.com"; 
-	person["37469269022"] = "rabia.taleb@yhoo.fr"; 
-    person["37242244670"] = "nourhenyahyaoui@gmail.com"; 
-	person["37452460846"] = "lydia.lebaz@gmail.com"; 
-    person["37469229002"] = "hassina.salmi90@gmail.com"; 
-	person["23647903238"] = "aoua.kahina@gmail.com"; 
-    person["37500282781"] = "roza.arezki@outlook.fr"; 
-	person["36790307514"] = "rabahmaakni@gmail.com"; 
-    person["23647865848"] = "soukaynamanessoub@gmail.com"; 
-	person["23647866988"] = "hatim.elmabrouk@gmail.com"; 
-    person["37469188442"] = "frdfhdewl@gmail.com"; 
-	person["37583377632"] = "nourhenyahyaoui@gmail.com"; 
-    person["37583374782"] = "nouryadef@gmail.com"; 
-	person["37617449841"] = "cylia.oulebsir@yahoo.fr"; 	
 
-	var fruits = [];
+   if(window.location.href.indexOf("event") > -1) {
+       alert("The Event Created");
+    }
+	
+	var result = [];
 	
 
 	function save(){
 	var str=[];
-		for (i = 0; i < fruits.length; i++) {
-			if(document.getElementById(fruits[i]).checked)  { str.push(person[fruits[i]]);}
+		for (i = 0; i < result.length; i++) {
+			if(document.getElementById(result[i]).checked)  { str.push(person[result[i]]);}
 }
 
-document.getElementById('myField').action ="agenda/calender.php?q=present&id="+document.getElementById('id').value+"&desc="+document.getElementById('desc').value+"&email="+str.toString();
+document.getElementById('myField').action ="agenda/calender.php?page_id=t&q=present&id="+document.getElementById('id').value+"&desc="+document.getElementById('desc').value+"&email="+str.toString();
 
 
 }
@@ -59,7 +40,7 @@ document.getElementById('myField').action ="agenda/calender.php?q=present&id="+d
 
 	    // Debut de la boucle
 	    $.each(data.photoset.photo, function(i,item){
-		 fruits.push(item.id); 
+		 result.push(item.id); 
 	        // Sockage de l'image dans une variable
 	        var photo = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_s.jpg';
 	        // Sockage de l'url dans une variable

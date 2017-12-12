@@ -3,8 +3,8 @@ require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
-
 $client = new Google_Client();
+
 $client->setAuthConfig('../agenda/client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
@@ -33,35 +33,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	//
 //$_GET['q'] = 'present';
 	//$_GET['id'] = 'amenibenmrad@gmail.com';
-	/*try {
 
-	    switch ($_GET['q']) {
-	        case 'all':
-	            //Pour la liste complète des calendrier de la personne
-	            $r = getAllCalendar($cal_service);
-        	        break;
-	        case 'info':
-	            //Pour les infos d'un calendrier
-	            $calendar = $cal_service->calendarList->get($_GET['id']);
-	            $r = getCalendarInfo($calendar, $cal_service);
-		    $r=getAllEvent($cal_service);
-	            break;
-          case 'event':
-              //Pour les événements
-           getAllEvent($cal_service);
-                 break;
-	        case 'present':
-	            //Pour ajouter un présent
-	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
-	            break;
-	        default:
-	            $r = "rien";
-	           break;
-	    }
-	    	echo json_encode($r);
-	} catch (Exception $e) {
-	    echo 'ERREUR : ',  $e->getMessage(), "\n";
-	}*/
+
 	//
 } else {
 	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/grid/callback.php';
@@ -158,8 +131,8 @@ function getAclInfo($acl)
 }
 
 function insertPresent($service, $calendarId, $desc, $mails){
+  $date = new DateTime();
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-    $date = new DateTime();
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
     $date->add(new DateInterval('PT60S'));
     $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
@@ -195,7 +168,44 @@ function insertPresent($service, $calendarId, $desc, $mails){
     return array('message'=>'Event created', 'event'=>$event);
 
 }
+function insertPresentDate($service, $calendarId, $desc, $dates){
+    //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+    $date = new DateTime($_GET['date']);
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $dateF = new DateTime($_GET['dateF']);
+    $dateFin = $dateF->format('Y-m-d').'T'.$dateF->format('H:i:s');
+    echo $dateDeb." - ".$dateFin;
+    $attendees = array();
+
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
+    //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
+
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => $desc,
+        'location' => 'Paris 8',
+        'description' => $desc,
+        'start' => array(
+            'dateTime' => $dateDeb,
+            'timeZone' => 'Europe/Paris',
+        ),
+        'end' => array(
+            'dateTime' => $dateFin,
+            'timeZone' => 'Europe/Paris',
+        ),
+        'attendees' => $attendees,
+    ));
+    //print_r($event);
+    $event = $service->events->insert($calendarId, $event);
+    return array('message'=>'Event created', 'event'=>$event);
+
+}
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -204,13 +214,24 @@ function insertPresent($service, $calendarId, $desc, $mails){
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
-</head>
-<body >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+</head>
+<body ><br><br>
+  <div class="container">
+      <ul class="nav nav-pills">
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/">Acceuil</a></li>
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/dash.html">Compétences</a></li>
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/trombinoscope/">Présence</a></li>
+        <li role="presentation" class="active"><a href="http://localhost/THYP_17-18/ameni26/grid/grid.php">Evenements</a></li>
+      </ul>
+      <br>
 <div id="grid" style="width: 100%; height: 350px;"></div>
 <div id="grid2" style="width: 100%; height: 350px;"></div>
 
 <script type="text/javascript">
+dtEtu = [];
+
 $(function () { w2utils.lock($("#grid"),"loading...",true);
 	$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
 //$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
@@ -267,6 +288,7 @@ $(function () { w2utils.lock($("#grid"),"loading...",true);
   //$(".w2ui-footer-left").ready(function(){alert()})
 
 })
+
 var inc=2;
 function showEvents(EventId) {console.log(EventId); w2utils.lock($("#grid2"),"loading...",true);
 var url="/THYP_17-18/ameni26/agenda/index.php?q=info&id="+EventId;
@@ -293,20 +315,121 @@ inc++;
 		toolbarAdd: true,
             },
 	onAdd: function (event) {
-            w2alert('Add event:<br>sujet<SELECT name="nom" id="inputTitre" size="1"><OPTION>Présence</option><OPTION>Réunion</option><OPTION>Sortie</option><OPTION>RDV</option></SELECT><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
+    var lyEvent =  $().w2layout({
+        name: 'lyEvent',
+        panels: [
+
+            { type: 'main', size:"50%", content: '' },
+            { type: 'bottom', size:"50%", content: '' }
+        ]
+    });
+    //var src = "https://calendar.google.com/calendar/embed?src=amenibenmrad@gmail.com&ctz=Europe/Paris";
+    var frmEvent  = $().w2form({
+       name   : 'frmEvent',
+       header : '',
+       fields : [
+           { name: 'debut_evenemnt',field: 'Date de début', type: 'dateTime', required: true },
+           { name: 'fin_evenemnt',field: 'Date de fin', type: 'dateTime', required: true },
+           { name: 'description_evenemnt',field: 'Description',  type: 'text', required: true },
+
+       ],
+       actions: {
+           reset: function () {
+
+               this.clear();
+           },
+           save: function () {var debut_ev=w2ui['frmEvent'].record['debut_evenemnt'];
+           var fin_ev=w2ui['frmEvent'].record['fin_evenemnt'];
+           var description_ev=w2ui['frmEvent'].record['description_evenemnt'];alert(fin_ev);
+           var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+description_ev+"&date="+debut_ev+"&dateF="+fin_ev;
+            $.ajax({
+             url: lien,
+             context: document.body
+           }).done(function(data) {
+             console.log(data);showEvents(EventId);
+           //  $("#result").append("Validé");
+           });
+               this.save();
+           },
+
+       }
+   });
+   //   alert($('input[type=us-time]').value);
+
+    w2popup.open({
+        title   : 'Créer un nouveau événement',
+        body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
+        showMax : true,
+        onOpen  : function (event) {
+            event.onComplete = function () {
+           if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
+           if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
+
+                     $('#w2ui-popup #main').w2layout(lyEvent);
+                     w2ui['lyEvent'].content('main', $().w2form(frmEvent));
+                     w2ui['lyEvent'].load('bottom', "http://localhost/THYP_17-18/ameni26/palette/1.svg"
+                         , 'pop-in', function () {
+                       console.log('content loaded');
+                       $( "#path93-1" ).click(function() {
+                        $('#description_evenemnt').val("Rendez-vous");
+                      });
+                      $( "#path93-2" ).click(function() {
+                       $('#description_evenemnt').val("Sortie");
+                      });
+                      $( "#path93" ).click(function() {
+                       $('#description_evenemnt').val("Travail");
+                      });
+                       /*
+                       d3.json("../"+dt.id+"/palette/palette.json", function(data) {
+                       data.zones.forEach(function(d){
+                         d3.select('svg').select("#"+d.id)
+                           .attr('tweet',d.text)
+                           .on("click",function(e){
+                           var t = d3.select(this).attr('tweet');
+                           w2ui['layout'].content('left', t, 'pop-out');
+                         });
+                       });
+                       */
+                   });
+
+
+                     $('input[type=us-datetime]').w2field('datetime');
+
+                     $('#enum').w2field('enum', {
+                       items: dtEtu,
+                       openOnFocus: true,
+                       selected: []
+                   });
+
+
+                   w2popup.max();
+
+            };
+        },
+          /*  w2alert('Add event:<br>sujet<SELECT name="nom" id="inputTitre" size="1"><OPTION>Présence</option><OPTION>Réunion</option><OPTION>Sortie</option><OPTION>RDV</option></SELECT><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
  .ok(function () { console.log('ok'); var sujet= $("#inputTitre option:selected").text();alert($("#inputDate").val())
  var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+sujet+"&date="+$("#inputDate").val();
  $.ajax({
   url: lien,
   context: document.body
 }).done(function(data) {
-  console.log(data);showEvents(EventId);
+  console.log(data);showEvents(EventId);*/
 //  $("#result").append("Validé");
-});
+
 });
 
 var month = (new Date()).getMonth() + 1;
 var year  = (new Date()).getFullYear();
+
+$.getJSON('../palette/palette.json',
+//$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
+  function(data3){console.log("c bon");
+//  $("g").click(function(){ alert("sss"); });
+
+
+    //els[i].onclick=myClickHandlerFunction;
+
+  });
 
 $('input[type=us-time]').w2field('time',  { format: 'h12' });
 
@@ -320,8 +443,6 @@ $('input[type=us-date]').w2field('date');
                 { field: 'recid', caption: 'recid', size: '30%' },
                 { field: 'summary', caption: 'resume', size: '30%' },
                 { field: 'creator.displayName', caption: 'createur', size: '30%' }
-
-
 
             ]
 

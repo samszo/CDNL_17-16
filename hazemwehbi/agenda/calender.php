@@ -47,8 +47,12 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            break;
 	        case 'present':
 	            //Pour ajouter un présent
-	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
-	            break;
+				{$r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
+				 if ( $_GET['page_id'] == 't') 
+				 {
+					 header('Location: ../trombinoscope.html?event=true');
+					}
+	            break;}
 	        default:
 	            header('Location: ../grid.html');
 	           break;

@@ -1,9 +1,14 @@
 {
+<<<<<<< HEAD
 	"titre": "cible des courtisans"
+=======
+	"titre": "cible des courtisans",
+>>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
 	"zones": [
 		{
 			"id": "path93",
 			"text": "1"
+<<<<<<< HEAD
 			},
 			{
 				"id": "path12",
@@ -19,4 +24,18 @@
 			}
       
 			]
+=======
+		},
+		
+		
+		{
+			"id": "path93-2",
+			"text": "3"
+		},
+		{
+			"id": "path93-1",
+			"text": "4"
+		}
+	]
+>>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
 }

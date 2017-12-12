@@ -51,10 +51,10 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
 	        default:
-	            $r = ".";
+	            $r = "";
 	           break;
 	    }
-	    	echo json_encode($r);
+
 	} catch (Exception $e) {
 	    echo 'ERREUR : ',  $e->getMessage(), "\n";
 	}
@@ -166,6 +166,11 @@ function insertPresent($service, $calendarId, $desc, $mails){
 <html>
 <head>
 <meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 <style>
 body{
     width:1060px;
@@ -191,7 +196,18 @@ img{
 </style>
 </head>
 <body>
+  <div class="container">
+      <ul class="nav nav-pills">
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/">Acceuil</a></li>
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/dash.html">Compétences</a></li>
+        <li role="presentation" class="active"><a href="http://localhost/THYP_17-18/ameni26/trombinoscope/">Présence</a></li>
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/grid/grid.php">Evenements</a></li>
+      </ul>
+      <br>
+
+  </div>
 <h1 id="head">Liste de présence</h1>
+Id du calendrier <input type="text" id="idCal"><label style="color:red" id="succ"></label>
 <div id="etu" >
 
 </div>
@@ -213,6 +229,7 @@ img{
 <script type="text/javascript" src="../js/jquery.min.js" ></script>
 <script>
 function validerPresence(){
+  w2utils.lock($("#dashboard"),"loading...",true);
   var h="";var c=0;
   $('.presence:checked').each(function() {
     if(c==0){
@@ -220,14 +237,36 @@ function validerPresence(){
   else {
     h=h+"&"+this.value
   }
-});
- var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?desc=Presence&email[]="+h;
+});if(h== ""){alert("sélectionnez les présents");w2utils.unlock($("#dashboard"));}
+ else{var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?"+"q=present&id="+$("#idCal").val()+"&desc=Presence&email[]="+h;
  $.ajax({
   url: lien,
-  context: document.body
-}).done(function() {
-  $("#result").append("Validé");
-});
+  context: document.body,
+  success: function (response) {w2utils.unlock($("#dashboard"));
+      $('#succ').text("validé");
+
+    },
+    error: function (jqXHR, exception) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+            msg = 'Not connect.\n Verify Network.';
+        } else if (jqXHR.status == 404) {
+            msg = 'Requested page not found. [404]';
+        } else if (jqXHR.status == 500) {
+            msg = 'Internal Server Error [500].';
+        } else if (exception === 'parsererror') {
+            msg = 'Requested JSON parse failed.';
+        } else if (exception === 'timeout') {
+            msg = 'Time out error.';
+        } else if (exception === 'abort') {
+            msg = 'Ajax request aborted.';
+        } else {
+            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        alert(msg);
+    },
+})
+}
 }
 
 var body=d3.select("body");
@@ -235,6 +274,8 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefa
   data.forEach(function(d){
     console.log(d);
     var h='http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+d["lien vers la photo"];
+    if(d["lien vers la photo"] == ""){h="https://cdn0.iconfinder.com/data/icons/large-glossy-icons/512/No.png"}
+
   //  $("<img/>").attr({src: h, height: "20px"}).appendTo("#tableAppel");
   $("#tableAppel").append('<tr><td><b>'+d["Prénom"]+' '+d["Nom"]+'<b/></td><td><img src="'+h+'" height="100px;width:50px"></td><td> présent(e)<input type="checkbox" class="presence" name="présent(e)" value="'+d["E-mail"]+'"><br></td></tr>');
 
