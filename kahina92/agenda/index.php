@@ -4,6 +4,7 @@ session_start();
 $client = new Google_Client();
 $client->setAuthConfig('client_secret.json');
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
+//détruire le stockage de donné
 if (isset($_GET['out'])) {
     unset($_SESSION['access_token']);
     $client->revokeToken();
@@ -11,7 +12,7 @@ if (isset($_GET['out'])) {
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $client->setAccessToken($_SESSION['access_token']);
     $cal_service = new Google_Service_Calendar($client);
-    $_GET['q'] = 'all';
+    //$_GET['q'] = 'all';
 
     try {
         switch ($_GET['q']) {
@@ -21,7 +22,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
                 header('http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/kahina92/grid.html');
                 break;
             case 'info':
-                //Pour les infos d'un calendrier
+                //Pour affiché  les infos d'un calendrier
                 $calendar = $cal_service->calendarList->get($_GET['id']);
                 $r = getCalendarInfo($calendar, $cal_service);
                 break;
@@ -153,16 +154,20 @@ function insertPresent($service, $calendarId, $desc, $mails){
     return array('message'=>'Event created', 'event'=>$event);
 }
  function addEvent($service) {
+     $date = new DateTime();
+     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+     $date->add(new DateInterval('PT60S'));
+     $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
      $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Google I/O 2017',
          'location' => ' Paris, 75003',
          'description' => 'A chance to hear more about Google\'s developer products.',
          'start' => array(
-             'dateTime' => '2017-11-28T09:00:00-07:00',
+             'dateTime' => '2017-12-12T09:00:00-07:00',
              'timeZone' => 'Europe/Paris',
          ),
          'end' => array(
-             'dateTime' => '2017-11-28T17:00:00-07:00',
+             'dateTime' => '2017-12-12T17:00:00-07:00',
              'timeZone' => 'Europe/Paris',
          ),
          'recurrence' => array(
