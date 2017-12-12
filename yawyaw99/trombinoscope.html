@@ -1,106 +1,79 @@
 <!DOCTYPE html>
 <html>
- <head>
-    <title>Simple Template Example</title>
-	<meta charset="utf-8">    
-    <script type="text/javascript" src="js/d3.v3.js"></script>
- 	<script type="text/javascript" src="js/jquery.min.js" ></script>
- 
-
- </head>
- <body>
- 	<div id="etuTrombi"/>
- 	<div id="etuData"/>
- 	<form id="myField"  method="post" action="'agenda/calender.php';" >
-
-	<script>
-	var person = [];
-	person["36831301933"] = "mans@gmail.com";
-	person["36831301813"] = "mansour.ismail.pro@gmail.com";
-	person["37469324182"] = "wehbihazem@gmail.com";
-	person["37500371201"] = "fb.mory@gmail.com"; 
-    person["37469326552"] = "elmounjide.hamza@gmail.com";
-	person["37469306082"] = "saadhamdani1995@gmail.com"; 
-    person["36790405664"] = "derfoufiabdel@gmail.com";
-	person["36790405044"] = "berradayacin@gmail.com"; 
-    person["36790360594"] = "bouna.nadia.isamm@gmail.com"; 
-	person["37469269022"] = "rabia.taleb@yhoo.fr"; 
-    person["37242244670"] = "nourhenyahyaoui@gmail.com"; 
-	person["37452460846"] = "lydia.lebaz@gmail.com"; 
-    person["37469229002"] = "hassina.salmi90@gmail.com"; 
-	person["23647903238"] = "aoua.kahina@gmail.com"; 
-    person["37500282781"] = "roza.arezki@outlook.fr"; 
-	person["36790307514"] = "rabahmaakni@gmail.com"; 
-    person["23647865848"] = "soukaynamanessoub@gmail.com"; 
-	person["23647866988"] = "hatim.elmabrouk@gmail.com"; 
-    person["37469188442"] = "frdfhdewl@gmail.com"; 
-	person["37583377632"] = "nourhenyahyaoui@gmail.com"; 
-    person["37583374782"] = "nouryadef@gmail.com"; 
-	person["37617449841"] = "cylia.oulebsir@yahoo.fr"; 	
-	var tableau = [];
-	
-	function envoyer(){
-	var str=[];
-		for (i = 0; i < tableau.length; i++) {
-			if(document.getElementById(tableau[i]).checked)  { str.push(person[tableau[i]]);}
+<head>
+<meta charset="utf-8">
+<style>
+body{
+    width:1060px;
+    margin:50px auto;
 }
-document.getElementById('myField').action ="../../samszo/agenda/index.php?q=present&id="+document.getElementById('id').value+"&desc="+document.getElementById('desc').value+"&email="+str.toString();
-
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
 }
-	//merci beaucoup à https://etienner.fr/flickr-json
-	$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=79672885f8a018343cd8849f57e8a50a&photoset_id=72157686924962130&extras=original_format&format=json&jsoncallback=?",
-	function(data){
-	    // Debut de la boucle
-	    $.each(data.photoset.photo, function(i,item){
-		 tableau.push(item.id); 
-	        // Sockage de l'image dans une variable
-	        var photo = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_s.jpg';
-	        // Sockage de l'url dans une variable
-	        var url= 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_c.jpg';
-	        // Affichage des images dans la balise ul#images avec le l'url dans la balise li
-	        $("<img/>").attr({src: photo, alt: item.title}).appendTo("#etuTrombi").wrap("<li> <input type='checkbox'  name='"+item.id+"' id='"+item.id +"' /><a href=' "+ url +"' title=' "+ item.title +" ' ></a></li>");
-	  }); //Fin de la boucle
-	});
-	// Fin appel JSON 	
- 	/*
-    <script type="text/javascript">
-	    var urlPhoto = "php/lecteurFlux.php?url=THYP1617photo";
-   		d3.json(urlPhoto, function(data)
-   	    {
-   	        //prices is an array of json objects containing the data in from the csv
-   	        //console.log("data:", data);
-			data.feed.entry.map(function(e, i){									
-				var tof = e['media$group']['media$thumbnail'][2];
-	        	var h = i+' = <img src="'+tof.url+'" />';
-   	            $('<div class="data" id="etu_' + i + '"></div>').html(h).appendTo('#etuTrombi');
-			});																
-		    var urlData = "php/lecteurFlux.php?url=CDNL1617data";
-	   		d3.csv(urlData, function(data)
-	   	    {
-	   	        //prices is an array of json objects containing the data in from the csv
-	   	        //console.log("data:", data);
-	   	        data.forEach(function(d,i){
-	    	        	var h = i+' - '+d.numPhoto+' = '+d['Votre prénom']+" "+d['Votre nom']+" "+d['numEtudiant'];
-	   	            $('<div class="data" id="data_' + i + '"></div>').html(h).appendTo('#etu_'+d['numTof']);
-	   	        		
-	   	        });
-	   	    })
-			
-   	    })
-   	  */
-   	    
-		
-</script>
-	<input type="hidden" id="q" value=""><br>
+td,th{
+  padding:5px;
+}
+td{
+  height:200px
+}
+img{
+   -webkit-transform: rotate(90deg);
+   -moz-transform: rotate(90deg);
+   -o-transform: rotate(90deg);
+   -ms-transform: rotate(90deg);
+   transform: rotate(90deg);
+}
+</style>
+</head>
+<body>
+<h1 id="head">Liste de présence</h1>
+<div id="etu" >
 
-	<input type="text" id="id" placeholder="Email"><br><br>
-
-	<input type="text" id="desc" placeholder="Description"><br>
-	<input type="hidden" id="email" value=""><br>
-	
-<button onclick="envoyer()" >Crée un evenement </button><br> 
-<br> 
-<br> 
+</div>
+<div id='dashboard'>
+</div><p></p>
+<form action="#" method="get">
+<table id="tableAppel" style="float:left;width:400">
+  <tr>
+    <th >Nom et prénom</th>
+    <th >Photo</th>
+    <th >Présence</th>
+  </tr>
+</table>
+<div style="width:200px;margin-left:600px;margin-top:100px" id="result">
+<input type="button" value="valider" style="margin-top:100px;width:70px;height:30px" onclick="validerPresence()"><br>
+</div>
 </form>
- </body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js" ></script>
+<script>
+function validerPresence(){
+  var h="";var c=0;
+  $('.presence:checked').each(function() {
+    if(c==0){
+  h=this.value;c++}
+  else {
+    h=h+"&"+this.value
+  }
+});
+ var lien="http://localhost/THYP_17-18/yawyaw99/agenda/index.php?desc=Presence&email[]="+h;
+ $.ajax({
+  url: lien,
+  context: document.body
+}).done(function() {
+  $("#result").append("Validé");
+});
+}
+var body=d3.select("body");
+d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQxmWDytc5hSTaF-V-96gefaJxHJWnLGS7xudeNJChpgpvqWdskujnlt03TkiWRHtW5uoTV8sYAH3HZ/pub?gid=642939185&single=true&output=csv",function(data){
+  data.forEach(function(d){
+    console.log(d);
+    var h='http://www.samszo.univ-paris8.fr/THYP/17-18/photo/'+d["lien vers la photo"];
+  //  $("<img/>").attr({src: h, height: "20px"}).appendTo("#tableAppel");
+  $("#tableAppel").append('<tr><td><b>'+d["Prénom"]+' '+d["Nom"]+'<b/></td><td><img src="'+h+'" height="100px;width:50px"></td><td> présent(e)<input type="checkbox" class="presence" name="présent(e)" value="'+d["E-mail"]+'"><br></td></tr>');
+  });
+  })
+</script>
+</body>
 </html>

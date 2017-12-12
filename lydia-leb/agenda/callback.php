@@ -1,4 +1,6 @@
 <?php
+
+
 require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';//chemin vers google_api
 
 session_start();

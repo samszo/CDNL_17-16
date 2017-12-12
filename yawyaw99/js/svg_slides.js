@@ -30,6 +30,7 @@ var slides={},
 
 function svg_slides(svg,delay) {
 	
+	
 	//style du body
 	d3.select("body")
 		.style("margin",0);
@@ -161,4 +162,3 @@ function changeNavig(numIma){
 	d3.select("#numSlide-value").text(numIma);
 	d3.select("#numSlide").property("value", numIma); 	
 }
-
