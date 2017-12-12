@@ -3,8 +3,8 @@ require_once '../../../google-api-php-client-2.2.0/vendor/autoload.php';
 
 session_start();
 
-
 $client = new Google_Client();
+
 $client->setAuthConfig('../agenda/client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
@@ -14,8 +14,6 @@ if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
 }
-
-
 
 //vérifie que le token n'ets pas expéré
 //if ($client->isAccessTokenExpired()) {
@@ -35,35 +33,8 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	//
 //$_GET['q'] = 'present';
 	//$_GET['id'] = 'amenibenmrad@gmail.com';
-	/*try {
 
-	    switch ($_GET['q']) {
-	        case 'all':
-	            //Pour la liste complète des calendrier de la personne
-	            $r = getAllCalendar($cal_service);
-        	        break;
-	        case 'info':
-	            //Pour les infos d'un calendrier
-	            $calendar = $cal_service->calendarList->get($_GET['id']);
-	            $r = getCalendarInfo($calendar, $cal_service);
-		    $r=getAllEvent($cal_service);
-	            break;
-          case 'event':
-              //Pour les événements
-           getAllEvent($cal_service);
-                 break;
-	        case 'present':
-	            //Pour ajouter un présent
-	            $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
-	            break;
-	        default:
-	            $r = "rien";
-	           break;
-	    }
-	    	echo json_encode($r);
-	} catch (Exception $e) {
-	    echo 'ERREUR : ',  $e->getMessage(), "\n";
-	}*/
+	
 	//
 } else {
 	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/grid/callback.php';
@@ -160,8 +131,8 @@ function getAclInfo($acl)
 }
 
 function insertPresent($service, $calendarId, $desc, $mails){
+  $date = new DateTime();
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-    $date = new DateTime();
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
     $date->add(new DateInterval('PT60S'));
     $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
@@ -197,7 +168,44 @@ function insertPresent($service, $calendarId, $desc, $mails){
     return array('message'=>'Event created', 'event'=>$event);
 
 }
+function insertPresentDate($service, $calendarId, $desc, $dates){
+    //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
+    $date = new DateTime($_GET['date']);
+    $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
+    $dateF = new DateTime($_GET['dateF']);
+    $dateFin = $dateF->format('Y-m-d').'T'.$dateF->format('H:i:s');
+    echo $dateDeb." - ".$dateFin;
+    $attendees = array();
+
+    /*
+     * array(
+            array('email' => 'lpage@example.com'),
+            array('email' => 'sbrin@example.com'),
+        )
+     */
+    //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
+
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => $desc,
+        'location' => 'Paris 8',
+        'description' => $desc,
+        'start' => array(
+            'dateTime' => $dateDeb,
+            'timeZone' => 'Europe/Paris',
+        ),
+        'end' => array(
+            'dateTime' => $dateFin,
+            'timeZone' => 'Europe/Paris',
+        ),
+        'attendees' => $attendees,
+    ));
+    //print_r($event);
+    $event = $service->events->insert($calendarId, $event);
+    return array('message'=>'Event created', 'event'=>$event);
+
+}
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -343,7 +351,7 @@ inc++;
            });
                this.save();
            },
-  
+
        }
    });
    //   alert($('input[type=us-time]').value);
