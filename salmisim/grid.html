@@ -6,45 +6,13 @@
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 	<style>
-<<<<<<< HEAD
-.w2ui-field input {
-    width: 1000px;
-}
-.w2ui-field > div > span {
-    margin-left: 20px;
-}
-.example{
-	max-width: 700px;
-	margin: 0 auto;
-}
-.block {
-    padding-top: 20px; 
-    padding-bottom: 10px; 
-    color: #999;
-}
-.w2ui-field input {
-    width: 800px;
-}
-.w2ui-field.dt input {
-    width: 540px;
-}
-.w2ui-field > div > span {
-    margin-left: 20px;
-}
-.w2popup.open{height: 1000px;}
-=======
 
 
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
 </style>
 </head>
 <body >
           
-<<<<<<< HEAD
-<div style="position: relative; height: 1000px;">
-=======
 <div style="position: relative; height: 100px;">
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
     <div id="grid" style="position: absolute; left: 0px; width: 49.9%; height: 300px;"></div>
     <div id="grid2" style="position: absolute; right: 0px; width: 49.9%; height: 300px;"></div>
 	
@@ -124,12 +92,7 @@ inc++;
     var lyEvent =  $().w2layout({
         name: 'lyEvent',
         panels: [
-<<<<<<< HEAD
-            { type: 'top', size: 50, content:'<iframe style="border: 0" width="1200" height="410" frameborder="0"'
-              +'scrolling=no></iframe>'},
-=======
             
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
             { type: 'main', size:"50%", content: '' },
             { type: 'bottom', size:"50%", content: '' }
         ]
@@ -138,28 +101,6 @@ inc++;
 	
     var frmEvent  = $().w2form({
        name   : 'frmEvent',
-<<<<<<< HEAD
-       header : 'Nouveaux Evenements',
-       fields : [
-           { field: ' la date de début: ', type: 'us-datetime', required: true },
-           { field: ' la date de fin: ', type: 'us-datetime', required: true },
-           { field: 'Description:',  type: 'text', required: true },
-           
-       ],
-
-       actions: {
-           reset: function () {
-               this.clear();
-           },
-           save: function () {
-               this.save();
-           }
-       }
-   });
-    w2popup.open({
-        title   : 'Creer un nouveau evenement',
-        body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
-=======
      
        fields : [
            { name: 'debut_ev', field: ' la date de début: ', type: 'datetime', required: true },
@@ -192,73 +133,24 @@ inc++;
     w2popup.open({
         title   : 'Creer un nouveau evenement',
         body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 0px;"></div>',
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
         showMax : true,
         onOpen  : function (event) {
             event.onComplete = function () {
            if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
            if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
-<<<<<<< HEAD
-
-=======
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
                      $('#w2ui-popup #main').w2layout(lyEvent);
                      w2ui['lyEvent'].content('main', $().w2form(frmEvent));
                      w2ui['lyEvent'].load('bottom', "http://localhost/THYP_17-18/salmisim/palette/1.svg"
                          , 'pop-in', function () {
                        console.log('content loaded');
-<<<<<<< HEAD
-                       /*
-                       d3.json("../"+dt.id+"/palette/palette.json", function(data) {
-                       data.zones.forEach(function(d){
-                         d3.select('svg').select("#"+d.id)
-                           .attr('tweet',d.text)
-                           .on("click",function(e){
-                           var t = d3.select(this).attr('tweet');
-                           w2ui['layout'].content('left', t, 'pop-out');
-                         });
-                       });
-                       */
-                   });
-
-
-                     $('input[type=us-datetime]').w2field('datetime');
-
-=======
                        
                    });
                      $('input[type=us-datetime]').w2field('datetime');
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
                      $('#enum').w2field('enum', {
                        items: dtEtu,
                        openOnFocus: true,
                        selected: []
                    });
-<<<<<<< HEAD
-
-
-                   w2popup.max();
-
-            };
-        },
-          /*  w2alert('Add event:<br>sujet<SELECT name="nom" id="inputTitre" size="1"><OPTION>Présence</option><OPTION>Réunion</option><OPTION>Sortie</option><OPTION>RDV</option></SELECT><br>Date<input id="inputDate" type="us-date"><br>Time<input type="us-time">')
- .ok(function () { console.log('ok'); var sujet= $("#inputTitre option:selected").text();alert($("#inputDate").val())
- var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+sujet+"&date="+$("#inputDate").val();
- $.ajax({
-  url: lien,
-  context: document.body
-}).done(function(data) {
-  console.log(data);showEvents(EventId);*/
-//  $("#result").append("Validé");
-
-});
-
-var month = (new Date()).getMonth() + 1;
-var year  = (new Date()).getFullYear();
-
-$('input[type=us-time]').w2field('time',  { format: 'h12' });
-
-=======
                    w2popup.max();
             };
         },
@@ -271,7 +163,6 @@ function( data1){ console.log("valider");
 var month = (new Date()).getMonth() + 1;
 var year  = (new Date()).getFullYear();
 $('input[type=us-time]').w2field('time',  { format: 'h12' });
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
 // US Format
 $('input[type=us-datetime]').w2field('date');
         },
@@ -282,18 +173,11 @@ $('input[type=us-datetime]').w2field('date');
                 { field: 'recid', caption: 'recid', size: '30%' },
                 { field: 'summary', caption: 'resume', size: '30%' },
                 { field: 'creator.displayName', caption: 'createur', size: '30%' }
-<<<<<<< HEAD
-
-=======
->>>>>>> ae29846d43a4399948d17be487a0993a70d4b9e4
             ]
-
         });
       //  $("#bfCaptchaEntry").click(function(){ myFunction(); });
-
     });               // Function returns the product of a and b
 }
-
 </script>
 
 </body>
