@@ -18,7 +18,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
             case 'all':
                 //Pour la liste complète des calendrier de la personne
                 $r = getAllCalendar($cal_service);
-                header('http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/saimi1/grid.html');
+                header('http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/saimi/grid.html');
                 break;
             case 'info':
                 //Pour les infos d'un calendrier
@@ -118,21 +118,19 @@ function getAclInfo($acl)
 }
 function insertPresent($service, $calendarId, $desc, $mails){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-    $date = new DateTime();
+    
+    $date = new DateTime($_GET['start_date']);  $date1 = new DateTime($_GET['end_date']);
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
-    $date->add(new DateInterval('PT60S'));
-    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
-    echo $dateDeb." - ".$dateFin;
-    $attendees = array();
-    foreach ($mails as $m) {
-        $attendees[]=array('email'=>$m);
-    }
-    /*
-     * array(
-            array('email' => 'lpage@example.com'),
-            array('email' => 'sbrin@example.com'),
-        )
-     */
+  
+    $dateFin = $date1->format('Y-m-d').'T'.$date1->format('H:i:s');
+    
+    
+    
+$mails = explode(",", $mails);  
+$attendees = array();
+ foreach ($mails  as $m) {
+      $attendees[]=array('email'=>$m);
+  }
     //pour la géolocalisation merci à https://stackoverflow.com/questions/409999/getting-the-location-from-an-ip-address
     $event = new Google_Service_Calendar_Event(array(
         'summary' => 'Présent',
@@ -146,7 +144,7 @@ function insertPresent($service, $calendarId, $desc, $mails){
             'dateTime' => $dateFin,
             'timeZone' => 'Europe/Paris',
         ),
-        'attendees' => $attendees,
+    'attendees' => $attendees,
     ));
     //print_r($event);
     $event = $service->events->insert($calendarId, $event);
@@ -158,11 +156,11 @@ function insertPresent($service, $calendarId, $desc, $mails){
          'location' => ' Paris, 75003',
          'description' => 'A chance to hear more about Google\'s developer products.',
          'start' => array(
-             'dateTime' => '2017-11-28T09:00:00-07:00',
+             'dateTime' => '2017-12-12T09:00:00-07:00',
              'timeZone' => 'Europe/Paris',
          ),
          'end' => array(
-             'dateTime' => '2017-11-28T17:00:00-07:00',
+             'dateTime' => '2017-12-12T17:00:00-07:00',
              'timeZone' => 'Europe/Paris',
          ),
          'recurrence' => array(
