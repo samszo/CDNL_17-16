@@ -162,7 +162,7 @@ function getAclInfo($acl)
     return $r;
 }
 
-function insertPresent($service, $calendarId, $desc, $mails,$dates){
+function insertPresent($service, $calendarId, $desc, $mails){
   $date = new DateTime();
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
@@ -202,10 +202,10 @@ function insertPresent($service, $calendarId, $desc, $mails,$dates){
 }
 function insertPresentDate($service, $calendarId, $desc, $dates){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-    $date = new DateTime();
+    $date = new DateTime($_GET['date']);
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
-    $date->add(new DateInterval('PT60S'));
-    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+    $dateF = new DateTime($_GET['dateF']);
+    $dateFin = $dateF->format('Y-m-d').'T'.$dateF->format('H:i:s');
     echo $dateDeb." - ".$dateFin;
     $attendees = array();
 

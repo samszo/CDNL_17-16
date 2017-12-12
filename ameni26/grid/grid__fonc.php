@@ -206,18 +206,9 @@ function insertPresent($service, $calendarId, $desc, $mails){
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
 </head>
-<body ><br><br>
-  <div class="container">
-      <ul class="nav nav-pills">
-        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/">Acceuil</a></li>
-        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/dash.html">Compétences</a></li>
-        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/trombinoscope/">Présence</a></li>
-        <li role="presentation" class="active"><a href="http://localhost/THYP_17-18/ameni26/grid/grid.php">Evenements</a></li>
-      </ul>
-      <br>
+<body >
+
 <div id="grid" style="width: 100%; height: 350px;"></div>
 <div id="grid2" style="width: 100%; height: 350px;"></div>
 
@@ -310,50 +301,38 @@ inc++;
     var lyEvent =  $().w2layout({
         name: 'lyEvent',
         panels: [
-
+            { type: 'top', size: 50, content:'<iframe src='+ src +' style="border: 0" width="975" height="410" frameborder="0"'
+              +'scrolling=no></iframe>'},
             { type: 'main', size:"50%", content: '' },
             { type: 'bottom', size:"50%", content: '' }
         ]
     });
-    //var src = "https://calendar.google.com/calendar/embed?src=amenibenmrad@gmail.com&ctz=Europe/Paris";
+    var src = "https://calendar.google.com/calendar/embed?src=amenibenmrad@gmail.com&ctz=Europe/Paris";
     var frmEvent  = $().w2form({
        name   : 'frmEvent',
-       header : '',
+       header : 'New Events',
        fields : [
-           { name: 'debut_evenemnt',field: 'Date de début', type: 'dateTime', required: true },
-           { name: 'fin_evenemnt',field: 'Date de fin', type: 'dateTime', required: true },
-           { name: 'description_evenemnt',field: 'Description',  type: 'text', required: true },
+           { field: 'Choose The Start Date For the Event', type: 'us-datetime', required: true },
+           { field: 'Choose The End Date For the Event', type: 'us-datetime', required: true },
+           { field: 'Event description',  type: 'text', required: true },
 
        ],
        actions: {
            reset: function () {
-
                this.clear();
            },
-           save: function () {var debut_ev=w2ui['frmEvent'].record['debut_evenemnt'];
-           var fin_ev=w2ui['frmEvent'].record['fin_evenemnt'];
-           var description_ev=w2ui['frmEvent'].record['description_evenemnt'];alert(fin_ev);
-           var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+description_ev+"&date="+debut_ev+"&dateF="+fin_ev;
-            $.ajax({
-             url: lien,
-             context: document.body
-           }).done(function(data) {
-             console.log(data);showEvents(EventId);
-           //  $("#result").append("Validé");
-           });
+           save: function () {
                this.save();
-           },
-  
+           }
        }
    });
-   //   alert($('input[type=us-time]').value);
-
     w2popup.open({
         title   : 'Créer un nouveau événement',
+        buttons: '<button class="w2ui-btn" onclick="create_event()">Create New Event</button>',
         body    : '<div id="main" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
         showMax : true,
         onOpen  : function (event) {
-            event.onComplete = function () {
+            event.onComplete = function () {alert("hh");
            if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
            if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
 
@@ -403,16 +382,6 @@ inc++;
 
 var month = (new Date()).getMonth() + 1;
 var year  = (new Date()).getFullYear();
-
-$.getJSON('../palette/palette.json',
-//$.getJSON("/THYP_17-18/ameni26/agenda/index.php?q=all",
-  function(data3){console.log("c bon");
-//  $("g").click(function(){ alert("sss"); });
-
-
-    //els[i].onclick=myClickHandlerFunction;
-
-  });
 
 $('input[type=us-time]').w2field('time',  { format: 'h12' });
 

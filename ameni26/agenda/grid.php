@@ -5,7 +5,7 @@ session_start();
 
 
 $client = new Google_Client();
-$client->setAuthConfig('../agenda/client_secret.json');
+$client->setAuthConfig('client_secret.json');
 //$client->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
 $client->addScope(array("https://www.googleapis.com/auth/calendar"));
 
@@ -66,7 +66,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	}*/
 	//
 } else {
-	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/grid/callback.php';
+	$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/THYP_17-18/ameni26/agenda/callback.php';
 	header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
@@ -212,10 +212,10 @@ function insertPresent($service, $calendarId, $desc, $mails){
 <body ><br><br>
   <div class="container">
       <ul class="nav nav-pills">
-        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/">Acceuil</a></li>
-        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/dash.html">Compétences</a></li>
-        <li role="presentation" ><a href="http://localhost/THYP_17-18/ameni26/trombinoscope/">Présence</a></li>
-        <li role="presentation" class="active"><a href="http://localhost/THYP_17-18/ameni26/grid/grid.php">Evenements</a></li>
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/nadiabn/">Acceuil</a></li>
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/nadiabn/dash.html">Compétences</a></li>
+        <li role="presentation" ><a href="http://localhost/THYP_17-18/nadiabn/trombinoscope/">Présence</a></li>
+        <li role="presentation" class="active"><a href="http://localhost/THYP_17-18/nadiabn/agenda/grid.php">Evenements</a></li>
       </ul>
       <br>
 <div id="grid" style="width: 100%; height: 350px;"></div>
