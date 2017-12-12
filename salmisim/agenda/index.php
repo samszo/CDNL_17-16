@@ -9,14 +9,7 @@ if(isset($_GET['out'])){
     unset($_SESSION['access_token']);
     $client->revokeToken();
 }
-//vérifie que le token n'ets pas expéré
-//if ($client->isAccessTokenExpired()) {
-//    unset($_SESSION['access_token']);
-//}
-//pour supprimer les droits https://myaccount.google.com/permissions?pli=1
-//print_r($_SESSION['access_token']);
-//$_SESSION['access_token'] = array("access_token"=>"ya29.GlvYBAAizcoG4SH14m1nTmBnZXqgabVmkNJyd0d1wFBMfDOTDmJvHWaD86CRJjFXRSY0SEiTfZjpvpWGzFAAkTfuhCICZ_hznkuCkDtSI5OIlCAz2M4aPOwZp3jS","token_type"=>"Bearer", "expires_in"=>"3599", "created"=>1506954203);
-   // var connected = $_GET['connect'];
+
 if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	$client->setAccessToken($_SESSION['access_token']);
 	$cal_service = new Google_Service_Calendar($client);
@@ -39,12 +32,12 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 	            //Pour ajouter un présent
 	             $r = insertPresent($cal_service, $_GET['id'], $_GET['desc'], $_GET['email']);
 	            break;
-				 case 'presentDate':
-    	        //Pour ajouter un présent
+		case 'presentDate':
+    	        //Pour ajouter un présent par date 
     	        $r = insertPresentDate($cal_service, $_GET['id'], $_GET['desc'],$_GET['date']);
     	        break;
 	        default:
-	            $r="rien";
+	            header('Location: ../grid.html');
 	           break;
 	    }
 	    	echo json_encode($r);    
@@ -122,12 +115,13 @@ function getAclInfo($acl)
     );
     return $r;
 }
+// insert la presence des personne par date 
 function insertPresentDate($service, $calendarId, $desc, $dates){
     //merci à https://developers.google.com/google-apps/calendar/v3/reference/events/insert
-   $date = new DateTime($_GET['date']);
+    $date = new DateTime();
     $dateDeb = $date->format('Y-m-d').'T'.$date->format('H:i:s');//'2017-10-17T14:30:00'
-    $dateF = new DateTime($_GET['dateF']);
-    $dateFin = $dateF->format('Y-m-d').'T'.$dateF->format('H:i:s');
+    $date->add(new DateInterval('PT60S'));
+    $dateFin = $date->format('Y-m-d').'T'.$date->format('H:i:s');
     echo $dateDeb." - ".$dateFin;
     $attendees = array();
    foreach ($mails as $m) {
