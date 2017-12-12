@@ -340,7 +340,7 @@ inc++;
            },
            save: function () {var debut_ev=w2ui['frmEvent'].record['debut_evenemnt'];
            var fin_ev=w2ui['frmEvent'].record['fin_evenemnt'];
-           var description_ev=w2ui['frmEvent'].record['description_evenemnt'];alert(fin_ev);
+           var description_ev=w2ui['frmEvent'].record['description_evenemnt'];alert("evenement ajouté");
            var lien="http://localhost/THYP_17-18/ameni26/agenda/index.php?q=presentDate&id="+EventId+"&desc="+description_ev+"&date="+debut_ev+"&dateF="+fin_ev;
             $.ajax({
              url: lien,
