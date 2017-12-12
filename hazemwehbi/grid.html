@@ -79,6 +79,7 @@ d3.csv(url, function(data) {
 		var txt = d["Prénom"].substring(0,1).toUpperCase()+d["Prénom"].substring(1).toLowerCase()
 		+' '
 		+d["Nom"].substring(0,1).toUpperCase()+d["Nom"].substring(1).toLowerCase();
+		dtEtu.push({id:d["E-mail"],text:txt});
 	});
 })
 
@@ -132,6 +133,7 @@ var frame = '<iframe src='+ src +' style="border: 0" width="975" height="410" fr
 
 										
 if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
+if(w2ui['lyEvent'])w2ui['lyEvent'].destroy();
 			
  var frmEvent  =  $().w2form({ 
 								name   : 'frmEvent',
@@ -165,6 +167,9 @@ if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
  var lyEvent =  $().w2layout({
      name: 'lyEvent',
      panels: [
+         { type: 'top', size: "50%", content:'<iframe src='+ src +' style="border: 0" width=100% height="300" frameborder="0"'
+        	 +'scrolling=no></iframe>'},
+         { type: 'main', size:"40%", content: '' },
          { type: 'bottom', size:"10%", content: '' }
      ]
  });
@@ -197,7 +202,20 @@ if(w2ui['frmEvent'])w2ui['frmEvent'].destroy();
 			    		
 						data.zones.forEach(function(d){
 			    			var g = d3.select('svg').select("#"+d.id)
-			    		
+			    				.attr('class','zones')
+			    				.on("click",function(e){
+
+									//$('input[type=list]').w2field('list', { items: people });
+									
+									w2ui['frmEvent'].record['Start_date'] = d.start; 
+									w2ui['frmEvent'].record['End_date'] = d.end; 
+									w2ui['frmEvent'].record['Description'] = d.desc; 
+									w2ui['frmEvent'].record['Guest_List'] = d.list; 
+									
+								    w2ui['frmEvent'].refresh();
+									//w2alert(w2ui['frmEvent'].fields['name']);
+									console.log(d.list);
+
 			    				});
 			    		});		    	
 					});
@@ -241,7 +259,8 @@ function create_event(){
 
 	$.getJSON("agenda/calender.php?q=present&id="+ event_id +"&desc=HelloWorld&start_date="+
                                  	w2ui['frmEvent'].record['Start_date'] +"&end_date="+
-                                    w2ui['frmEvent'].record['End_date'] +"&email="+event_id +"&desc="
+                                    w2ui['frmEvent'].record['End_date'] +"&email="
+									+ event_id +"&desc="
 									+ w2ui['frmEvent'].record['Description'], 
 	
 					function(data){   if (data) w2alert('The Event Created'); });
@@ -370,6 +389,11 @@ $(function () {
 	
 });
 </script>
+
+
+
+
+
 
 </body>
 </html>
